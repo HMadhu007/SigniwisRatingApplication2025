@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS-USER</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+   <script src="../javascripts/user.js"></script>
+</head>
+<body style="padding: 0px; margin: 0px;z-index: -1;" id="body">
+ 
+ 
+  <div class="loader"></div>
+ 
+  <!-- ********************************User Notification popup****************************** -->
+  <!-- ******************************************************************************** -->
+ 
+  <div style="padding-bottom: 30px;width: 90%;height: 80%;background-color:white;position: absolute;top:10%;left: 5%;display: none;z-index: 2;border-radius: 10px;border: 2px solid black;" id="UserNotificationPopUp">
+   
+ 
+    <div style="scroll-behavior: smooth;">
+      <div style="border-radius: 10px;border-radius: 10px;padding: 6px 0px 0px 0px;" class="table-responsive">
+        <table border='1' style="text-align: center;"  class="table table-bordered" id="userNotificationReviewpopup" >
+          <tr style="background-color: rgb(97, 97, 233);" ><th style="color:black;">Employee Id</th><th  style="color:black;">Requested Date</th><th>Status</th><th>Type of Mock</th><th  style="color:black;">Action</th></tr>
+
+
+          <%
+          var aEmployeesData = []        
+          if(oReviewEmpData.length > 0)
+          {
+            oReviewEmpData.forEach((data)=>{
+              if(data.selectedId === loggedUser1  )
+              {
+              
+                  %>
+                  <!-- <td><%= loggedUser1 %></td> -->
+                  <td><%= data.User_Id %></td>
+                  <td><%= data.Requested_Date %></td>
+                  <td><%= data.Status %></td>
+                  <td><%= data.Mock_Type %></td>
+                  <td ><span onclick="" class="btn btn-sm btn-success" style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;"  ><a href="/user/mail/<%= data.table_UId %>/<%= data.User_Id %>" style="color: white;text-decoration: none;" >Accept</a></span>
+                  <a style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-danger"  href="/user/delete/<%= data.table_UId %>/<%= data.User_Id %>" >Reject</a></td>
+                  </tr>
+                  <%
+              
+              }
+                
+
+            })
+          }
+          else
+          {
+          %>
+        <tr>
+            <td style="position: relative; left: 35%;">No Data Found</td>
+        </tr>
+        <%
+        }
+        %>
+        </table>
+      </div>
+    </div>
+    <div style="position: fixed;top: 82%;left: 88%;">
+      <button onclick="UserNotificationPopUp()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);">Close</button>
+    </div>
+  </div>
+ 
+ 
+                                                <!-- user Reviewer popup  -->
+ 
+   <div style="padding-bottom: 30px;width: 90%;height: 85%;background-color:white;position: absolute;top:10%;left: 5%;display: none;z-index: 10;border-radius: 10px;border: 2px solid black; overflow: auto; " id="userReviewId">
+ 
+      <div style="position: sticky;top: 0px; background-color: white;z-index: 100;">
+        <div class="row mt-3 mb-3 w-100" >
+          <div class="col-md-1"></div>
+          <div class="col-md-3">
+            <input type="search" name="SearchByEMPId" id="SearchByEMPId" onkeyup="searchByEMPId()"  placeholder="search by employee id " style="width:100%;height: 30px;text-align: center;letter-spacing: 2px;">
+     
+          </div>
+          <div class="col-md-3 ">
+            <input type="search" name="SearchByEMPName" id="SearchByEMPName" onkeyup="searchByEMPName()"  placeholder="search by  name" style="width:100%;height: 30px;text-align: center;letter-spacing: 2px;">
+     
+          </div>
+          <div class="col-md-5"></div>
+      </div>
+     
+     
+     
+            <div class="row mb-2 w-100">
+              <div class="col-md-8 col-sm-8">
+                <div class="text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">EMPLOYEE REVIEW</div>
+              </div>
+              <div class="col-md-3 col-sm-3" >
+              </div>
+            </div>
+ 
+            <div style="position: fixed;top: 82%;left: 88%;">
+              <button onclick="closeEmpDetails()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);position: absolute;top: -550px;">Close</button>
+            </div>
+         
+ 
+ 
+            <hr style="width: auto;border: 1px solid black;">
+      </div>
+     
+ 
+          <div class="table-responsive w-100" >
+            <table border="1"  id="RecordsTable" class="table table-hover" style="position: sticky;top: 0px;"  >
+             
+              <tr class="tableHeading"><th>Employee Id</th><th>Name</th><th>Department</th><th>Designation</th><th>Mail Id</th> <th>Type of Mock <th>Action</th></tr>
+              <%
+              var aEmployeesData1 = []
+              oEmp_Data.forEach((data)=>{
+                if(session.EmpId == data.Employee_Id)
+                {
+     
+                }
+                else{
+                  aEmployeesData1.push(data)
+                }
+              })
+              if(oEmp_Data.length >0)
+              {
+                aEmployeesData1.forEach((data, index)=>{
+                 
+               %>
+               <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>" >
+                <td><%= data.Employee_Id %></td>
+                 <td><%= data.Employee_Name %></td>
+                 <td><%= data.Employee_Department %></td>
+                 <td><%= data.Employee_Designation %></td>
+                 <td><%= data.Employee_Email %></td>
+                 <td>
+                    <select class="form_select_mockType"  aria-label="Default select example">
+                      <option selected>--Select Review--</option>
+                      <option value="monthlyMock">Monthly Mock</option>
+                      <option value="hierarchyMock">Hierarchy Mock</option>
+                     
+                      <option value="KPI">KPI</option>
+                    </select>
+              </td>
+                 
+                 
+                 <td><p  onclick="ClicktoViewEm(<%= data.Employee_Id %>, <%= index %>)" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >Review</p></td>
+                 </tr>
+                 <%
+                  })
+                }
+                else
+                {
+                %>
+              <tr>
+                  <td>No Data Found</td>
+              </tr>
+              <%
+              }
+              %>
+            </table>
+          </div>
+         
+      </div>
+   
+   
+                                                  <!-- User review poup -->
+ 
+   <div id="bodyContainer">
+ 
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/user">
+          <img src="../images/logo.jpg" alt="" height="90px" width="150px" style="margin-left: 10px;">
+           
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- <div class="row"> -->
+              <div class="col-md-10" >
+                <div class="row">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-8">
+                <h2 id="orgTitle" style="color:rgb(34, 155, 199) ;">--Rating Application--</h2>
+ 
+                  </div>
+                  <div class="col-md-2"></div>
+                </div>
+ 
+              </div>
+              <div class="col-md-2">
+                <div style="display: flex; align-items: center; justify-content: space-evenly;">
+                  <div style="display: flex; justify-content: space-between; gap: 8px;">
+                    <button   style="" onclick="displayEmpDetails()">Update Review</button>
+                    <img src="../images/notification.png" onclick="UserNotification()"  id="UserNotification" alt="User" width="34px" height="30px"/>
+                    <a href="./home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+                </div>
+              </div>
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+       
+      </nav>
+    </div>
+ 
+ 
+  <!-- **********************************User Info************************************* -->
+  <!-- ********************************************************************************* -->
+  <!-- display:none; -->
+  <div id="infoPopUp" style=" margin-right: 8px;margin-top: -10px;position:absolute;top:75px;right:30px;display:none">
+  <div style="background-color: white; width: max-content;border-radius: 10px;padding-bottom:10px ;box-shadow: 0px 0px 5px 1px;">
+    <div style="display: flex;justify-content: flex-end;">
+      <% oEmp_Data.forEach((element,index)=>{
+        if(element.Employee_Id == session.EmpId){
+          %>
+      <img width="160px" height="170px" style="border-radius: 5px;"  src= "data:image/png;base64,<%= element.IMG_file %>"" >
+      
+    </div>
+   
+    <div id="innerwelcome" style="padding: 10px 20px 20px 20px;">
+          <p id="EmployeeId">Employee_Id : <%= session.EmpId  %> </p>
+          <p>Name : <%= session.Name  %></p>
+          <p>Department : <%= session.Dept  %></p>
+          <p>Email : <%= session.Email  %></p>
+ 
+    </div>
+    </div>
+   
+</div>
+ 
+ 
+    <div id="userInfoBlur" class="row m-0">
+ 
+      <div class="col-md-1">
+       
+      </div>
+      <div class="col-md-8">
+          <div class="row " id="tUserInfo" style="background-color: rgba(211, 213, 213, 0.639);border: 1px solid black;border-radius: 6px;padding: 18px 25px;width: inherit;">
+            <div class="col-md-4">
+              <img width="140px" height="170px" src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"/>
+            </div>
+            <div class="col-md-7">
+              <h2 style="font-weight: bold;letter-spacing: 2px;"><%= session.Name  %></h2>
+              <p >Employee_Id : <%= session.EmpId  %> </p>
+              <p>Department : <%= session.Dept  %> Consultant</p>
+              <p>Email : <%= session.Email  %></p>
+              
+                  <p>No.of Mock Taken: <%= element.Employee_Mock_Taken %> </p>
+                  <p>No.of Mock Given: <%= element.Employee_Mock_Given %> </p>
+                  <%
+                }
+              }) %>
+              </div>
+             
+          </div>
+      </div>
+      <div class="col-md-3">
+ 
+      </div>
+ 
+    </div>
+ 
+    <div id="adminNotification" >
+                <% if(message.length > 0){  %>
+                  <div class="alert alert-success" id="alert" style="margin-top: 10px;width:250px; margin: 50px auto;text-align: center;" role="alert">
+                    <%= message %>
+                  </div>
+                <% } %>
+    </div>
+ 
+<script>
+ 
+function ClicktoViewEm(id, index){
+  debugger
+ var sMockType =  document.getElementsByClassName('form_select_mockType')[index].value;
+ 
+  location.href= `/${sMockType}/${id}`;
+}
+ 
+                                    // search functionalities
+ 
+   const searchByEMPId = ()=>{
+    debugger
+    const searchbox = document.getElementById("SearchByEMPId").value
+    const storeitems = document.getElementById("RecordsTable")
+    const product = document.querySelectorAll(".searchbyID")
+    const pname = storeitems.getElementsByTagName("td")
+ 
+    for(var i=0;i<pname.length;i++){
+        let match = product[i].getElementsByTagName('td')[0]
+ 
+        if(match){
+           let textvalue = match.textContent || match.innerHTML
+ 
+           if(textvalue.toUpperCase().indexOf(searchbox)>-1){
+            product[i].style.display = "";
+           }else{
+            product[i].style.display = "none";
+           }
+ 
+        }
+    }
+}
+ 
+  const searchByEMPName = ()=>{
+    debugger
+  const searchbox = document.getElementById("SearchByEMPName").value.toUpperCase()
+  const storeitems = document.getElementById("RecordsTable")
+  const product = document.querySelectorAll(".searchbyName")
+  const pname = storeitems.getElementsByTagName("td")
+ 
+  for(var i=0;i<pname.length;i++){
+      let match = product[i].getElementsByTagName('td')[1]
+ 
+      if(match){
+         let textvalue = match.textContent || match.innerHTML
+ 
+         if(textvalue.toUpperCase().indexOf(searchbox)>-1){
+          product[i].style.display = "";
+         }else{
+          product[i].style.display = "none";
+         }
+ 
+      }
+  }
+}
+// *************************************************
+ 
+ 
+    function onReviewButton(event){
+      debugger
+      // event.preventDefault();
+      document.getElementById("bodyContainer").style.filter = 'blur(8px)';
+      document.getElementById("userInfoBlur").style.filter = 'blur(8px)';
+    document.getElementById("UserNotificationPopUp").style.display="none"
+    document.getElementById("Mode_of_review").style.display="block"
+ 
+    }
+   </script>
+   <script>
+ 
+    function displayEmpDetails(){
+      debugger
+      document.getElementById("bodyContainer").style.filter = 'blur(8px)';
+      document.getElementById("userInfoBlur").style.filter = 'blur(8px)';
+      document.getElementById('userReviewId').style.display= 'block';
+ 
+    }
+function closeEmpDetails(){
+  document.getElementById('userReviewId').style.display= 'none';
+  document.getElementById("bodyContainer").style.filter = 'blur(0px)'
+  document.getElementById("userInfoBlur").style.filter = 'blur(0px)';
+ 
+ 
+ 
+}
+    function AdminNotificationHide(){
+        debugger
+        var oContainer = document.getElementById('adminNotification');
+        setTimeout(()=>{
+            oContainer.style.display='none'
+        },5000)
+    }
+    AdminNotificationHide();
+ 
+    window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader");
+ 
+  loader.classList.add("loader--hidden");
+ 
+  loader.addEventListener("transitionend", () => {
+    document.body.removeChild(loader);
+  });
+});
+ 
+    </script>
+</body>
+</html>
+ 

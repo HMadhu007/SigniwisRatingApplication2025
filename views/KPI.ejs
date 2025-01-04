@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS-USER</title>
+    <script src="https://kit.fontawesome.com/e799d6a9ed.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../stylesheets/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+      body{
+        box-sizing: border-box;
+      }
+      .Mandatory{
+        margin: 50px;
+        color: red;
+        font-weight: bolder;
+      }
+      .borderDiv{
+        /* border: 1px rgb(104, 99, 99) solid; */
+       
+       
+      }
+      .borderDiv h4{
+        text-align: center;
+      }
+      .row{
+        margin-top: 5px;
+      }
+      .form-group {
+        padding-left: 80px;
+      }
+      #kpiTable{
+        margin-left: 200px;
+      }
+      #kpiTable td input{
+        margin-left: 20px;
+        margin-top: 10px;
+        box-shadow: 5px 5px 5px rgb(141, 141, 149);
+      }
+
+
+     
+       
+     
+    </style>
+ 
+  </head>
+<body>
+ 
+  <div class="loader"></div>
+ 
+ 
+  <!-- ****************** navigation *********************** -->
+ 
+ 
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/admin">
+      <img src="../images/logo.jpg" alt="" height="90px" width="150px" style="margin-left: 10px;">
+       
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- <div class="row"> -->
+          <div class="col-md-10" >
+            <div class="row">
+              <div class="col-md-2"></div>
+              <div class="col-md-8">
+            <h2 id="orgTitle" style="color:rgb(34, 155, 199) ;">--Rating Application--</h2>
+ 
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+ 
+          </div>
+          <div class="col-md-2">
+            <a href="../home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+ 
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </nav>
+    <!-- ***************************** Reviewer Popup ***************************** -->
+
+ <!-- <div id="Reviewer-Popup" style="padding-top: 2%;"> -->
+  
+
+
+  <div id="Candidate-Container" style="display: flex;justify-content: center;gap: 16%;" >
+    <%
+   
+    singleUserData.forEach((data)=>{
+          
+          
+
+  %>
+    <div><img width="160px" height="170px" src="data:image/png;base64,<%= data.IMG_file %>""></div>
+    
+  
+
+              <div><p><span style="font-weight: bold;">Emp_Id</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= data.Employee_Id %> </p><p><span style="font-weight: bold;">Name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= data.Employee_Name %></p><p> <span style="font-weight: bold;">Department</span> &nbsp;:  &nbsp;<%= data.Employee_Department %></p></div>
+              <div><p> <span style="font-weight: bold;">Mail_Id</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;<%= data.Employee_Email %></p></div>
+
+  <%
+          
+})
+  %>
+ 
+
+          
+     
+    
+    
+    
+  </div>
+
+   
+    <div id="review-details-container">
+    
+ 
+      <!-- *****************************Review Table***************************************     -->
+ 
+     
+      <form >
+      </form>
+      <hr>
+
+      <form class="borderDiv" id="KPI_Form" action="/KPI/ratings/<%= singleUserData[0].Employee_Id %>" method="post" >
+        <!-- <h4>Training and Learning</h4><br> -->
+        <div>
+          <%
+          if(KPIData1.length > 0){
+            KPIData1.forEach((data)=>{
+  
+              %>
+          <div class="form-group row" >
+            <label for="inputPassword" class="col-sm-5 col-form-label"><%= data.review_points %></label>
+            <div class="col-sm-3">
+              <input type="text" class="form-control" id="CTCinputPassword2" name="<%= data.employee_review_val %>" placeholder="">
+            </div>
+          </div>
+          <% })
+        }
+      %>
+        
+
+      </div>
+       
+     
+   
+          <div style="text-align: center;">
+            <input class="btn btn-primary" type="submit" value="Submit1" id="kpiSubmitId"  />
+          </div>
+        </form>
+        <Button onclick="quterlyKPISection()" id="QuaterlyKPIBtn"> Quterly KPI Review</Button>
+        
+        <!-- <form id="quaterlyReviewSection" action="/KPI/quterlyKPI/<%= singleUserData[0].Employee_Id %>" method="post" enctype="multipart/form-data" class="borderDiv" style="display: none;">
+          <table class="form-group row">
+            <thead>
+              <tr>
+                <th>KPI Piont</th><th>Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% 
+           kpi1TableData.forEach((data)=>{
+            for(const key in data){              
+              if(data[key] !== null){
+                %> 
+            <tr>
+              <td class="col-sm-5 col-form-label"><%= key %> </td>
+
+               <td><input type="text" id="<%= key %>_Id" class="col-sm-3 form-control" placeholder="<%= data[key ]%>" name="<%= key %>_Name" ></td>
+                <%
+              }
+            
+              }
+           })
+             %>
+          </tr>
+            </tbody>
+          </table>          
+           <div style="text-align: center;">
+            <input class="btn btn-primary" type="submit" value="Submit" id="kpiReviewPointSubmitBtn"  />
+          </div>
+        </form> -->
+        <form method="post" action="/KPI/kpiUpload"  id="kpiUpload" style="display: none;">
+          <%
+            console.log("guru",kpi1TableData)
+            let tabledata=kpi1TableData[0]
+            
+          %>
+          
+          
+          <table id="kpiTable">
+            <tr >
+              <td>
+                <label for="">Appreciation from the Client:</label>
+              </td>
+              <td>
+                <input type="text" name="CF_Appreciate_Mail_Client" placeholder="Mail From the Client" id=""  style="width: 400px;text-align: center;"  <%= tabledata.CF_Appreciate_Mail_Client==='REQUEST'?'enabled':'readonly' %>  />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label >Project Release Feedback</label>
+              </td>
+              <td>
+                <input type="text" name="CF_Project_Release_Feedb" placeholder="Project Release Feedback" id="" style="width: 400px;text-align: center;"  <%= tabledata.CF_Project_Release_Feedb==='REQUEST'?'enabled':'readonly' %> /> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Sessions Given On Saturday</label>
+              </td>
+              <td>
+                <input  type="text" name="TMS_Session_On_Sat" placeholder=" Sessions Given On Saturday" id="" style="width: 400px;text-align: center;"  required="true"  <%= tabledata.TMS_Session_On_Sat==='REQUEST'?'enabled':'readonly' %>  /> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Number of Leave taken</label>
+              </td>
+              <td>
+                <input  type="text"  name="CTC_Num_Leave_Taken" placeholder=" Number of Leave taken" id="" style="width: 400px;text-align: center;"  required <%= tabledata.CTC_Num_Leave_Taken==='REQUEST'?'enabled':'readonly' %>  /> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Reviewer Name</label>
+              </td>
+              <td>
+                <input required type="text" name="Reviewer_Name" placeholder=" Reviewer Name" id="" value="<%= tabledata.Reviewer_Name%>" style="width: 400px;text-align: center;"   <%= tabledata.Reviewer_Name==='REQUEST'?'enabled':'readonly' %>  /> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Reviewer ID</label>
+              </td>
+              <td>
+                <input required type="text" name="ReviewerId" placeholder=" Reviewer ID" id="" style="width: 400px;text-align: center;" value="<%= tabledata.ReviewerId%>"   <%= tabledata.ReviewerId ==='REQUEST'?'enabled':'readonly' %> /> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Employee ID</label>
+              </td>
+              <td>
+                <input required type="text" name="Emp_Id" placeholder="Employee ID" id="" style="width: 400px;text-align: center;" value="<%= tabledata.Emp_Id%>"   <%= tabledata.Emp_Id==='REQUEST'?'enabled':'readonly' %> /> <br>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Company Growth</label>
+              </td>
+              <td>
+                <input required type="text" name="CTC_Company_Growth" placeholder=" Company Growth" id="" style="width: 400px;text-align: center;"   <%= tabledata.CTC_Company_Growth==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Information from HR</label>
+              </td>
+              <td>
+                <input required type="text" name="HRF_Emp_Need_Inform_HR" placeholder=" Information From HR" id="ggggg" style="width: 400px;text-align: center;"   <%= tabledata.HRF_Emp_Need_Inform_HR==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Available Attendence :-</label>
+              </td>
+              <td>
+                <input required type="text" name="HRF_Reg_Avail_Attendance" placeholder="Available Attendence" id="" style="width: 400px;text-align: center;"   <%= tabledata.HRF_Reg_Avail_Attendance==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Number of Sessions Taken in Year :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TMS_Taken_Session_Year" placeholder="Number of Sessions taken in Year" id="" style="width: 400px;text-align: center;"   <%= tabledata.TMS_Taken_Session_Year==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Train Two Candidates</label>
+              </td>
+              <td>
+                <input required type="text" name="TMS_Train_Two_Candidates" placeholder="Train Two Dandidates" id="" style="width: 400px;text-align: center;"   <%= tabledata.TMS_Train_Two_Candidates==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Documents Prepared for New Topics :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TL_Documents_New_Topics" placeholder="Documents Prepared for New Topics" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Documents_New_Topics==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Learning New Topics In a Year :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TL_Two_Topics_Year" placeholder="Learning New Topics in Year" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Two_Topics_Year==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Blogs Published :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TL_Publish_Blogs" placeholder="Blogs Published" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Publish_Blogs==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Mock Performance :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TL_Performance_Mock" placeholder="Mock Performance" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Performance_Mock==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Learning Advance Concepts in Fiori :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TL_Adv_Concept_Fiori" placeholder="Advance Concepts in Fiori" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Adv_Concept_Fiori==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">Time Taken To Complete Training :-</label>
+              </td>
+              <td>
+                <input required type="text" name="TL_Complete_Training" placeholder="Time Taken To Complete Training" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Complete_Training==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="">KPI ID :-</label>
+              </td>
+              <td>
+                <input required type="text" name="KPI_UId"  placeholder="KPI ID" id="" style="width: 400px;text-align: center;" value="<%= tabledata.KPI_UId %>"  <%= tabledata.KPI_UId==='REQUEST'?'enabled':'readonly' %> /> <br> 
+              </td>
+            </tr>
+            <!-- <tr>
+              <td>
+                <button type="submit">Submit KPI Rating</button>
+              </td>
+            </tr> -->
+          </table>
+          <div style="padding-left: 25%; padding-top: 2%;">
+            <button type="submit" style="background-color: rgb(58, 137, 255); border: none; color: blanchedalmond;">Submit KPI Rating</button>
+          </div>
+
+        </form>
+      <!-- <form action="KPI/KPI">
+          <div class="form-group row" >
+            <label for="inputPassword" class="col-sm-5 col-form-label">Number of leaves taken</label>
+            <div class="col-sm-3">
+              <input type="password" class="form-control" id="CTCinputPassword2" name="CTC_Num_Leave_Taken" placeholder="Password">
+            </div>
+          </div>
+
+          <div style="text-align: center;">
+            <input type="submit" value="Submit" onclick="handleSubmit()" />
+          </div>
+      </form> -->
+      <br>
+    <!-- <div class="table-responsive">
+        <h1>Contribution towards Company</h1>
+        <h6>Contribution for Company growth</h6>
+        <h6>Number of leaves taken</h6>
+    </div> -->
+      <div class="mt-4 mb-3">
+        <div class="row m-0">
+          <div class="col-md-1"></div>
+          <!-- <div class="col-md-4">
+            <div id="Reviewer-comments-area">
+              <div>
+                <span class="Mandatory">* </span>  
+                <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
+                <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
+              </div>
+            </div>
+          </div> -->
+          <div class="col-md-4">
+         
+            <% if(message.length > 0){  %>
+              <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+              <div class="alert alert-success" id="alert" style="text-align: center;margin: 5px auto;" role="alert">
+                <%= message %>
+              </div>
+            <% } %>
+           
+          </div>
+          <div class="col-md-3">
+           
+              <!-- <div >
+                <span class="Mandatory">* </span>
+                <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;" readonly>
+                <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div> -->
+              <!-- <div>
+                  <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
+             
+              </div> -->
+           
+          </div>
+           
+          <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
+         
+          </div>
+          </div>
+        </div>
+      </div>  
+     <!-- <div style="display: flex;justify-content: space-around;margin-top: 10px;width: 100%;align-items: center;gap: 50%;margin-top: 2%;">
+      <div id="Reviewer-comments-area">
+        <div>
+          <span class="Mandatory">* </span>  
+          <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
+          <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
+        </div>
+      </div> -->
+ 
+      <!-- <div >
+        <div style="margin-bottom: 25px;">
+          <span class="Mandatory">* </span>
+          <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;">
+          <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div>
+        <div>
+            <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
+        </form></div>
+      </div>
+     </div> -->
+     
+     <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
+   
+    <!-- </div> -->
+  </div>
+  <div id="adminNotification">
+   
+  </div>
+ 
+ 
+ <script>
+      // function for hover effect
+
+      // document.getElementById("quaterlyReviewSection").style.display="none"
+      function quterlyKPISection() {
+        if (document.getElementById("kpiUpload").style.display="none"){
+          document.getElementById("kpiUpload").style.display="block"
+          debugger
+          document.getElementById("QuaterlyKPIBtn").style.display='none'
+        }else{
+          debugger
+          document.getElementById("kpiUpload").style.display="none"
+          document.getElementById("QuaterlyKPIBtn").style.display='block'
+        }
+      }
+
+      function quertlyTypeSelecion(params) {
+        
+      }
+ 
+      var coll = document.getElementsByClassName("collapsible");
+var i;
+ 
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+ 
+ 
+  function onChange1(){
+    debugger
+    var Job_Knowladge_comm = document.getElementById("Job_Knowladge_comm");
+    var Work_Quality_comm = document.getElementById("work_comm");
+    var Attendance_Punctuality_comm = document.getElementById("attendance_comm");
+      var productivity_comm = document.getElementById("productivity_comm");
+      var skill_comm = document.getElementById("skill_comm");
+      var behaviour_comm = document.getElementById("behaviour_comm");
+ 
+ 
+    if(Job_Knowladge_comm.style.border == '2px solid red'){
+      Job_Knowladge_comm.style.border = '2px solid black'
+    } else if(work_comm.style.border == '2px solid red'){
+      work_comm.style.border = '2px solid black'
+    } else if(Attendance_Punctuality_comm.style.border == '2px solid red'){
+      Attendance_Punctuality_comm.style.border = '2px solid black'
+    } else if(productivity_comm.style.border == '2px solid red'){
+      productivity_comm.style.border = '2px solid black'
+    } else if(skill_comm.style.border == '2px solid red'){
+      skill_comm.style.border = '2px solid black'
+    } else if(behaviour_comm.style.border == '2px solid red'){
+      behaviour_comm.style.border = '2px solid black'
+    }
+  }
+ 
+function onChange(){
+  debugger
+   var ijobValue = parseInt(document.getElementById("job").value);
+   var iWorkValue =   parseInt(document.getElementById("work").value);
+   var iProductivityValue =   parseInt(document.getElementById("productivity").value);
+   var iattendanceValue =   parseInt(document.getElementById("attendance").value);
+   var iSkillValue =   parseInt(document.getElementById("skill").value);
+   var ibehaviourValue =   parseInt(document.getElementById("behaviour").value);
+   
+ 
+ 
+    var iavgValue = (ijobValue + iWorkValue + iProductivityValue + iattendanceValue + iSkillValue + ibehaviourValue)/60*10;
+   
+    document.getElementById("idOverall_Ratings").value= iavgValue.toFixed(1);;
+    // document.getElementById("job").value;
+ 
+ 
+ 
+}
+ 
+ 
+
+
+
+function onChangeKPI(){
+    debugger
+    var sTL_Complete_Training = document.getElementById('TLinput1')
+      var sTL_Adv_Concept_Fiori = document.getElementById('TLinput2')
+      var sTL_Performance_Mock = document.getElementById('TLinput3')
+      var sTL_Publish_Blogs = document.getElementById('TLinput4')
+      var sTL_Two_Topics_Year = document.getElementById('TLinput5')
+      var TL_Reg_Avail_Attendance = document.getElementById('TLinput6')
+      var sTL_Documents_New_Topics = document.getElementById('TLinput7')
+ 
+      var sTMS_Train_Two_Candidates = document.getElementById('TMSinput1')
+      var sTMS_Taken_Session_Year = document.getElementById('TMSinput2')
+      var sTMS_Session_On_Sat = document.getElementById("TMSinput3");
+ 
+      var sHRF_Reg_Avail_Attendance = document.getElementById("HRFinput1");
+      var sHRF_Emp_Need_Inform_HR = document.getElementById("HRFinput2");
+ 
+      var sCF_Appreciate_Mail_Client = document.getElementById("CFinput1");
+      var sCF_Project_Release_Feedb = document.getElementById("CFinput2");
+ 
+      var sCTC_Company_Growth = document.getElementById("CTCinput1");
+      var sCTC_Num_Leave_Taken = document.getElementById("CTCinput2");
+ 
+ 
+    if(sTL_Complete_Training.style.border == '2px solid red'){
+      sTL_Complete_Training.style.border = '2px solid black'
+    } else if(sTL_Adv_Concept_Fiori.style.border == '2px solid red'){
+      sTL_Adv_Concept_Fiori.style.border = '2px solid black'
+    } else if(sTL_Performance_Mock.style.border == '2px solid red'){
+      sTL_Performance_Mock.style.border = '2px solid black'
+    } else if(sTL_Publish_Blogs.style.border == '2px solid red'){
+      sTL_Publish_Blogs.style.border = '2px solid black'
+    } else if(sTL_Two_Topics_Year.style.border == '2px solid red'){
+      sTL_Two_Topics_Year.style.border = '2px solid black'
+    } else if(TL_Reg_Avail_Attendance.style.border == '2px solid red'){
+      TL_Reg_Avail_Attendance.style.border = '2px solid black'
+    }else if(sTL_Documents_New_Topics.style.border == '2px solid red'){
+      sTL_Documents_New_Topics.style.border = '2px solid black'
+ 
+    } else if(sTMS_Train_Two_Candidates.style.border == '2px solid red'){
+      sTMS_Train_Two_Candidates.style.border = '2px solid black'
+    } else if(sTMS_Taken_Session_Year.style.border == '2px solid red'){
+      sTMS_Taken_Session_Year.style.border = '2px solid black'
+    } else if(sTMS_Session_On_Sat.style.border == '2px solid red'){
+      sTMS_Session_On_Sat.style.border = '2px solid black'
+    }
+   
+    else if(sHRF_Reg_Avail_Attendance.style.border == '2px solid red'){
+      sHRF_Reg_Avail_Attendance.style.border = '2px solid black'
+    }
+    else if(sHRF_Emp_Need_Inform_HR.style.border == '2px solid red'){
+      sHRF_Emp_Need_Inform_HR.style.border = '2px solid black'
+    }
+   
+    else if(sCF_Appreciate_Mail_Client.style.border == '2px solid red'){
+      sCF_Appreciate_Mail_Client.style.border = '2px solid black'
+    } else if(sCF_Project_Release_Feedb.style.border == '2px solid red'){
+      sCF_Project_Release_Feedb.style.border = '2px solid black'
+    }
+   
+    else if(sCTC_Company_Growth.style.border == '2px solid red'){
+      sCTC_Company_Growth.style.border = '2px solid black'
+    } else if(sCTC_Num_Leave_Taken.style.border == '2px solid red'){
+      sCTC_Num_Leave_Taken.style.border = '2px solid black'
+    }
+
+  }
+
+
+
+
+
+
+  function handleSubmitKPI(){
+      debugger
+      // Fetching data
+      var sTL_Complete_Training = document.getElementById('TLinput1')
+      var sTL_Adv_Concept_Fiori = document.getElementById('TLinput2')
+      var sTL_Performance_Mock = document.getElementById('TLinput3')
+      var sTL_Publish_Blogs = document.getElementById('TLinput4')
+      var sTL_Two_Topics_Year = document.getElementById('TLinput5')
+      var TL_Reg_Avail_Attendance = document.getElementById('TLinput6')
+      var sTL_Documents_New_Topics = document.getElementById('TLinput7')
+ 
+      var sTMS_Train_Two_Candidates = document.getElementById('TMSinput1')
+      var sTMS_Taken_Session_Year = document.getElementById('TMSinput2')
+      var sTMS_Session_On_Sat = document.getElementById("TMSinput3");
+ 
+      var sHRF_Reg_Avail_Attendance = document.getElementById("HRFinput1");
+      var sHRF_Emp_Need_Inform_HR = document.getElementById("HRFinput2");
+ 
+      var sCF_Appreciate_Mail_Client = document.getElementById("CFinput1");
+      var sCF_Project_Release_Feedb = document.getElementById("CFinput2");
+ 
+      var sCTC_Company_Growth = document.getElementById("CTCinput1");
+      var sCTC_Num_Leave_Taken = document.getElementById("CTCinput2");
+     
+ 
+ 
+      document.getElementById('KPI_Form').addEventListener('submit',(e)=>{
+        e.preventDefault()
+      });
+ 
+       
+      if(
+      sTL_Complete_Training.value == '' || sTL_Adv_Concept_Fiori.value =='' || sTL_Performance_Mock.value==''||
+      sTL_Publish_Blogs.value=='' || sTL_Two_Topics_Year.value == '' || TL_Reg_Avail_Attendance.value =='' || sTL_Documents_New_Topics.value == '' ||
+ 
+      sTMS_Train_Two_Candidates.value == '' || sTMS_Taken_Session_Year.value == '' || sTMS_Session_On_Sat.value == '' ||
+ 
+      sHRF_Reg_Avail_Attendance.value == '' || sHRF_Emp_Need_Inform_HR.value == '' ||
+ 
+      sCF_Appreciate_Mail_Client.value == ''  || sCF_Project_Release_Feedb.value == ''  ||
+      sCTC_Company_Growth.value == ''   || sCTC_Num_Leave_Taken.value == ''
+      ){
+        var aLoopArr =  [sTL_Complete_Training , sTL_Adv_Concept_Fiori , sTL_Performance_Mock ,
+      sTL_Publish_Blogs , sTL_Two_Topics_Year , TL_Reg_Avail_Attendance , sTL_Documents_New_Topics ,
+ 
+      sTMS_Train_Two_Candidates , sTMS_Taken_Session_Year , sTMS_Session_On_Sat ,
+ 
+      sHRF_Reg_Avail_Attendance , sHRF_Emp_Need_Inform_HR,
+ 
+      sCF_Appreciate_Mail_Client , sCF_Project_Release_Feedb ,
+      sCTC_Company_Growth ,  sCTC_Num_Leave_Taken];
+        for(let i = 0; i < aLoopArr.length; i++){
+          debugger
+          if(aLoopArr[i].value == ''){
+            aLoopArr[i].style.border = '2px solid red'
+          } else{
+            aLoopArr[i].style.border = '2px solid black'
+          }
+        }
+       
+ 
+ 
+ 
+      }
+      else{
+        // document.getElementById('Employee_Feedback').addEventListener('submit',(e)=>{
+        //   e.submitter()
+        // })
+        document.getElementById('KPI_Form').submit();
+      }
+    }
+    window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader");
+ 
+  loader.classList.add("loader--hidden");
+ 
+  loader.addEventListener("transitionend", () => {
+    document.body.removeChild(loader);
+  });
+});
+
+
+
+
+
+
+
+ </script>
+</body>
+
+</html>

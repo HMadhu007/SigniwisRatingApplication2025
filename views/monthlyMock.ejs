@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS-USER</title>
+    <script src="https://kit.fontawesome.com/e799d6a9ed.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="../stylesheets/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+      .Mandatory{
+        color: red;
+        font-weight: bolder;
+      }
+     
+    </style>
+ 
+  </head>
+<body>
+ 
+  <div class="loader"></div>
+ 
+ 
+  <!-- ****************** navigation *********************** -->
+ 
+ 
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/admin">
+      <img src="../images/logo.jpg" alt="" height="90px" width="150px" style="margin-left: 10px;">
+       
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- <div class="row"> -->
+          <div class="col-md-10" >
+            <div class="row">
+              <div class="col-md-2"></div>
+              <div class="col-md-8">
+            <h2 id="orgTitle" style="color:rgb(34, 155, 199) ;">--Rating Application--</h2>
+ 
+              </div>
+              <div class="col-md-2"></div>
+            </div>
+ 
+          </div>
+          <div class="col-md-2">
+            <a href="../home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+ 
+          </div>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </nav>
+    <!-- ***************************** Reviewer Popup ***************************** -->
+ 
+ <div id="Reviewer-Popup" style="padding-top: 2%;">
+    <div id="Candidate-Container" style="display: flex;justify-content: center;gap: 16%;" >
+      <%
+      singleUserData.forEach((data)=>{
+ 
+            if(data.Employee_Id == title)
+            {
+ 
+    %>
+      <div><img width="160px" height="170px" src="data:image/png;base64,<%= data.IMG_file %>""></div>
+     
+   
+ 
+                <div><p><span style="font-weight: bold;">Emp_Id</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= data.Employee_Id %> </p><p><span style="font-weight: bold;">Name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= data.Employee_Name %></p><p> <span style="font-weight: bold;">Department</span> &nbsp;:  &nbsp;<%= data.Employee_Department %></p></div>
+                <div><p> <span style="font-weight: bold;">Mail_Id</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;<%= data.Employee_Email %></p><p> <span style="font-weight: bold;">Designation</span>&nbsp; :  &nbsp;<%= data.Employee_Designation %></p></div>
+ 
+    <%
+            }
+   
+            })
+    %>
+   
+ 
+           
+       
+     
+     
+     
+    </div>
+ 
+    <div id="review-details-container">
+      <!-- <span style="text-align: center;">Review</span>
+      <h1 style="text-align: center; display: inline;">Review hhh</h1>
+      <span><i class="fa-solid fa-info"></i></span> -->
+      <div class="heder-info" style="width: 50%; display: flex;justify-content: space-between;margin-left: 40%;position: relative;">
+        <h1 style="text-align: center;">Review</h1>
+        <!-- <div>
+        <span onclick="" class="hover-affect"><i style="background-color: rgba(0, 255, 255, 0.347);padding: 10px;border-radius: 50%;font-size: 90;color:rgb(34, 155, 199)"  class="fa-solid fa-info"></i></span>
+        <div  >
+          <span>Points are counted out of 10</span>
+          <ul class="info-content ratingpoints" style="position: absolute;background-color: rgb(178, 255, 255); color: rgb(34, 155, 199); left: 73%;padding: 10px; border-bottom-left-radius:25px ; border-top-left-radius: 25px; border-bottom-right-radius: 25px;">
+            <li> Poor is '<'5 </li>
+            <li> Fair is 6</li>
+            <li> Satisfactory is 7</li>
+            <li> Good is 8</li>
+            <li> Excellent is 9</li>
+ 
+          </ul>
+ 
+        </div>
+      </div> -->
+ 
+      <button type="button" class="collapsible" ><i style="background-color: #0060ff ;padding: 10px;border-radius: 50%;font-size: 90;color:white"  class="fa-solid fa-info"></i></button>
+<div class="content">
+  <p style="background-color: antiquewhite;width: 100%;color: rgb(34, 155, 199);padding: 5px;border-radius: 3px;">Note!! Points are calculated Out of 10 points</p>
+  <p>Poor is '<'5</p>
+  <p>Fair is 6</p>
+  <p> Satisfactory is 7</p>
+  <p>good is 8</p>
+  <p>Excellent is 9</p>
+</div>
+ 
+      </div>
+     
+        <form method="POST" id="Employee_Feedback" action="/Employee_review/review" >
+ 
+      <!-- *****************************Review Table***************************************     -->
+      <div class="table-responsive">
+        <table border="1px" style="width: 100%;text-align: center;">
+          <tr>
+            <td><p>Job Knowladge  <span class="Mandatory">*</span></p></td>
+            <td><select name="Job_Knowladge" id="job" onchange="onChange()" aria-placeholder="select" style="width: 150px; margin-top: 10px;">
+              <option value=0>--Select--</option>
+              <option value=0>Very Poor</option>
+              <option value=2>Poor</option>
+              <option value=4>Fair</option>
+              <option value=8>Satisfactory</option>
+              <option value=8>Good</option>
+              <option value=10>Excellent</option>
+            </select>
+            <p id="Job_Knowladge_Error" style="visibility: hidden;margin-top: 8px;">err</p>
+          </td>
+            <td>
+              <div><input id="Job_Knowladge_comm" type="text" name="Job_Knowladge_comm" placeholder="Comments on Job Knowladge " style="width: 300px;height: 40px;text-align: center;" onchange="onChange1()" />
+              </div>
+              <div>
+                <label id="Job_Knowladge_comm_err_text">Text should be 10 to 50 characters.</label>
+              </div>
+            </td>
+ 
+          </tr>
+       
+          <tr>
+            <td><p>Work Quality  <span class="Mandatory">*</span></p></td>
+            <td><select name="Work_Quality" id="work" aria-placeholder="select" onchange="onChange()" style="width: 150px;margin-top: 10px;">
+              <option value=0>--Select--</option>
+              <option value=0>Very Poor</option>
+              <option value=2>Poor</option>
+              <option value=4>Fair</option>
+              <option value=8>Satisfactory</option>
+              <option value=8>Good</option>
+              <option value=10>Excellent</option>
+            </select>
+            <p id="Work_Quality_Error"  style="visibility: hidden;">err</p>
+          </td>
+            <td>
+              <div>
+               <input id="work_comm" type="text" name="Work_Quality_comm" placeholder="Comments on Work Quality" style="width: 300px;height: 40px;text-align: center;" onchange="onChange1()">
+              </div>
+              <div>
+                <label id="work_comm_err_text">Text should be 10 to 50 characters.</label>
+              </div>
+            </td>
+          </tr>
+     
+          <tr>
+            <td><p>Attendance/Punctuality  <span class="Mandatory">*</span></p></td>
+            <td><select name="Attendance_Punctuality" id="attendance" onchange="onChange()"  aria-placeholder="select" style="width: 150px;margin-top: 10px;">
+              <option value=0>--Select--</option>
+              <option value=0>Very Poor</option>
+              <option value=2>Poor</option>
+              <option value=4>Fair</option>
+              <option value=8>Satisfactory</option>
+              <option value=8>Good</option>
+              <option value=10>Excellent</option>
+            </select>
+            <p id="Attendance_Punctuality_Error" style="visibility: hidden;">err</p></td>
+            <td>
+              <div>
+                <input type="text" id="attendance_comm" name="Attendance_Punctuality_comm" placeholder="Comments on Attendance/Punctuality" style="width: 300px;height: 40px;text-align: center;" onchange="onChange1()">
+              </div>
+              <div>
+                <label id="attendance_comm_err_text">Text should be 10 to 50 characters.</label>
+              </div>
+            </td>
+          </tr>
+     
+          <tr>
+            <td><p>Productivity  <span class="Mandatory">*</span></p></td>
+            <td><select name="Productivity" id="productivity" onchange="onChange()"  aria-placeholder="select" style="width: 150px;margin-top: 10px;">
+              <option value=0>--Select--</option>
+              <option value=0>Very Poor</option>
+              <option value=2>Poor</option>
+              <option value=4>Fair</option>
+              <option value=8>Satisfactory</option>
+              <option value=8>Good</option>
+              <option value=10>Excellent</option>
+            </select><p id="Productivity_Error" style="visibility: hidden;">err</p></td>
+            <td>
+              <div>
+                <input type="text" id="productivity_comm" name="Productivity_comm" placeholder="Comments on Productivity" style="width: 300px;height: 40px;text-align: center;" onchange="onChange1()">
+              </div>
+              <div>
+                <label id="productivity_comm_err_text">Text should be 10 to 50 characters.</label>
+              </div>
+            </td>
+          </tr>
+       
+          <tr>
+            <td><p>Communication/listening skill  <span class="Mandatory">*</span></p></td>
+             <td><select name="Communication_listening_Skill" id="skill" onchange="onChange()" aria-placeholder="select" style="width: 150px;margin-top: 10px;">
+              <option value=0>--Select--</option>
+              <option value=0>Very Poor</option>
+              <option value=2>Poor</option>
+              <option value=4>Fair</option>
+              <option value=8>Satisfactory</option>
+              <option value=8>Good</option>
+              <option value=10>Excellent</option>
+            </select><p id="Communication_listening_Skill_Error" style="visibility: hidden;">err</p></td>
+            <td>
+              <div>
+                <input type="text" id="skill_comm" name="Communication_listening_Skill_comm"  placeholder="Comments on Communication/listening skill" style="width: 300px;height: 40px;text-align: center;" onchange="onChange1()">
+              </div>
+              <div>
+                <label id="skill_comm_err_text">Text should be 10 to 50 characters.</label>
+              </div>
+            </td>
+          </tr>
+     
+          <tr>
+            <td><p>Behaviour  <span class="Mandatory">*</span></p></td>
+            <td><select name="Behaviour" id="behaviour" onchange="onChange()" aria-placeholder="select" style="width: 150px;margin-top: 10px;">
+              <option value=0>--Select--</option>
+              <option value=0>Very Poor</option>
+              <option value=2>Poor</option>
+              <option value=4>Fair</option>
+              <option value=8>Satisfactory</option>
+              <option value=8>Good</option>
+              <option value=10>Excellent</option>
+            </select><p id="Behaviour_Error" style="visibility: hidden;">err</p></td>
+            <td>
+              <div>
+                <input type="text" name="Behaviour_comm" id="behaviour_comm" placeholder="Comments on Behaviour" style="width: 300px;height: 40px;text-align: center;" onchange="onChange1()">
+              </div>
+              <div>
+                <label id="Behaviour_comm_err_text">Text should be 10 to 50 characters.</label>
+              </div>
+            </td>
+          </tr>
+         
+          </table>
+      </div>
+     
+      <div class="mt-4 mb-3">
+        <div class="row m-0">
+          <div class="col-md-1"></div>
+          <div class="col-md-4">
+            <div id="Reviewer-comments-area">
+              <div>
+                <span class="Mandatory">* </span>  
+                <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
+                <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+         
+            <% if(message.length > 0){  %>
+              <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+              <div class="alert alert-success" id="alert" style="text-align: center;margin: 5px auto;" role="alert">
+                <%= message %>
+              </div>
+            <% } %>
+           
+          </div>
+          <div class="col-md-3">
+           
+              <div >
+                <span class="Mandatory">* </span>
+                <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;" readonly>
+                <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div>
+              <div>
+                  <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
+             
+              </div>
+           
+          </div>
+           
+          <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
+         
+          </div>
+          </div>
+        </div>
+      </div>  
+     <!-- <div style="display: flex;justify-content: space-around;margin-top: 10px;width: 100%;align-items: center;gap: 50%;margin-top: 2%;">
+      <div id="Reviewer-comments-area">
+        <div>
+          <span class="Mandatory">* </span>  
+          <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
+          <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
+        </div>
+      </div> -->
+ 
+      <!-- <div >
+        <div style="margin-bottom: 25px;">
+          <span class="Mandatory">* </span>
+          <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;">
+          <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div>
+        <div>
+            <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
+        </form></div>
+      </div>
+     </div> -->
+     
+     <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
+   
+    <!-- </div> -->
+  </div>
+  <div id="adminNotification">
+   
+  </div>
+ 
+ 
+ <script>
+      // function for hover effect
+ 
+      var coll = document.getElementsByClassName("collapsible");
+var i;
+var validation=false;
+ 
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+ 
+ 
+  function onChange1(){
+    debugger
+    var Job_Knowladge_comm = document.getElementById("Job_Knowladge_comm");
+    var Work_Quality_comm = document.getElementById("work_comm");
+    var Attendance_Punctuality_comm = document.getElementById("attendance_comm");
+    var productivity_comm = document.getElementById("productivity_comm");
+    var skill_comm = document.getElementById("skill_comm");
+    var behaviour_comm = document.getElementById("behaviour_comm");
+ 
+ 
+ 
+   
+ 
+ 
+    if(Job_Knowladge_comm.value.length<10 || Job_Knowladge_comm.value.length>50){
+      document.getElementById("Job_Knowladge_comm_err_text").style.visibility = 'visible'
+      }
+      else if(Work_Quality_comm.value.length<10 || Work_Quality_comm.value.length>50){
+        document.getElementById("work_comm_err_text").style.visibility = 'visible'
+        document.getElementById("Job_Knowladge_comm_err_text").style.visibility = 'hidden'
+      }
+      else if(Attendance_Punctuality_comm.value.length<10 || Attendance_Punctuality_comm.value.length>50){
+        document.getElementById("attendance_comm_err_text").style.visibility = 'visible'
+        document.getElementById("Job_Knowladge_comm_err_text").style.visibility = 'hidden'
+        document.getElementById("work_comm_err_text").style.visibility = 'hidden'
+ 
+     
+      }
+      else if(productivity_comm.value.length<10 || productivity_comm.value.length>50){
+        document.getElementById("productivity_comm_err_text").style.visibility = 'visible'
+        document.getElementById("Job_Knowladge_comm_err_text").style.visibility = 'hidden'
+        document.getElementById("work_comm_err_text").style.visibility = 'hidden'
+        document.getElementById("attendance_comm_err_text").style.visibility = 'hidden'
+ 
+        }
+        else if(skill_comm.value.length<10 || skill_comm.value.length>50){
+          document.getElementById("skill_comm_err_text").style.visibility = 'visible'
+          document.getElementById("Job_Knowladge_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("work_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("attendance_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("productivity_comm_err_text").style.visibility = 'hidden'
+ 
+        }
+        else if(behaviour_comm.value.length<10 || behaviour_comm.value.length>50){
+          document.getElementById("Behaviour_comm_err_text").style.visibility = 'visible'
+          document.getElementById("skill_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("Job_Knowladge_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("work_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("attendance_comm_err_text").style.visibility = 'hidden'
+          document.getElementById("productivity_comm_err_text").style.visibility = 'hidden'
+        }
+        else{
+           validation=true
+           document.getElementById("Behaviour_comm_err_text").style.visibility = 'hidden'
+        }
+   
+ 
+    if(Job_Knowladge_comm.style.border == '2px solid red'){
+      Job_Knowladge_comm.style.border = '2px solid black'
+    } else if(work_comm.style.border == '2px solid red'){
+      work_comm.style.border = '2px solid black'
+    } else if(Attendance_Punctuality_comm.style.border == '2px solid red'){
+      Attendance_Punctuality_comm.style.border = '2px solid black'
+    } else if(productivity_comm.style.border == '2px solid red'){
+      productivity_comm.style.border = '2px solid black'
+    } else if(skill_comm.style.border == '2px solid red'){
+      skill_comm.style.border = '2px solid black'
+    } else if(behaviour_comm.style.border == '2px solid red'){
+      behaviour_comm.style.border = '2px solid black'
+    }
+  }
+ 
+function onChange(){
+  debugger
+   var ijobValue = parseInt(document.getElementById("job").value);
+   var iWorkValue =   parseInt(document.getElementById("work").value);
+   var iProductivityValue =   parseInt(document.getElementById("productivity").value);
+   var iattendanceValue =   parseInt(document.getElementById("attendance").value);
+   var iSkillValue =   parseInt(document.getElementById("skill").value);
+   var ibehaviourValue =   parseInt(document.getElementById("behaviour").value);
+   
+ 
+ 
+    var iavgValue = (ijobValue + iWorkValue + iProductivityValue + iattendanceValue + iSkillValue + ibehaviourValue)/60*10;
+   
+    document.getElementById("idOverall_Ratings").value= iavgValue.toFixed(1);;
+    // document.getElementById("job").value;
+ 
+ 
+ 
+}
+ 
+    function handleSubmit(){
+   
+      debugger
+      // Fetching data
+      var Job_Knowladge = document.getElementById('job')
+      var Work_Quality = document.getElementById('work')
+      var Attendance_Punctuality = document.getElementById('attendance')
+      var Productivity = document.getElementById('productivity')
+      var Communication_listening_Skill = document.getElementById('skill')
+      var Behaviour = document.getElementById('behaviour')
+      var overAll_Ratings = document.getElementById('idOverall_Ratings')
+      var Overall_Feedback = document.getElementById('idOverall_Feedback')
+ 
+      var Job_Knowladge_comm = document.getElementById("Job_Knowladge_comm");
+      var Work_Quality_comm = document.getElementById("work_comm");
+      var Attendance_Punctuality_comm = document.getElementById("attendance_comm");
+      var productivity_comm = document.getElementById("productivity_comm");
+      var skill_comm = document.getElementById("skill_comm");
+      var behaviour_comm = document.getElementById("behaviour_comm");
+      // Fetching
+ 
+      //Fetching Error Fields
+      var Job_Knowladge_Error = document.getElementById('Job_Knowladge_Error')
+      var Work_Quality_Error = document.getElementById('Work_Quality_Error')
+      var Attendance_Punctuality_Error = document.getElementById('Attendance_Punctuality_Error')
+      var Productivity_Error = document.getElementById('Productivity_Error')
+      var Communication_listening_Skill_Error = document.getElementById('Communication_listening_Skill_Error')
+      var Behaviour_Error = document.getElementById('Behaviour_Error')
+      var Overall_Feedback_Error = document.getElementById('Overall_Feedback_Error')
+      var Overall_Ratings_Error = document.getElementById('Overall_Ratings_Error')
+ 
+ 
+     
+ 
+      document.getElementById('Employee_Feedback').addEventListener('submit',(e)=>{
+        e.preventDefault()
+      });
+      debugger
+      //Checking field are not empty
+      var emptyField = Job_Knowladge.value == '0' && Work_Quality.value =='0' && Attendance_Punctuality.value=='0'&&
+      Productivity.value=='0'&&Communication_listening_Skill.value == '0' && Behaviour.value =='0' && Job_Knowladge_comm.value == '' && Work_Quality_comm.value == '' && Attendance_Punctuality_comm.value == '' &&
+      productivity_comm.value == '' && behaviour_comm.value == '' && skill_comm.value == '';
+      // console.log(emptyField);
+      //Checking weather user has selected any option
+      var noSelect = Job_Knowladge.value == '--Select--' && Work_Quality.value =='--Select--' && Attendance_Punctuality.value=='--Select--'&&
+      Productivity.value=='--Select--'&&Communication_listening_Skill.value == '--Select--' && Behaviour.value =='--Select--' && overAll_Ratings.value =='' && Overall_Feedback.value ==''
+      // console.log(noSelect);
+      if(emptyField  || noSelect ){
+ 
+        debugger
+ 
+        Job_Knowladge_comm.style.border = "2px solid red";
+        Work_Quality_comm.style.border = "2px solid red";
+        Attendance_Punctuality_comm.style.border = "2px solid red";
+        productivity_comm.style.border = "2px solid red";
+        behaviour_comm.style.border = "2px solid red";
+        skill_comm.style.border = "2px solid red";
+ 
+ 
+        Job_Knowladge.style.border = "2px solid red";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'visible';
+        Job_Knowladge_Error.innerHTML = 'Select the value';
+ 
+ 
+        Work_Quality.style.border = "2px solid red";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'visible';
+        Work_Quality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Attendance_Punctuality.style.border = "2px solid red";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'visible';
+        Attendance_Punctuality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Productivity.style.border = "2px solid red";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'visible';
+        Productivity_Error.innerHTML = 'Select the value';
+ 
+ 
+        Communication_listening_Skill.style.border = "2px solid red";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'visible';
+        Communication_listening_Skill_Error.innerHTML = 'Select the value';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+ 
+ 
+ 
+      }else if(Job_Knowladge_comm.value == '' && Work_Quality_comm.value == '' &&  Attendance_Punctuality_comm.value == '' && behaviour_comm.value == '' && productivity_comm.value == '' && skill_comm.value == ''){
+        Job_Knowladge_comm.style.border = '2px solid red'
+        Work_Quality_comm.style.border = '2px solid red'
+        Attendance_Punctuality_comm.style.border = '2px solid red'
+        behaviour_comm.style.border = '2px solid red'
+        productivity_comm.style.border = '2px solid red'
+        skill_comm.style.border = '2px solid red'
+ 
+ 
+      }else if(Job_Knowladge_comm.value == '' || Work_Quality_comm.value == '' ||  Attendance_Punctuality_comm.value == '' || behaviour_comm.value == '' || productivity_comm.value == '' || skill_comm.value == ''){
+        debugger
+        var aLoopArr =  [Job_Knowladge_comm, Work_Quality_comm, Attendance_Punctuality_comm, behaviour_comm, productivity_comm, skill_comm];
+        for(let i = 0; i < aLoopArr.length; i++){
+          debugger
+          if(aLoopArr[i].value == ''){
+            aLoopArr[i].style.border = '2px solid red'
+          }
+        }
+       
+ 
+ 
+ 
+      }  else if(Work_Quality_comm.value == ''){
+        debugger
+        Work_Quality_comm.style.border = '2px solid red'
+       
+      } else if(Attendance_Punctuality_comm.value == ''){
+        debugger
+        Attendance_Punctuality_comm.style.border = '2px solid red'
+       
+      } else if(behaviour_comm.vlaue == ''){
+        debugger
+        behaviour_comm.style.border = '2px solid red'
+ 
+      } else if(productivity_comm.value == ''){
+        debugger
+        productivity_comm.style.border = '2px solid red'
+      } else if(skill_comm.value == ""){
+        debugger
+        skill_comm.style.border = '2px solid red'
+      }
+      else if (Job_Knowladge.value =='' || Job_Knowladge.value =='--Select--'){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+ 
+        Work_Quality.style.border = "2px solid red";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'visible';
+        Work_Quality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Attendance_Punctuality.style.border = "2px solid red";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'visible';
+        Attendance_Punctuality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Productivity.style.border = "2px solid red";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'visible';
+        Productivity_Error.innerHTML = 'Select the value';
+ 
+ 
+        Communication_listening_Skill.style.border = "2px solid red";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'visible';
+        Communication_listening_Skill_Error.innerHTML = 'Select the value';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+      }
+      else if(Work_Quality.value == '' || Work_Quality.value =='--Select--'){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+ 
+        Work_Quality.style.border = "2px solid red";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'visible';
+        Work_Quality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Attendance_Punctuality.style.border = "2px solid red";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'visible';
+        Attendance_Punctuality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Productivity.style.border = "2px solid red";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'visible';
+        Productivity_Error.innerHTML = 'Select the value';
+ 
+ 
+        Communication_listening_Skill.style.border = "2px solid red";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'visible';
+        Communication_listening_Skill_Error.innerHTML = 'Select the value';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+      }
+      else if(Attendance_Punctuality.value =='' || Attendance_Punctuality.value == '--Select--'){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+        Work_Quality.style.border = "1px solid black";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'hidden';
+ 
+        Attendance_Punctuality.style.border = "2px solid red";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'visible';
+        Attendance_Punctuality_Error.innerHTML = 'Select the value';
+ 
+ 
+        Productivity.style.border = "2px solid red";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'visible';
+        Productivity_Error.innerHTML = 'Select the value';
+ 
+ 
+        Communication_listening_Skill.style.border = "2px solid red";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'visible';
+        Communication_listening_Skill_Error.innerHTML = 'Select the value';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+      }
+      else if(Productivity.value =='' || Productivity.value =='--Select--'){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+        Work_Quality.style.border = "1px solid black";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'hidden';
+ 
+        Attendance_Punctuality.style.border = "1px solid black";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'hidden';
+ 
+ 
+        Productivity.style.border = "2px solid red";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'visible';
+        Productivity_Error.innerHTML = 'Select the value';
+ 
+ 
+        Communication_listening_Skill.style.border = "2px solid red";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'visible';
+        Communication_listening_Skill_Error.innerHTML = 'Select the value';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+ 
+      }
+      else if(Communication_listening_Skill.value =='' || Communication_listening_Skill.value=='--Select--'){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+        Work_Quality.style.border = "1px solid black";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'hidden';
+ 
+        Attendance_Punctuality.style.border = "1px solid black";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'hidden';
+ 
+ 
+        Productivity.style.border = "1px solid black";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'hidden';
+ 
+ 
+        Communication_listening_Skill.style.border = "2px solid red";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'visible';
+        Communication_listening_Skill_Error.innerHTML = 'Select the value';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+       
+      }
+      else if(Behaviour.value =='' || Behaviour.value =='--Select--'){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+        Work_Quality.style.border = "1px solid black";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'hidden';
+ 
+        Attendance_Punctuality.style.border = "1px solid black";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'hidden';
+ 
+ 
+        Productivity.style.border = "1px solid black";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'hidden';
+ 
+ 
+        Communication_listening_Skill.style.border = "1px solid black";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'hidden';
+ 
+ 
+        Behaviour.style.border = "2px solid red";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'visible';
+        Behaviour_Error.innerHTML = 'Select the value';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+ 
+      }
+      else if(Overall_Feedback.value == ''){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+        Work_Quality.style.border = "1px solid black";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'hidden';
+ 
+        Attendance_Punctuality.style.border = "1px solid black";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'hidden';
+ 
+ 
+        Productivity.style.border = "1px solid black";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'hidden';
+ 
+ 
+        Communication_listening_Skill.style.border = "1px solid black";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'hidden';
+ 
+ 
+        Behaviour.style.border = "1px solid black";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'hidden';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "2px solid red";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'visible';
+        Overall_Feedback_Error.innerHTML = 'Enter the Feedback';
+ 
+ 
+      }
+      else if(overAll_Ratings.value == ''){
+        debugger
+        Job_Knowladge.style.border = "1px solid black";
+        Job_Knowladge_Error.style.color = 'red';
+        Job_Knowladge_Error.style.visibility = 'hidden';
+ 
+        Work_Quality.style.border = "1px solid black";
+        Work_Quality_Error.style.color = 'red';
+        Work_Quality_Error.style.visibility = 'hidden';
+ 
+        Attendance_Punctuality.style.border = "1px solid black";
+        Attendance_Punctuality_Error.style.color = 'red';
+        Attendance_Punctuality_Error.style.visibility = 'hidden';
+ 
+ 
+        Productivity.style.border = "1px solid black";
+        Productivity_Error.style.color = 'red';
+        Productivity_Error.style.visibility = 'hidden';
+ 
+ 
+        Communication_listening_Skill.style.border = "1px solid black";
+        Communication_listening_Skill_Error.style.color = 'red';
+        Communication_listening_Skill_Error.style.visibility = 'hidden';
+ 
+ 
+        Behaviour.style.border = "1px solid black";
+        Behaviour_Error.style.color = 'red';
+        Behaviour_Error.style.visibility = 'hidden';
+ 
+        overAll_Ratings.style.border = "2px solid red";
+        Overall_Ratings_Error.style.color = 'red';
+        Overall_Ratings_Error.style.visibility = 'visible';
+        Overall_Ratings_Error.innerHTML = 'Enter the Ratings';
+ 
+        Overall_Feedback.style.border = "1px solid black";
+        Overall_Feedback_Error.style.color = 'red';
+        Overall_Feedback_Error.style.visibility = 'hidden';
+      }
+     
+      else{
+        debugger
+        // document.getElementById('Employee_Feedback').addEventListener('submit',(e)=>{
+        //   e.submitter()
+        // })
+        if(validation==true){
+          validation=false
+          document.getElementById('Employee_Feedback').submit();
+        }else{
+          alert("correct the details")
+          validation=false
+        }
+       
+      }
+    }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+    window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader");
+ 
+  loader.classList.add("loader--hidden");
+ 
+  loader.addEventListener("transitionend", () => {
+    document.body.removeChild(loader);
+  });
+});
+ </script>
+</body>
+</html>

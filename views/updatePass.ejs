@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS-ADMIN</title>
+    <script src="../javascripts/admin.js" ></script>
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/e799d6a9ed.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <style>
+      .mandatory{
+        color: red;
+        font-weight: bold;
+      }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/admin">
+          <img src="../images/images.png" alt="" height="90px" width="150px" style="margin-left: 10px;">
+            
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- <div class="row"> -->
+              <div class="col-md-10" >
+                <div class="row">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-8">
+                <h2 id="orgTitle">--SIGNIWIS TECHNOLOGIES--</h2>
+  
+                  </div>
+                  <div class="col-md-2"></div>
+                </div>
+  
+              </div>
+              <div class="col-md-2">
+                <a href="../home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+  
+              </div>
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
+    <div class="container">
+        <form id="updateEmpPass" class="row m-0 p-4" style="background-color: white;
+        
+        border-radius: 10px;
+        padding-bottom: 10px;
+        box-shadow: 0px 0px 5px 1px;" action="/updatePass/Pass_Updated">
+            <div class="col-sm-6">
+            <label >Employee Id :</label>
+            <% 
+            oReviewEmpData.forEach((ele,ind)=>{
+                    if(ele.Employee_Id == session.EmpId){
+                        %>
+                        <input type="text" class="form-control" id="empId" name="Employee_Id" placeholder="Employee Id" aria-label="Employee Id" value="<%= ele.Employee_Id %>" readonly>
+                        <%
+                    }
+                })
+            %>   
+            </div>
+            <div class="col-sm-6">
+            <label >Employee Name :</label>
+            <% 
+            oReviewEmpData.forEach((ele,ind)=>{
+                    if(ele.Employee_Id == session.EmpId){
+                        %>
+                        <input type="text" class="form-control" id="empName" name="Employee_Name" placeholder="Employee name" aria-label="Employee Name" value="<%= ele.Employee_Name %>" readonly>
+                        <%
+                    }
+                })
+            %> 
+            </div>
+            <div class="col-sm-6">
+            <label >Password : <span class="mandatory">*</span> </label>
+              <input type="password" class="form-control" id="empPass" name="Password" placeholder="Enter Password" aria-label="Last name" >
+              <div class="pass-err" id="pass-err" style="visibility: hidden;">Hello</div>
+            </div>
+            <div class="col-sm-6">
+              <label >Confirm Password : <span class="mandatory">*</span> </label>
+              <input type="password" class="form-control" id="empConfirmPass" name="ConfirmPass" placeholder="Confirm Password" aria-label="Last name">
+              <div class="confirmPass-err" id="confirmPass-err" style="visibility: hidden;">Hello</div>
+            </div>
+            <div class="col-sm-12 d-flex justify-content-end mt-5">
+                <button type="submit" class="btn btn-success" onclick="handlePassUpdate()">Update</button>
+            </div>
+        </form>
+    </div>
+    <script>
+      function handlePassUpdate(){
+        debugger
+        document.getElementById('updateEmpPass').addEventListener('submit',(e)=>{
+          e.preventDefault()
+        })
+        var empId = document.getElementById('empId');
+        var empName = document.getElementById('empName');
+        var empPass = document.getElementById('empPass');
+        var empConfirmPass = document.getElementById('empConfirmPass');
+
+        var empPassErr=document.getElementById('pass-err');
+        var empConfirmPassErr=document.getElementById('confirmPass-err');
+
+        var PassRegex =/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/;
+
+        debugger
+
+        if(empPass.value == '' && empConfirmPass.value == ''){
+          empPass.style.border = '1px solid red';
+          empPassErr.style.visibility = 'visible';
+          empPassErr.style.color = 'red';
+          empPassErr.innerHTML = 'Please Enter Password';
+
+          empConfirmPass.style.border = '1px solid red';
+          empConfirmPassErr.style.visibility = 'visible';
+          empConfirmPassErr.style.color = 'red';
+          empConfirmPassErr.innerHTML = 'Please Enter Confirm Password'
+        }
+        else if(empPass.value == ''){
+          empPass.style.border = '1px solid black';
+          empPassErr.style.visibility = 'hidden';
+          empPassErr.style.color = 'red';
+          empPassErr.innerHTML = 'Please Enter Password';
+
+          empConfirmPass.style.border = '1px solid red';
+          empConfirmPassErr.style.visibility = 'visible';
+          empConfirmPassErr.style.color = 'red';
+          empConfirmPassErr.innerHTML = 'Please Enter Confirm Password'
+
+        }
+        else if(!(PassRegex.test(empPass.value))){
+          debugger
+          empPass.style.border = '1px solid red';
+          empPassErr.style.visibility = 'visible';
+          empPassErr.style.color = 'red';
+          empPassErr.innerHTML = 'Password Must Contain Special characeter and one digit atleast';
+
+          empConfirmPass.style.border = '1px solid red';
+          // empConfirmPassErr.style.visibility = 'visible';
+          empConfirmPassErr.style.color = 'red';
+          // empConfirmPassErr.innerHTML = 'Please Enter Confirm Password'
+        } 
+
+        else if (empConfirmPass.value == ''){
+          empPass.style.border = '1px solid black';
+          empPassErr.style.visibility = 'hidden';
+          empPassErr.style.color = 'red';
+          empPassErr.innerHTML = 'Please Enter Password';
+
+          empConfirmPass.style.border = '1px solid red';
+          empConfirmPassErr.style.visibility = 'visible';
+          empConfirmPassErr.style.color = 'red';
+          empConfirmPassErr.innerHTML = 'Please Enter Confirm Password'
+
+
+        }else if(empPass.value != empConfirmPass.value){
+          empPass.style.border = '1px solid black';
+          empPassErr.style.visibility = 'hidden';
+          empPassErr.style.color = 'red';
+          empPassErr.innerHTML = 'Please Enter Password';
+
+          empConfirmPass.style.border = '1px solid red';
+          empConfirmPassErr.style.visibility = 'visible';
+          empConfirmPassErr.style.color = 'red';
+          empConfirmPassErr.innerHTML = 'Confirm Password is not valid'
+        }else{
+          document.getElementById('updateEmpPass').submit()
+        }
+      }
+    </script>
+</body>
+</html>

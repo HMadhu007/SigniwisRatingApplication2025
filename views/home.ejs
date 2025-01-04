@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS-HOME</title>
+    <style>
+*{
+  box-sizing: border-box;
+}
+.forgotpassword{
+    margin-top: -50px;
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+}
+.forgotpassword:hover{
+    text-decoration: underline;
+    color: blue;
+}
+        .divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+#forgetPopUP{
+  height: auto;
+  position: absolute;
+  top: 30%;
+  left: 35%;
+  width: 400px;
+  background-color: white;
+  border: 1px solid black;
+  border-radius:10px;
+  display: none;
+  box-shadow: 3px 5px 10px 5px rgba(27,27,27,0.7);
+  
+}
+.pos{
+  top: 0px;
+  right: 10px;
+  cursor: pointer;
+}
+
+
+@media (max-width: 450px) {
+.h-custom {
+height: 100%;
+}
+#forgetPopUP{
+  left: 10%;
+  width: 350px;
+}
+}
+#pfont{
+    font-size: 30px;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    letter-spacing: 3px;
+}
+
+    </style>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<body>
+
+  <div class="loader"></div>
+
+    <div class="container" style="margin: 3px;">
+      <div class="row ">
+        <div class="col-md-1"></div>
+        <div class="col-md-5">
+          <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active" data-bs-interval="2000">
+                <img src="../images/logo.jpg" class="d-block w-100" alt="...">
+                <br> 
+                <div class="carousel-caption d-none d-md-block">
+                  <!-- <h5 style="color: black;">First slide label</h5> -->
+                  <p style="color: black;">“Alone we can do so little. Together we can do so much.” <br> <strong>– Helen Keller</strong>.</p>
+                </div>
+              </div>
+              <div class="carousel-item" data-bs-interval="3000">
+                <img src="../images/logo.jpg" class="d-block w-100" alt="...">
+                <br> 
+                <div class="carousel-caption d-none d-md-block">
+                  <!-- <h5 style="color: black;">First slide label</h5> -->
+                  <p style="color: black;">“If you can’t fly, then run; if you can’t run, then walk; if you can’t walk, then crawl, but whatever you do, you have to keep moving forward.” <br> <strong>– Martin Luther King Jr.</strong></p>
+                </div>
+              </div>
+              <div class="carousel-item">
+                <img src="../images/logo.jpg" class="d-block w-100" alt="...">
+                <br> 
+                <div class="carousel-caption d-none d-md-block">
+                  <!-- <h5 style="color: black;">First slide label</h5> -->
+                  <p style="color: black;"> “Limitations live only in our minds. But if we use our imaginations, our possibilities become limitless.” <br> <strong>— Jamie Paolinetti</strong></p>
+                </div>
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        </div>
+        <div class="col-md-1" >
+          
+        </div>
+        <div class="col-md-5" style="padding: 85px 10px;">
+            <% if(session.Employee_Id) { %>
+                <!-- <h2>Welcome</h2> -->
+            <% } else{ %>
+          <form method="post" action="/user">
+            <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+            
+            </div>
+  
+            <div class="divider d-flex align-items-center my-4">
+              <p class="text-center mx-3 mb-0" id="pfont">Login</p>
+            </div>
+  
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+              <input type="text" id="empId" name="User_Id" class="form-control form-control-lg text-center"
+                placeholder="Enter Employee Id" width="100%"/>
+                <span id="loginEmployeeIdNotify" style="visibility: hidden;">Employee number cannot be blank</span><br>
+           
+            </div>
+  
+            <!-- Password input -->
+            <div class="form-outline mb-3">
+              <input  type="password" id="empPassword" name="User_Password" class="form-control form-control-lg text-center"
+                placeholder="Enter password" />
+                <span id="loginEmployeePasswordNotify" style="visibility: hidden;">Password cannot be blank</span><br>
+            
+            </div>
+          
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Checkbox -->
+              <div class="form-check mb-0">
+              
+              </div>
+              <p class="forgotpassword" id="forgotpassword" > <a href="#" data-toggle="modal" data-target="#myModal">Forgot password?</a> </p>
+            </div>
+  
+            <div class="text-center text-lg-center mt-8 pt-1">
+              <input type="submit" value="Login" onclick="Employeeloginfunction()" class="btn btn-primary btn-lg"
+                style="padding-left: 11rem;margin-top: -10px; padding-right: 11rem;" />
+             
+            </div>
+  
+          </form>
+          <% }if(message.length > 0){  %>
+
+            <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+            <div class="alert alert-danger" style="margin-top: 10px;" role="alert">
+              <%= message %>
+            </div>
+           
+          <% } %> %>
+
+
+        
+        </div>
+        <!-- <div class="col-md-1"></div> -->
+      </div>
+    </div>
+    
+    <div class="container p-3" id="forgetPopUP">
+      <div class="row position-relative" >
+        <div class="col-md-12">
+          <div class="row p-2">
+            <div class="col-md-5">
+              <label for="exampleFormControlInput1" class="form-label">Employee Id</label>
+
+            
+            </div>
+            <div class="col-md-1">:</div>
+            <div class="col-md-6">
+          
+
+              <input type="text"  class="form-control" id="EmpForgotId" placeholder="Employee Id">
+              <span id="EmpIdforgotNotify" style="visibility: hidden;font-size: x-small;">kskj</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row p-2">
+            <div class="col-md-5">
+              <label for="exampleFormControlInput1" class="form-label">New Password</label>
+            
+            </div>
+            <div class="col-md-1">:</div>
+            <div class="col-md-6">
+              <input type="password" class="form-control" id="empForgotPassword" placeholder="New password">
+              <span id="empForgotPassNotify" style="visibility: hidden; font-size: x-small;">Password cannot be blank</span>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row p-2">
+            <div class="col-md-5" >
+              <label for="exampleFormControlInput1" class="form-label">Confirm Password</label>
+            
+            </div>
+            <div class="col-md-1" >:</div>
+            <div class="col-md-6" >
+              <input type="password" class="form-control" id="empConfirmForgotPassword" placeholder="Confirm Password">
+        <span id="forgotconfirmPassNotify" style="visibility: hidden;font-size: x-small;"> Confirm Password cannot be blank</span>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-4">
+
+            </div>
+            <div class="text-center mx-3 mb-2 " style="padding-left: 10rem">
+              <button class=" btn btn-success" style="width: 7rem;" onclick="passwordReset()">Confirm</button>
+            </div>
+            <div class="col-md-3"></div>
+          </div>
+        </div>
+      </div>
+      <b class="position-absolute pos" onclick="closeforget()">X</b>
+    <!-- </div> -->
+  </div>
+      
+
+        <div class="container-fluid bg-primary" style="padding: 25px 18px;">
+          <div class="text-white mb-3 mb-md-0">
+            Copyright © 2023. All rights reserved.
+          </div>
+        </div>
+     
+<script>
+
+    
+
+   // document.body.innerHTML = `<a href="/user"><h1>Welocme</h1></a>`
+    
+    
+
+  
+       
+    
+    function passwordReset(){
+    debugger
+    var EmpForgotId=document.getElementById('EmpForgotId')      
+    var EmpIdforgotNotify=document.getElementById('EmpIdforgotNotify')
+
+    var empForgotPassword = document.getElementById('empForgotPassword')
+    var empForgotPassNotify = document.getElementById('empForgotPassNotify')
+
+    var empConfirmForgotPassword = document.getElementById('empConfirmForgotPassword')
+    var forgotconfirmPassNotify = document.getElementById('forgotconfirmPassNotify')
+
+    if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword.value ==null || empForgotPassword.value == '')
+         && (empConfirmForgotPassword.value ==null || empConfirmForgotPassword.value == ''))
+    {
+        EmpForgotId.style.border = "1px solid red"
+        EmpIdforgotNotify.style.visibility = "visible"
+        EmpIdforgotNotify.innerHTML = "Employee Id cannot be blank"
+        EmpIdforgotNotify.style.color = "red"
+
+        empForgotPassword.style.border = "1px solid red"
+        empForgotPassNotify.style.visibility = "visible"
+        empForgotPassNotify.innerHTML = "Password cannot be blank"
+        empForgotPassNotify.style.color = "red" 
+
+        empConfirmForgotPassword.style.border = "1px solid red"
+        forgotconfirmPassNotify.style.visibility = "visible"
+        forgotconfirmPassNotify.innerHTML = "Confirm Password cannot be blank"
+        forgotconfirmPassNotify.style.color = "red" 
+    }
+    else if((EmpForgotId.value!=null || EmpForgotId.value!='') && (empForgotPassword.value ==null || empForgotPassword.value == '')
+    && (empConfirmForgotPassword.value ==null || empConfirmForgotPassword.value == ''))
+{
+   EmpForgotId.style.border = "1px solid black"
+   EmpIdforgotNotify.style.visibility = "hidden"
+
+   empForgotPassword.style.border = "1px solid red"
+   empForgotPassNotify.style.visibility = "visible"
+   empForgotPassNotify.innerHTML = "Password cannot be blank"
+   empForgotPassNotify.style.color = "red" 
+  
+
+   empConfirmForgotPassword.style.border = "1px solid red"
+   forgotconfirmPassNotify.style.visibility = "visible"
+   forgotconfirmPassNotify.innerHTML = "Confirm Password cannot be blank"
+   forgotconfirmPassNotify.style.color = "red" 
+}
+
+else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword.value !=null || empForgotPassword.value != '')
+         && (empConfirmForgotPassword.value ==null || empConfirmForgotPassword.value == ''))
+    {
+        EmpForgotId.style.border = "1px solid red"
+        EmpIdforgotNotify.style.visibility = "visible"
+        EmpIdforgotNotify.innerHTML = "Employee Id cannot be blank"
+        EmpIdforgotNotify.style.color = "red"
+
+        empForgotPassword.style.border = "1px solid black"
+        empForgotPassNotify.style.visibility = "hidden"
+       
+
+        empConfirmForgotPassword.style.border = "1px solid red"
+        forgotconfirmPassNotify.style.visibility = "visible"
+        forgotconfirmPassNotify.innerHTML = "Confirm Password cannot be blank"
+        forgotconfirmPassNotify.style.color = "red" 
+    }
+    else if((EmpForgotId.value!=null && EmpForgotId.value!='') && (empForgotPassword.value !=null && empForgotPassword.value!= '')
+            && (empConfirmForgotPassword.value !=null && empConfirmForgotPassword.value!= '') )
+    {
+        EmpForgotId.style.border = "1px solid black"
+        EmpIdforgotNotify.style.visibility = "hidden"
+
+
+        empForgotPassword.style.border = "1px solid black"
+        empForgotPassNotify.style.visibility = "hidden"
+
+
+        empConfirmForgotPassword.style.border = "1px solid black"
+        forgotconfirmPassNotify.style.visibility = "hidden"
+
+         if((EmpForgotId.value=='1234') && (empForgotPassword.value=="abc")
+        && (empConfirmForgotPassword.value =="abc") )
+        {
+            alert('password successfully changed')
+        }
+
+        
+    }
+    else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword.value !=null && empForgotPassword.value!= '')
+            && (empConfirmForgotPassword.value !=null || empConfirmForgotPassword.value!= '') )
+    {
+        EmpForgotId.style.border = "1px solid red"
+        EmpIdforgotNotify.style.visibility = "visible"
+        EmpIdforgotNotify.style.margin="5px 0px 0px 20px"
+        EmpIdforgotNotify.innerHTML = "Employee Id cannot be blank"
+        EmpIdforgotNotify.style.color = "red"
+
+        empForgotPassword.style.border = "1px solid black"
+        empForgotPassNotify.style.visibility = "hidden"
+        empForgotPassNotify.style.margin="0px 0px 0px 20px"
+       
+
+        empConfirmForgotPassword.style.border = "1px solid black"
+        forgotconfirmPassNotify.style.visibility = "hidden"
+        forgotconfirmPassNotify.style.margin="0px 0px 0px 20px"
+       
+
+        
+    }
+    else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword.value !=null || empForgotPassword.value!= '')
+            && (empConfirmForgotPassword.value ==null || empConfirmForgotPassword.value== '') )
+    {
+        EmpForgotId.style.border = "1px solid red"
+        EmpIdforgotNotify.style.visibility = "visible"
+        EmpIdforgotNotify.style.margin="5px 0px 0px 20px"
+        EmpIdforgotNotify.innerHTML = "Employee Id cannot be blank"
+        EmpIdforgotNotify.style.color = "red"
+
+        empForgotPassword.style.border = "1px solid black"
+        empForgotPassNotify.style.visibility = "hidden"
+        empForgotPassNotify.style.margin="0px 0px 0px 20px"
+       
+
+        empConfirmForgotPassword.style.border = "1px solid black"
+        forgotconfirmPassNotify.style.visibility = "hidden"
+        forgotconfirmPassNotify.style.margin="0px 0px 0px 20px"
+
+        
+    }
+    else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword.value ==null || empForgotPassword.value== '')
+            && (empConfirmForgotPassword.value !=null || empConfirmForgotPassword.value!= '') )
+    {
+        EmpForgotId.style.border = "1px solid red"
+        EmpIdforgotNotify.style.visibility = "visible"
+        EmpIdforgotNotify.style.margin="5px 0px 0px 20px"
+        EmpIdforgotNotify.innerHTML = "Employee Id cannot be blank"
+        EmpIdforgotNotify.style.color = "red"
+
+        empForgotPassword.style.border = "1px solid red"
+        empForgotPassNotify.style.visibility = "visible"
+        empForgotPassNotify.innerHTML = "Password cannot be blank"
+        empForgotPassNotify.style.color = "red" 
+        empForgotPassNotify.style.margin="5px 0px 0px 20px"
+
+        empConfirmForgotPassword.style.border = "1px solid black"
+        forgotconfirmPassNotify.style.visibility = "hidden"
+        forgotconfirmPassNotify.style.margin="0px 0px 0px 20px"
+
+        
+    }
+
+    else if((EmpForgotId.value!=null || EmpForgotId.value!='') && (empForgotPassword.value ==null || empForgotPassword.value== '')
+            && (empConfirmForgotPassword.value !=null || empConfirmForgotPassword.value!= '') )
+    {
+        EmpForgotId.style.border = "1px solid black"
+        EmpIdforgotNotify.style.visibility = "hidden"
+        EmpIdforgotNotify.style.margin="0px 0px 0px 20px"
+
+        empForgotPassword.style.border = "1px solid red"
+        empForgotPassNotify.style.visibility = "visible"
+        empForgotPassNotify.innerHTML = "Password cannot be blank"
+        empForgotPassNotify.style.color = "red" 
+        empForgotPassNotify.style.margin="5px 0px 0px 20px"
+
+        empConfirmForgotPassword.style.border = "1px solid black"
+        forgotconfirmPassNotify.style.visibility = "hidden"
+        forgotconfirmPassNotify.style.margin="0px 0px 0px 20px"
+
+        
+    }
+    
+    else if((EmpForgotId.value!=null || EmpForgotId.value!='') && (empForgotPassword.value !=null || empForgotPassword.value!= '')
+    && (empConfirmForgotPassword.value ==null || empConfirmForgotPassword.value== '') )
+    {
+    EmpForgotId.style.border = "1px solid black"
+    EmpIdforgotNotify.style.visibility = "hidden"
+    EmpIdforgotNotify.style.margin="0px 0px 0px 20px"
+
+    empForgotPassword.style.border = "1px solid black"
+    empForgotPassNotify.style.visibility = "hidden"
+    empForgotPassNotify.style.margin="0px 0px 0px 20px"
+
+    empConfirmForgotPassword.style.border = "1px solid red"
+    forgotconfirmPassNotify.style.visibility = "visible"
+    forgotconfirmPassNotify.innerHTML = "Confirm Password cannot be blank"
+    forgotconfirmPassNotify.style.color = "red" 
+    forgotconfirmPassNotify.style.margin="5px 0px 0px 20px"
+
+
+    }
+   
+    
+
+   }
+
+
+
+      //  **************************************************************************
+    function Employeeloginfunction(){
+    
+       //location.href = "/user"
+    var loginEmployeeId=document.getElementById('empId')      
+    var loginEmployeePassword=document.getElementById('empPassword')
+
+    var empPassword = document.getElementById("empPassword").value
+    var empId = document.getElementById("empId").value
+    console.log(empId, empPassword)
+
+    
+    
+    
+    var loginEmployeeIdNotify = document.getElementById('loginEmployeeIdNotify')
+    var loginEmployeePasswordNotify = document.getElementById('loginEmployeePasswordNotify')
+
+    
+     if((loginEmployeeId.value==null || loginEmployeeId.value=='') && (loginEmployeePassword.value ==null || loginEmployeePassword.value == '') )
+    {
+        loginEmployeeId.style.border = "1px solid red"
+        loginEmployeeIdNotify.style.visibility = "visible"
+        loginEmployeeIdNotify.innerHTML = "Employee Id cannot be blank"
+        loginEmployeeIdNotify.style.color = "red"
+        loginEmployeeIdNotify.style.margin="5px 0px 0px 20px"
+
+        loginEmployeePassword.style.border = "1px solid red"
+        loginEmployeePasswordNotify.style.visibility = "visible"
+        loginEmployeePasswordNotify.style.color = "red" 
+        loginEmployeePasswordNotify.style.margin="5px 0px 0px 20px"
+    }
+    else if((loginEmployeeId.value!=null && loginEmployeeId.value!='') && (loginEmployeePassword.value !=null && loginEmployeePassword.value!== '') )
+    {
+        loginEmployeeId.style.border = "1px solid black"
+        loginEmployeeIdNotify.style.visibility = "hidden"
+        loginEmployeeIdNotify.style.margin="0px 0px 0px 20px"
+
+
+        loginEmployeePassword.style.border = "1px solid black"
+        loginEmployeePasswordNotify.style.visibility = "hidden"
+        loginEmployeePasswordNotify.style.margin="0px 0px 0px 20px"
+        if(loginEmployeeId.value=='Admin' && loginEmployeePassword.value==123){
+          alert('hello Admin')
+          location.href='file:///D:/Application/RatingApplication/admin/admin.html'
+        }
+        else if(loginEmployeeId.value=='User' && loginEmployeePassword.value==123){
+          alert('hello User')
+          location.href='file:///D:/Application/RatingApplication/user/user.html'
+        }
+        
+    }
+    
+    else if(loginEmployeeId.value==null || loginEmployeeId.value==''){
+
+        loginEmployeePassword.style.border = "1px solid black"
+        loginEmployeePasswordNotify.style.visibility = "hidden"
+
+        loginEmployeeId.style.border = "1px solid red"
+        loginEmployeeIdNotify.style.visibility = "visible"
+        loginEmployeeIdNotify.innerHTML = "Employee Id cannot be blank"
+        loginEmployeeIdNotify.style.color = "red"
+        loginEmployeeIdNotify.style.margin="5px 0px 0px 20px"
+        loginEmployeePasswordNotify.style.visibility = "hidden"
+        loginEmployeePasswordNotify.style.color = "black"
+    }
+
+    else if(loginEmployeePassword.value ==null || loginEmployeePassword.value == '')
+        {
+            loginEmployeeId.style.border = "1px solid black"
+            loginEmployeeIdNotify.style.visibility = "hidden"
+
+            loginEmployeePassword.style.border = "1px solid red"
+            loginEmployeePasswordNotify.style.visibility = "visible"
+            loginEmployeePasswordNotify.style.color = "red" 
+            loginEmployeePasswordNotify.style.margin="5px 0px 0px 20px"
+            loginEmployeePasswordNotify.innerHTML = "Password Cann't be blank"
+        }   
+      
+}
+
+
+      //  ****************************************************************
+            document.getElementById("forgotpassword").addEventListener('click',function(){
+             let popUp = document.getElementById("forgetPopUP")
+             popUp.style.display = "block"
+             let sec= document.getElementById("sec")
+             sec.style.filter = "blur(6px)"
+            })
+            function closeforget(){
+
+              
+
+
+              let popUp = document.getElementById("forgetPopUP")
+             popUp.style.display = "none"
+             let sec= document.getElementById("sec")
+             sec.style.filter = "blur(0px)"
+
+            var EmpForgotId=document.getElementById('EmpForgotId')      
+            var EmpIdforgotNotify=document.getElementById('EmpIdforgotNotify')
+
+            var empForgotPassword = document.getElementById('empForgotPassword')
+            var empForgotPassNotify = document.getElementById('empForgotPassNotify')
+
+            var empConfirmForgotPassword = document.getElementById('empConfirmForgotPassword')
+            var forgotconfirmPassNotify = document.getElementById('forgotconfirmPassNotify')
+
+            EmpForgotId.style.border = "1px solid black"
+            EmpForgotId.value=''
+            EmpIdforgotNotify.style.visibility = "hidden"
+            
+
+            empForgotPassword.style.border = "1px solid black"
+            empForgotPassword.value=''
+            empForgotPassNotify.style.visibility = "hidden"
+        
+
+
+            empConfirmForgotPassword.style.border = "1px solid black"
+            empConfirmForgotPassword.value=''
+            forgotconfirmPassNotify.style.visibility = "hidden"
+    
+            }
+            window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader");
+
+  loader.classList.add("loader--hidden");
+
+  loader.addEventListener("transitionend", () => {
+    document.body.removeChild(loader);
+  });
+});
+      </script>
+      
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</head>
+</body>
+</html>

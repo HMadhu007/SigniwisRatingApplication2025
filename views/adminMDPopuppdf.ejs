@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS</title>
+    <script src="../javascripts/admin.js" ></script>
+    <link rel="stylesheet" href="../stylesheets/style.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="../javascripts/adminMDPopup.js"></script>
+    <script src="https://kit.fontawesome.com/e799d6a9ed.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+   
+    <style>
+        #EmployeeReviewDetails table tr th{
+            background-color: #0060ff;
+            border: 1px black solid;
+            color: white;
+            font-family: sans-serif;
+            padding:5px 10px;
+        }
+        #EmployeeReviewDetails table{
+            width: 70%;
+            margin-left:14%;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        .err{
+          visibility: hidden;
+          color: red;
+        }
+        .mandatory{
+          color: red;
+          font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+  <div class="loader"></div>
+    
+    
+    <!-- ******************************* header part************************************* -->
+    <!-- ******************************************************************************** -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/admin">
+        <img src="../images/logo.jpg" alt="" height="90px" width="150px" style="margin-left: 10px;">
+          
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- <div class="row"> -->
+            <div class="col-md-10" >
+              <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+              <h2 id="orgTitle">--Rating Application--</h2>
+
+
+              
+                </div>
+                <div class="col-md-2">
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-2">
+              <!-- <button class="alert alert-danger"> <i class="fa-solid fa-file-pdf" ></i></button> -->
+
+              <a href="../home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+
+            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- employee profile detail download pdf -->
+
+      <!-- <div class="profile-container">
+        <B><font size=5><center>personal Information </center></font></B><br>
+
+<table border =1 align =center cellspacing=5 cellpadding=5>
+  <%
+
+  var vSingleEmpData = []
+  
+  sampleData.forEach((data, index)=>{
+  
+    if(data.Employee_Id == session.UID)
+    {
+      vSingleEmpData.push(data)
+    }
+  
+  })
+  
+  if(vSingleEmpData.length >0)
+  {
+   
+    %>
+<tr>
+
+<td>
+
+<img src="data:image/png;base64,<%= vSingleEmpData[0].IMG_file %>" Align =”top” Width=75 height=75/>
+
+</td>
+
+
+<td><B>Name:  </B><%= vSingleEmpData[0].Employee_Name %><br>
+
+<B>Email: </B><%= vSingleEmpData[0].Employee_Email %><br>
+
+<B>contact:</B><%=  vSingleEmpData[0].Employee_Name %> %>
+
+</B></td>
+
+<td>
+
+<B>permanent Adress:</B> Flat No-302,<br>Jai Aranvilai, Manavalakurichi,<br> Kanyakumari-629251
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan=3>
+
+<hr color= brown></center>
+
+<B>Objective </B>
+
+<center><hr color=brown> To be associated with a progressive organization which poses a challenging and innovative career , my knowledge and thus giving me scope to update my knowledge and skill.</center>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan=3>
+
+<hr color=brown>
+
+<B>Education Profile </B>
+
+<hr color=brown>
+
+<table cellspacing=5 cellpadding=5 border=2>
+
+<tr>
+
+<td>Exam</td>
+
+<td>Board /University</td>
+
+<td>Institution</td>
+
+<td>Year </td>
+
+<td>Percentage</td>
+
+</tr>
+
+<tr>
+
+<td>B.pharm.</td>
+
+<td>Dr M G R medical university, chennai</td>
+
+<td>S .A Raja pharmacy College, Vadakangulam.</td>
+
+<td>2017-2021</td>
+
+<td>98.9%</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan=3>
+
+<hr color=brown></center>
+
+<B>Decleration</B>
+
+<hr color =brown>I hereby declare that the above written particulars are true to the best of my knowledge and belief.<BR>
+
+Date:<BR> Place:
+
+</td>
+
+</td>
+
+</tr>
+
+</table>
+
+<Br>
+
+<Marquee><font           color=red><B></td>           ©           Copyrights           reserved
+
+</B></font></Marquee>
+<% } %>
+      </div> -->
+
+    <!-- employee profile details pdf end -->
+    <!-- <div style="display: flex; align-items: center; justify-content: space-between; margin: 0px;padding: 0px;">
+        <div>
+          <img src="../images/images.png" alt="" height="90px" width="150px" style="margin-left: 10px;">
+        </div>
+        <div >
+          <h2 id="orgTitle" >--SIGNIWIS TECHNOLOGIES--</h2>
+        </div>
+        
+          <div style="width: 200px; display: flex; align-items: center; justify-content: flex-start;">
+            <div style="display: flex;width: 190px; justify-content: space-between;">
+              <img src="../images/notification.png" onclick="AdminNotification()" id="AdminNotification" alt="User" width="34px" height="30px"/>
+              <img src="../images/profile.png" onclick="userProfileinfo()" id="userProfileinfo" alt="User" width="30px" height="30px"/>
+              <a href="../home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+          </div>
+          </div>
+    
+    </div>   -->
+    <span id="body">
+      <div class="container">
+        <div style="background-color: rgb(255, 255, 255);width: 100%;" id="detailPage">
+          <div id="EmployeeData" class="col-md-12">
+          <%
+
+          var vSingleEmpData = []
+
+          sampleData.forEach((data, index)=>{
+
+            if(data.Employee_Id == session.UID)
+            {
+              vSingleEmpData.push(data)
+            }
+
+          })
+
+          if(vSingleEmpData.length >0)
+          {
+           
+            %>
+        <div class="row">
+          <div class="col-md-2 mt-2" title="Profile picture">
+            <span style="color: rgba(0, 0, 0, 0.622);">Profile Picture</span> <br> 
+            <img width="160px" height="170px" style="border-radius: 5px;"  src= "data:image/png;base64,<%= vSingleEmpData[0].IMG_file %>"" >
+            <!-- <a href="" style="margin: 0px 0px 40px 0px;font-size: 13px;font-family: sans-serif ; ">Update profile picture </a> -->
+            <!-- <button type="button"  class="btn btn-outline-primary" style="background-color: #81b1ff36;border: none;color: rgb(8, 8, 248);font-weight: 600;margin: 10px 0px 0px 0px;width: 160px;font-size: 12px;font-family: cursive;" onclick="handleEditPopUp()" >Update profile</button> -->
+            <form action="/adminMDPopup/empDelete/:id" >
+            <!-- <button type="submit"  class="btn btn-outline-primary" style="background-color: #ff818137;border: none;color: rgb(248, 8, 8);font-weight: 600;margin: 10px 0px 0px 0px;width: 160px;font-size: 12px;font-family: cursive;" >Delete profile</button> -->
+          </form>
+
+          </div>
+          <div class="col-md-3 mt-2">
+            <!-- <h2><%= vSingleEmpData[0].Employee_Name %></h2> -->
+            <!-- <span style="color: rgba(0, 0, 0, 0.622);">personal Details</span> <br>  -->
+
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Name</small> 
+              <strong><%= vSingleEmpData[0].Employee_Name %></strong>
+            </div>
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Id:</small> 
+              <strong><%= vSingleEmpData[0].Employee_Id %></strong>
+            </div>
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Email: </small> 
+              <strong><%= vSingleEmpData[0].Employee_Email %></strong>
+            </div>
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Department:</small> 
+              <strong><%= vSingleEmpData[0].Employee_Department %></strong>
+            </div>
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Designation</small> 
+              <strong ><%= vSingleEmpData[0].Employee_Designation %></strong>
+            </div>
+                              <!-- <p><%= vSingleEmpData[0].Employee_Id %></p> -->
+                              <!-- <p><%= vSingleEmpData[0].Employee_Email %></p>
+                              <p><%= vSingleEmpData[0].Employee_Department %></p>
+                              <p><%= vSingleEmpData[0].Employee_Designation %></p> -->
+  
+                              <form action="POST" >
+                                <input name="User_Id" id="User_Id" value="<%= vSingleEmpData[0].Employee_Id %>" style="visibility: hidden;">
+                              </form>
+          </div>
+          <div class="col-md-3 mt-2">
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Employee No</small> 
+              <strong><%= vSingleEmpData[0].employeeNo %></strong>
+            </div>
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Mobile No:</small> 
+              <strong><%= vSingleEmpData[0].mobil %></strong>
+            </div>
+            <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">DOB: </small> 
+              <strong><%= vSingleEmpData[0].dateOfBirth %></strong>
+            </div>
+            <!-- <div class="alert alert-secondary" role="alert">
+              <small style="color: rgba(0, 0, 0, 0.622);">Department:</small> 
+              <strong><%= vSingleEmpData[0].Employee_Department %></strong>
+            </div> -->
+          
+          <div class="alert alert-secondary" role="alert">
+            
+              <%
+                for(let i = 0; i < sampleData.length;i++){
+                  if(sampleData[i].Employee_Id == session.UID){
+                    if(sampleData[i].Employee_Status == 'Working')
+                    {
+                    %>
+                    <span class="badge rounded-pill text-bg-success" >
+                      Status: <%= sampleData[i].Employee_Status %>
+                      <% break %>
+                    </span>
+                    <%
+                    }
+                    else if(sampleData[i].Employee_Status == 'Released'){
+                      %>
+                      <span class="badge rounded-pill text-bg-primary" >
+                        Status:  <%= sampleData[i].Employee_Status %>
+                        <% break %>
+                      </span>
+                      <%
+                      
+                    }else{
+                      %>
+                      <span class="badge rounded-pill text-bg-danger">
+                        Status: <%= sampleData[i].Employee_Status %>
+                        <% break %>
+                      </span>
+                      <%
+                      
+                    }
+                  }
+              }
+              
+              %>
+          </div>
+        </div>
+          <!-- <div class="empBandge mt-5 mb-5 ">
+            <%
+              for(let i = 0; i < sampleData.length;i++){
+                if(sampleData[i].Employee_Id == session.UID){
+                  if(sampleData[i].Employee_Status == 'Working')
+
+                  {
+                  %>
+                  <span class="badge rounded-pill text-bg-success" style="width: 125px;padding: 12px 22px;font-weight: bold;">
+                    <%= sampleData[i].Employee_Status %>
+                    <% break %>
+                  </span>
+                  <%
+                  }
+                  else if(sampleData[i].Employee_Status == 'Released'){
+                    %>
+                    <span class="badge rounded-pill text-bg-primary" style="width: 125px;padding: 12px 22px; font-weight: bold;">
+                      <%= sampleData[i].Employee_Status %>
+                      <% break %>
+                    </span>
+                    <%
+                    
+                  }else{
+                    %>
+                    <span class="badge rounded-pill text-bg-danger" style="width: 125px;padding: 12px 22px;font-weight: bold;">
+                      <%= sampleData[i].Employee_Status %>
+                      <% break %>
+                    </span>
+                    <%
+                    
+                  }
+                }
+            }
+            
+            %>
+
+          </div> -->
+          <!-- <div class="col-md-3 mt-2">
+            <div class="d-flex ">
+                <div onclick="handleEditPopUp()">
+                  <i class="fas fa-edit" style="font-size: 25px;color: black;cursor: pointer;"></i>
+                </div>
+                <div class="ms-3">
+                  <a href="/adminMDPopup/empDelete/:id" title="Delete"><i class="fa-solid fa-trash" style="font-size: 25px;color: black;"></i></a>
+                </div>
+
+            </div>
+            <form  method="POST" action="/adminMDPopup/rating" style="height: max-content;margin-top: 125px;">
+
+              <input style="padding: 2px 20px 2px 20px;border-radius: 5px;background-color: rgb(35, 239, 107);" type="submit" value="Request Rating">
+                
+            </form>  
+          </div> -->
+          <div class="col-md-3 mt-2">
+            <!-- <div class="d-flex ">
+                <div onclick="handleEditPopUp()">
+                  <i class="fas fa-edit" style="font-size: 25px;color: black;cursor: pointer;"></i>
+                </div>
+                <div class="ms-3">
+                  <a href="/adminMDPopup/empDelete/:id" title="Delete"><i class="fa-solid fa-trash" style="font-size: 25px;color: black;"></i></a>
+                </div>
+
+            </div> -->
+            <% if(vSingleEmpData[0].Employee_Total_Rating < 5 ) {%>
+              <h6 >Latest Ratings : <strong style="color: red"> <%= vSingleEmpData[0].Employee_Total_Rating %> </strong></h6>
+
+              <% } else if (vSingleEmpData[0].Employee_Total_Rating >=5 && vSingleEmpData[0].Employee_Total_Rating <= 6 ){ %>
+
+                <h6 >Latest Ratings : <strong style="color: rgba(255, 0, 0, 0.535);"> <%= vSingleEmpData[0].Employee_Total_Rating %> </strong></h6>
+
+
+              <% }else if(vSingleEmpData[0].Employee_Total_Rating >=6 && vSingleEmpData[0].Employee_Total_Rating <= 8 ){ %>
+              <h6 >Latest Ratings : <strong style="color:orange"> <%= vSingleEmpData[0].Employee_Total_Rating %> </strong></h6>
+
+                <% }else if(vSingleEmpData[0].Employee_Total_Rating >=8 && vSingleEmpData[0].Employee_Total_Rating <= 10 ){ %>
+                  <h6 >Latest Ratings : <strong style="color: green;"> <%= vSingleEmpData[0].Employee_Total_Rating %> </strong></h6>
+
+                  <% } %>
+                              
+            <label>Feedback : </label><br>
+            <textarea name="feedback" id="" cols="42" rows="5" disabled> <%= vSingleEmpData[0].Employee_Overall_Feedback %></textarea>
+
+            
+            <!-- <form  method="POST" action="/adminMDPopup/rating" style="height: max-content;margin-top: 65px;">
+              <select class="form-select" aria-label="Default select example">
+                <option selected>Select Review</option>
+                <option value="1">Monthly Mock</option>
+                <option value="2">Hierarchy Mock</option>
+                <option value="3">Technology completion Mock</option>
+              </select>
+              <br>
+              <input style="padding: 2px 20px 2px 20px;border-radius: 5px;background-color: #212529;color: white;padding-bottom:6px ;font-weight: bold;" type="submit" value="Request Rating">
+                
+            </form>   -->
+          </div>
+          </div>
+          </div>
+
+          <%  %> 
+  
+          <% } %>  
+        </div>
+
+      </div>
+      <hr>
+      <div id="EmployeeReviewDetails" class="table-responsive">
+        <table class="table table-hover" border="1">
+            <tr>
+            <th>Reviewer_Id</th>
+            <th>Reviewer Name</th>
+            <th >Review Date</th>
+            
+            <th >Feedback</th>
+            <th >Attendance</th>
+            <th >Productivity</th>
+            <th >Communication</th>
+            <th >Behaviour</th>
+            <th >Rating</th>
+            <!-- <th>Delete</th> -->
+            </tr>
+          <%
+          var ReviewerData = []
+
+          sampleData.forEach((data)=>{
+
+            if(data.Employee_Id == session.UID && data.Reviewer_Id != null)
+            {
+              ReviewerData.push(data)
+            }
+
+          })
+
+            if(ReviewerData.length >0)
+            {
+              ReviewerData.forEach((data)=>{
+               
+                
+            %>
+            <tr>
+            <td><%= data.Reviewer_Id %></td>
+            <td><%= data.Rew_Name %></td>
+
+            <td><%= data.Review_Date %></td>
+           
+            <td><%= data.Employee_Overall_Feedback %></td>
+            <td><%= data.Employee_Attendence_punctuality %></td>
+            <td><%= data.Employee_Productivity%></td>
+            <td><%= data.Employee_Communication %></td>
+            <td><%= data.Employee_Behaviour %></td>
+            <% if(data.Employee_Total_Rating  < 5 ) {%>
+              <!-- <h6 >Latest Ratings : <span style="color: rgba(255, 0, 0, 0.692);"> <%= vSingleEmpData[0].Employee_Total_Rating %> </span></h6> -->
+            <td ><strong style="color: rgb(255, 0, 0);"><%= data.Employee_Total_Rating %></strong></td>
+
+
+              <% } else if (data.Employee_Total_Rating  >=5 && data.Employee_Total_Rating  <= 6 ){ %>
+
+                <!-- <h6 >Latest Ratings : <span style="color: rgba(255, 0, 0, 0.534);"> <%= vSingleEmpData[0].Employee_Total_Rating %> </span></h6> -->
+                <td ><strong style="color:orangered"><%= data.Employee_Total_Rating %></strong></td>
+
+
+
+
+                <% } else if (data.Employee_Total_Rating  >=6 && data.Employee_Total_Rating  <= 8 ){ %>
+
+              <!-- <h6 >Latest Ratings : <span style="color:orange"> <%= vSingleEmpData[0].Employee_Total_Rating %> </span></h6> -->
+              <td ><strong style="color: orange;"><%= data.Employee_Total_Rating %></strong></td>
+
+                <% }else if(data.Employee_Total_Rating  >=8 && data.Employee_Total_Rating  <= 10 ){ %>
+                  <!-- <h6 >Latest Ratings : <span style="color: rgba(0, 255, 68, 0.996);"> <%= vSingleEmpData[0].Employee_Total_Rating %> </span></h6> -->
+            <td ><strong style="color: green"><%= data.Employee_Total_Rating %></strong></td>
+                  
+
+
+                  <% } %>
+ 
+           <!-- <td><a href="/adminMDPopup/delete/<%= data.UniqueId %>/<%= data.Employee_Id %>"  style="color: red;"><i class="fa-solid fa-trash" style=" color: cadetblue;"></i></a></td> -->
+            
+            </tr>
+            <%
+              
+              })
+            }
+            else
+            {
+            %>
+          <tr >
+              <td style="position: relative;left: 38%;font-family: Monotype Corsiva;font-weight: bold;"> -- No Data Found --</td>
+          </tr>
+          <%
+          }
+        %>
+        </table>
+  </div>
+  <div id="adminNotification">
+    <% if(message.length > 0){  %>
+      <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+      <div class="alert alert-success" id="alert" style="width: 250px;text-align: center;margin: 5px auto;" role="alert">
+        <%= message %>
+      </div>
+    <% } %>
+  </div>
+  </body></span>
+  <div class="editEmpPopup" id="editEmpPopup" style="background-color: white;
+  width: 650px;
+  padding:  15px 25px;
+  border-radius: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0px 0px 5px 1px;
+  position: absolute;
+    top: 125px;
+    left: 430px;
+    display: none;"
+    >
+    <%
+ 
+          var vSingleEmpData = []
+    sampleData.forEach((data, index)=>{
+ 
+      if(data.Employee_Id == session.UID)
+      {
+        vSingleEmpData.push(data)
+      }
+
+    })
+
+    if(vSingleEmpData.length >0)
+    {
+     
+      %>
+      <div style="display: flex;justify-content: flex-end;">
+        <svg xmlns="http://www.w3.org/2000/svg" id="oEditpopup" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="oCloseuserEditPopup()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </div> 
+    <form class="row m-0" action="/adminMDPopup/empEdit/:id" id="editEmployee"> 
+      <div class="col-md-6">
+        <label for="empId" class="form-label">Id :</label>
+        <input type="text" class="form-control" id="empEditId" value="<%= vSingleEmpData[0].Employee_Id %>" readonly>
+      </div>
+      <div class="col-md-6">
+        <label for="empName" class="form-label">Name : <span class="mandatory">*</span> </label>
+        <input type="text" class="form-control" name="empEditName" id="empEditName" value="<%= vSingleEmpData[0].Employee_Name %>">
+        <p class="err" id="empEditNameErr">Err</p>
+      </div>
+      <div class="col-6">
+        <label for="empEmail" class="form-label">Email : <span class="mandatory">*</span></label>
+        <input type="email" class="form-control" name="empEditEmail" id="empEditEmail" value="<%= vSingleEmpData[0].Employee_Email %>">
+        <p class="err" id="empEditEmailErr">Err</p>
+      </div>
+      <div class="col-6">
+        <label for="empDesignation" class="form-label">Designation : <span class="mandatory">*</span></label>
+        <!-- <input type="text" class="form-control" name="empEditDesignation" id="empEditDesignation" value="<%= vSingleEmpData[0].Employee_Designation %>"> -->
+        <select class="form-select" id="empEditDesignation" aria-label="Default select example" name="empEditDesignation">
+        <!-- <option selected>---Select---</option> -->
+
+        <%
+        <!-- if(vSingleEmpData[0]) -->
+        if(vSingleEmpData[0].Employee_Designation == 'Deveplor'){
+          %>
+         
+            <option value="Working" selected>Deveplor</option>
+            
+          <option value="Tester">Tester</option>
+          <option value="Executive HR senior">Executive HR senior</option>
+          <option value="Executive HR">Executive HR </option>
+         
+          <%
+          
+        }
+        else if(vSingleEmpData[0].Employee_Designation == 'Tester'){
+          %>
+          
+          <option value="Working" >Deveplor</option>
+            
+          <option value="Tester" selected>Tester</option>
+          <option value="Executive HR senior">Executive HR senior</option>
+          <option value="Executive HR">Executive HR </option>
+        
+          <%
+        }else if(vSingleEmpData[0].Employee_Designation == 'Executive HR senior'){
+          %>
+         
+            <option value="Working" >Deveplor</option>
+            
+          <option value="Tester">Tester</option>
+          <option value="Executive HR senior" selected>Executive HR senior</option>
+          <option value="Executive HR">Executive HR </option>
+         
+          <%
+          
+        }else if(vSingleEmpData[0].Employee_Designation == 'Executive HR'){
+          %>
+         
+            <option value="Working" >Deveplor</option>
+            
+          <option value="Tester">Tester</option>
+          <option value="Executive HR senior">Executive HR senior</option>
+          <option value="Executive HR" selected>Executive HR </option>
+         
+          <%
+          
+        }
+      %>
+        </select>
+        <p class="err" id="empEditDesignationErr">Err</p>
+      </div>
+      <div class="col-md-6">
+        <label for="empDept" class="form-label">Department : <span class="mandatory">*</span></label>
+        <!-- <input  class="form-control"   value="<%= vSingleEmpData[0].Employee_Department %>"> -->
+        <select  name="empEditDept" id="empEditDept" class="form-select">
+
+          <%
+          <!-- if(vSingleEmpData[0]) -->
+          if(vSingleEmpData[0].Employee_Department == 'UI5'){
+            %>
+           
+            <option value="UI5" selected>UI5</option>
+            <option value="ABAP">ABAP</option>
+            <option value="Sales Force">Sales Force</option>
+           
+            <%
+            
+          }
+          else if(vSingleEmpData[0].Employee_Department == 'ABAP'){
+            %>
+            
+            <option value="UI5">UI5</option>
+            <option value="ABAP" selected>ABAP</option>
+            <option value="Sales Force">Sales Force</option>
+          
+            <%
+          } 
+          else if(vSingleEmpData[0].Employee_Department == 'Sales Force'){
+            %>
+            
+            <option value="UI5">UI5</option>
+            <option value="ABAP" >ABAP</option>
+            <option value="Sales Force" selected>Sales Force</option>
+          
+            <%
+          }
+        %>
+        
+
+        </select>
+        <p class="err" id="empEditDeptErr">Err</p>
+      </div>
+      <div class="col-md-6">
+        <label for="empStatus" class="form-label">Status : <span class="mandatory">*</span></label>
+       <div>
+        <select style="width: 100%;height: 35px;" id="empEditStatus" name="Status">
+        <%
+          <!-- if(vSingleEmpData[0]) -->
+          if(vSingleEmpData[0].Employee_Status == 'Working'){
+            %>
+           
+              <option value="Working" selected>Working</option>
+              <option>Released</option>
+           
+            <%
+            
+          }
+          else{
+            %>
+            
+              <option value="Working" >Working</option>
+              <option value="Notice Period" selected>Released</option>
+          
+            <%
+          }
+        %>
+        
+      </select>
+      <p class="err" id="empEditStatusErr">Err</p>   
+    </div>
+        
+        <!-- <input type="text" class="form-control" name="empEditDept" id="empEditDept" value="<%= vSingleEmpData[0].Employee_Department %>"> -->
+      </div>
+     
+
+      <div class="col-12 d-flex justify-content-end" >
+        <button type="submit" class="btn btn-success" onclick="handleEmpEdit()">Update</button>
+      </div>
+    </form>
+  </div>
+   <%
+  }
+   %>
+
+   <script>
+      function oCloseuserEditPopup(){
+        document.getElementById('editEmpPopup').style.display = 'none';
+        document.getElementById('body').style.filter='blur(0px)'
+
+      }
+
+      function handleEditPopUp(){
+        document.getElementById('editEmpPopup').style.display = 'block';
+        document.getElementById('body').style.filter='blur(3px)'
+
+      }
+
+      function handleEmpEdit(){
+
+        document.getElementById('editEmpPopup').addEventListener('submit',(e)=>{
+          e.preventDefault();
+        });
+
+        var empId=document.getElementById('empEditId')
+        var empName=document.getElementById('empEditName')
+        var empEmail=document.getElementById('empEditEmail')
+        var empDesign=document.getElementById('empEditDesignation')
+        var empDept=document.getElementById('empEditDept')
+        var empStatus=document.getElementById('empEditStatus')
+
+        var empNameErr=document.getElementById('empEditNameErr')
+        var empEmailErr=document.getElementById('empEditEmailErr')
+        var empDesignErr=document.getElementById('empEditDesignationErr')
+        var empDeptErr=document.getElementById('empEditDeptErr')
+        var empStatusErr=document.getElementById('empEditStatusErr')
+
+
+        if(empName.value =='' && empEmail.value==''  && empDesign.value == '' && empDept.value ==''
+        && empStatus.value==''){
+          empName.style.border='1px solid red';
+          empNameErr.style.visibility='visible'
+          empNameErr.innerHTML='Please Enter Employee Name'
+
+          empEmail.style.border='1px solid red';
+          empEmailErr.style.visibility='visible'
+          empEmailErr.innerHTML='Please Enter Employee Email'
+
+          empDesign.style.border='1px solid red';
+          empDesignErr.style.visibility='visible'
+          empDesignErr.innerHTML='Please Enter Employee Designation'
+
+          empDept.style.border='1px solid red';
+          empDeptErr.style.visibility='visible'
+          empDeptErr.innerHTML='Please Enter Employee Department'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+
+        }
+        else if(empName.value=='' && empEmail.value!='' && empDesign.value!='' && empDept.value != ''
+        && empStatus.value !=''){
+          empName.style.border='1px solid red';
+          empNameErr.style.visibility='visible'
+          empNameErr.innerHTML='Please Enter Employee Name'
+
+          empEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='hidden'
+
+          empDesign.style.border='1px solid black';
+          empDesignErr.style.visibility='hidden'
+
+          empDept.style.border='1px solid black';
+          empDeptErr.style.visibility='hidden'
+
+          empStatus.style.border='1px solid black';
+          empStatusErr.style.visibility='hidden'
+        }
+        else if(empName.value==''){
+          empName.style.border='1px solid red';
+          empNameErr.style.visibility='visible'
+          empNameErr.innerHTML='Please Enter Employee Name'
+
+          empEmail.style.border='1px solid red';
+          empEmailErr.style.visibility='visible'
+          empEmailErr.innerHTML='Please Enter Employee Email'
+
+          empDesign.style.border='1px solid red';
+          empDesignErr.style.visibility='visible'
+          empDesignErr.innerHTML='Please Enter Employee Designation'
+
+          empDept.style.border='1px solid red';
+          empDeptErr.style.visibility='visible'
+          empDeptErr.innerHTML='Please Enter Employee Department'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+        }
+        else if(empName.value!='' && empEmail.value=='' && empDesign.value!='' && empDept.value != ''
+        && empStatus.value !=''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          eempEmail.style.border='1px solid red';
+          empEmailErr.style.visibility='visible'
+          empEmailErr.innerHTML='Please Enter Employee Email'
+
+          empDesign.style.border='1px solid black';
+          empDesignErr.style.visibility='hidden'
+
+          empDept.style.border='1px solid black';
+          empDeptErr.style.visibility='hidden'
+
+          empStatus.style.border='1px solid black';
+          empStatusErr.style.visibility='hidden'
+        }
+        else if(empEmail.value==''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          empEmail.style.border='1px solid red';
+          empEmailErr.style.visibility='visible'
+          empEmailErr.innerHTML='Please Enter Employee Email'
+
+          empDesign.style.border='1px solid red';
+          empDesignErr.style.visibility='visible'
+          empDesignErr.innerHTML='Please Enter Employee Designation'
+
+          empDept.style.border='1px solid red';
+          empDeptErr.style.visibility='visible'
+          empDeptErr.innerHTML='Please Enter Employee Department'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+        }
+        else if(empName.value!='' && empEmail.value!='' && empDesign.value=='' && empDept.value != ''
+        && empStatus.value !=''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          empEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='hidden'
+
+          empDesign.style.border='1px solid red';
+          empDesignErr.style.visibility='visible'
+          empDesignErr.innerHTML='Please Enter Employee Designation'
+
+          empDept.style.border='1px solid black';
+          empDeptErr.style.visibility='hidden'
+
+          empStatus.style.border='1px solid black';
+          empStatusErr.style.visibility='hidden'
+        }
+        else if(empDesign.value ==''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          empEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='hidden'
+
+          empDesign.style.border='1px solid red';
+          empDesignErr.style.visibility='visible'
+          empDesignErr.innerHTML='Please Enter Employee Designation'
+
+          empDept.style.border='1px solid red';
+          empDeptErr.style.visibility='visible'
+          empDeptErr.innerHTML='Please Enter Employee Department'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+        }
+        else if(empName.value!='' && empEmail.value!='' && empDesign.value!='' && empDept.value == ''
+        && empStatus.value !=''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          eempEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='visible'
+
+          empDesign.style.border='1px solid black';
+          empDesignErr.style.visibility='hidden'
+
+          empDept.style.border='1px solid red';
+          empDeptErr.style.visibility='visible'
+          empDeptErr.innerHTML='Please Enter Employee Department'
+
+          empStatus.style.border='1px solid black';
+          empStatusErr.style.visibility='hidden'
+        }
+        else if(empDept.value==''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          empEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='hidden'
+
+          empDesign.style.border='1px solid black';
+          empDesignErr.style.visibility='hidden'
+
+          empDept.style.border='1px solid red';
+          empDeptErr.style.visibility='visible'
+          empDeptErr.innerHTML='Please Enter Employee Department'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+        }
+        else if(empName.value!='' && empEmail.value!='' && empDesign.value!='' && empDept.value != ''
+        && empStatus.value ==''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          eempEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='hidden'
+
+          empDesign.style.border='1px solid black';
+          empDesignErr.style.visibility='hidden'
+
+          empDept.style.border='1px solid black';
+          empDeptErr.style.visibility='hidden'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+        }
+        else if(empStatus.value==''){
+          empName.style.border='1px solid black';
+          empNameErr.style.visibility='hidden'
+
+          empEmail.style.border='1px solid black';
+          empEmailErr.style.visibility='hidden'
+
+          empDesign.style.border='1px solid black';
+          empDesignErr.style.visibility='hidden'
+
+          empDept.style.border='1px solid black';
+          empDeptErr.style.visibility='hidden'
+
+          empStatus.style.border='1px solid red';
+          empStatusErr.style.visibility='visible'
+          empStatusErr.innerHTML='Please Select Employee Status'
+        }
+        else{
+          debugger
+          document.getElementById('editEmployee').submit()
+        }
+
+      }
+
+
+      window.addEventListener("load", () => {
+  const loader = document.querySelector(".loader");
+
+  loader.classList.add("loader--hidden");
+
+  loader.addEventListener("transitionend", () => {
+    document.body.removeChild(loader);
+  });
+});
+   </script>
+</body>
+</html>

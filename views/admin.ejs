@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGNIWIS-ADMIN</title>
+    <script src="../javascripts/admin.js" ></script>
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <link rel="stylesheet" href="admin.css">
+    <link rel="shortcut icon" href="../images/logo.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/e799d6a9ed.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+      .newEmployeePopup{
+        position: absolute;
+        top: 5.5rem;
+        left: 20rem;
+        width: 55%;
+        height: auto;
+        /* overflow: auto; */
+        display: none;
+        background-color: white;
+        padding: 18px 15px;
+        border-radius: 10px;
+        padding-bottom: 10px;
+        box-shadow: 0px 0px 5px 1px;
+      }
+      .err{
+        visibility: hidden;
+        color: red;
+      }
+      .mandatory{
+        color: red;
+        font-weight: bold;
+      }
+      @media only screen and (max-width: 480px) {
+        .newEmployeePopup{
+          position: absolute;
+          top: 10px;
+          left: 20px;
+          width: 100%;
+        }
+      }
+      #editHierarchyMainContainer{
+        display: none;
+        position: absolute;
+        background-color: white;
+        left: 5%;
+        top: 5%;
+        z-index: 10;
+        height: 80%;
+        overflow: auto;
+        border: 2px solid rgb(112, 112, 205);
+        border-radius: 10px;
+      }
+      #editHierarchyTitle{
+        margin-left: 20rem;
+        font-family: sans-serif;
+        font-weight: bold;
+        margin-top: 2.5%;
+        font-size: 22px;
+        color: rgb(55, 55, 223);
+        text-shadow: 5px 5px 5px rgb(125, 120, 120)
+      }
+      #editHierarchyEditButton{
+        margin-left: 23rem;
+        margin-top: 2rem;
+      }
+      #ocloseEditHierarchyPopUp{
+      position: absolute;
+      right: 1rem;
+    }
+    #navBarOfEditHierarchy{
+      /* background-color: yellow; */
+      background-color: white;
+      position: sticky;
+      top: 0rem;
+    }
+    #editHierarchyTable {
+    width: 100%;
+    border-collapse: collapse; /* Optional: This helps avoid double borders */
+}
+
+#editHierarchyTable th {
+    position: sticky;
+    top:5.6rem;
+    background-color: white; /* Ensures the header has a background */
+    z-index: 10; /* Ensures the header is above other content */
+    padding: 10px; /* Optional: Adds padding for better spacing */
+    border-bottom: 2px solid #dee2e6; /* Optional: Adds a border at the bottom */
+}
+
+    </style>
+</head>
+<body style="padding: 0px; margin: 0px;z-index: -1;" id="body">
+  <div class="loader"></div>
+ 
+
+  <span id="body" >
+    <div style="width: 100%;height: 100vh;background-color: #242524b4; position: absolute; display: none;z-index: 1;" id="popupBackground"></div>
+
+
+    <!-- ******************************* header part************************************* -->
+    <!-- ******************************************************************************** -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" ">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+        <img src="../images/logo.jpg" alt="" height="90px" width="150px" style="margin-left: 10px;" id="mainLogo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <!-- <div class="row"> -->
+            <div class="col-md-10">
+              <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+              <h2 id="orgTitle" >--Rating Application--</h2>
+
+                </div>
+                <div class="col-md-2"></div>
+              </div>
+
+            </div>
+            <div class="col-md-2">
+              <div style="display: flex; justify-content: space-evenly;">
+                <img src="../images/notification.png" onclick="AdminNotification()" id="AdminNotification" alt="User" width="34px" height="30px" style="z-index: 10;" title="Notification"/>
+                <img src="../images/profile.png" onclick="userProfileinfo()" id="userProfileinfo" alt="User" width="30px" height="30px"/>
+                <a href="../home" style="position: relative; left: -100px;"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+            </div>
+            <!-- </div> -->
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- <div style="display: flex; align-items: center; justify-content: space-between; margin: 0px;padding: 0px;">
+      <div>
+        <img src="../images/images.png" alt="" height="90px" width="150px" style="margin-left: 10px;">
+      </div>
+      <div >
+        <h2 id="orgTitle">--SIGNIWIS TECHNOLOGIES--</h2>
+      </div>
+      
+        <div style="width: 200px; display: flex; align-items: center; justify-content: flex-start;">
+          <div style="display: flex;width: 190px; justify-content: space-between;">
+            <img src="../images/notification.png" onclick="AdminNotification()" id="AdminNotification" alt="User" width="34px" height="30px"/>
+            <img src="../images/profile.png" onclick="userProfileinfo()" id="userProfileinfo" alt="User" width="30px" height="30px"/>
+            <a href="../home" style="position: relative; left: -100px;"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
+        </div>
+        </div>
+  
+  </div>   -->
+  
+  
+   <!-- ********************************Admin Notification popup****************************** -->
+    <!-- ******************************************************************************** -->
+  
+    <div style="width: 90%;height: 80%;background-color:white;position: absolute;top:10%;left: 5%;display: none;z-index: 2;border-radius: 10px;z-index: 20;" id="AdminNotificationPopUp" >
+      <div class="row mt-2 mb-2">
+        <div class="col-md-3"></div>
+        <div class="col-md-7">
+          <h3   style="font-style: oblique;color: cadetblue;position: sticky; top: 0px; background-color: #fff;"> Admin Notification</h1>
+
+        </div>
+        <div class="col-md-1"></div>
+        <div class="col-md-1">
+          <div style="display: flex;justify-content: space-around;cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" id="AdminNotifyCloseBtn" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="AdminNotifyCloseBtn()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: center;">
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      
+      
+      <div style="overflow: auto; height: 80%;">
+        <div class="table-responsive container">
+          <table border='1' id="AdminNotificationPopUpId" style="width: 100%;overflow-y: scroll;height: 40px;border-collapse: collapse;font-size: 18px;text-align: center;" class="table table-hover">
+              <thead>
+            <tr style="background-color: #fff;"  ><th style="color:black;">Requested Date</th><th style="color:black;">Reviewed date</th><th  style="color:black;">Employee Name</th><th  style="color:black;">Reviewer Name</th><th  style="color:black;">Status</th><th  style="color:black;">Result</th></tr>
+          </thead>
+          <tbody>
+            <%
+            if(sampleData2.length >0)
+            {
+              sampleData2.forEach((data)=>{
+                
+             %>
+           <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+            <td><%= data.Req_Date %></td>
+             <td><%= data.Rew_Date %></td>
+             <td><%= data.Emp_name %></td>
+             <td><%= data.Rew_name %></td>
+             <td><%= data.Status %></td>
+             <td><%= data.Result %></td>
+             
+             <td><a onclick="onPress()" href="/admin/delete/<%= data.Unique_Id %>"  style="color: red;"><i class="fa-solid fa-trash" style=" color: cadetblue;"></i></a></td>
+             <!-- <td><a href="/adminMDPopup/<%= data.Employee_Id %>" onclick="ClicktoViewEm(<%= data.Employee_Id %>)" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >X</a></td> -->
+             <!-- <td><div style="background-color:black ; color: white; font-weight: bold; width: 30px; height: 30px;border-radius: 20px; justify-content: center; align-items: center;padding: 0px 10px 10px 10px; ">X</div></td> -->
+             </tr>
+             <%
+              })
+            }
+            else
+            {
+            %>
+          <tr>
+            
+              <td style="position: absolute; left: 500px;">No Data Found</td>
+          </tr>
+          <%
+          }
+          %>
+        </tbody>
+          </table>
+          <!-- <button onclick="AdminNotifyCloseBtn()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);">Close</button> -->
+
+        </div>
+
+        <!-- <div style="" class="closeBtn">
+          <button onclick="AdminNotifyCloseBtn()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);">Close</button>
+        </div> -->
+      </div>
+    </div>
+  
+    <!-- **********************************User Detail popup**************************************** -->
+  
+    <div style="width: 90%;height: 80%;background-color:white;position: absolute;top:10%;left: 5%;display: none;z-index: 2;border-radius: 10px;" id="UsersDetailsPopUp">
+      <div style="display: flex;justify-content: flex-end;">
+        <svg xmlns="http://www.w3.org/2000/svg" id="UsersDetailsPopUpCloseBtn" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="UsersDetailsPopUpCloseBtn()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+          <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+        </svg>
+      </div>
+  
+      <div style="display: flex;background-color: rgb(155, 156, 148);">
+  
+        <div style="background-color: rgb(255, 255, 255);display: grid;width: 30%;overflow-y: scroll;" id="masterPage">
+            <input type="search" name="searchByListEmpyName" id="ListOfEmp" onkeyup="searchByListEmpName()"  placeholder="search" style="width:100%;height: 30px;text-align: center;letter-spacing: 2px;margin-right: 10px;"> 
+    
+            <table id="EmployeeList" style="margin: 20px 5px 0px 0px; text-align: center;background-color:white;" class="table table-hover">            
+              <tr ><th>Employees</th></tr>
+              <%
+            if(sampleData.length >0)
+            {
+              sampleData.forEach((data)=>{
+                
+            %>
+            <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+            <!-- <td><%= data.Employee_Id %></td> -->
+            <td id="<%= data.Employee_Id %>"><%= data.Employee_Name %></td>
+            
+            </tr>
+            <%
+              })
+            }
+            else
+            {
+            %>
+          <tr>
+              <td>No Data Found</td>
+          </tr>
+          <%
+          }
+          %>
+            </table>
+        </div>
+    
+      <!-- ************************************Detail part******************************************** -->
+    
+    
+        <div style="background-color: white;width: 70%;height: 100%;" id="detailPage">
+          <div id="EmployeeData">
+            <input id="EmpIdForFeatchData" name="EmpIdForFeatchData" />
+         
+    
+            <h1><%= session.UID %></h1>
+            
+           
+            
+          </div>
+          
+          <div id="EmployeeReviewDetails">
+            
+          </div>
+        </div>
+    
+      </div>
+    </div>
+  
+    <!-- **********************************Admin Info************************************* -->
+    <!-- ********************************************************************************* -->
+  
+    <div id="infoPopUp" style=" margin-right: 8px;margin-top: -10px;position:absolute;top:75px;right:30px;display:none;z-index: 11;">
+      <div style="background-color: white; width: max-content;border-radius: 10px;padding-bottom:10px ;box-shadow: 0px 0px 5px 1px;">
+        <div style="display: flex;justify-content: flex-end;">
+          <svg xmlns="http://www.w3.org/2000/svg" id="oclosepopup" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="oCloseuserInfoPopup()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </div>
+        
+        <div id="innerwelcome" style="padding: 10px 20px 20px 20px;">
+              <p>Employee Id : S0001</p>
+              <p>Employee Name : Signiwis Technology</p>
+              <p>Phone Number: XXXXXXXXXX</p>
+              <p>email: XXXXX@signiwis.com</p>
+        </div>
+            
+              
+        </div>
+      
+      </div>
+  
+  
+      
+    <!-- ***********************************Search fields********************************************* -->
+    <!-- ********************************************************************************************* -->
+    <!-- <div style="display: flex;justify-content: space-around;" class="row">
+      <div class="col-md-12">
+        <div class="row"  style="display: flex;align-items:center;justify-content: space-around;width:max-content;margin: 10px;padding:0px">
+          <div class="col-md-6 mt-3">
+          <input type="search" name="SearchByEMPId" id="SearchByEMPId" onkeyup="searchByEMPId()"  placeholder="search by employee id " style="width:250px;height: 30px;text-align: center;letter-spacing: 2px;margin: 0px 10px 0px 10px;">
+          </div>
+          <div class="col-md-6 mt-3">
+          <input type="search" name="SearchByEMPName" id="SearchByEMPName" onkeyup="searchByEMPName()"  placeholder="search by  name" style="width:250px;height: 30px;text-align: center;letter-spacing: 2px;margin: 0px 10px 0px 10px;"> 
+  
+          </div>
+        </div>
+      </div>
+      
+  </div>
+   -->
+   <div class="row mt-3 mb-3 w-100">
+    <div class="col-md-1"></div>
+    <div class="col-md-3">
+      <input type="search" name="SearchByEMPId" id="SearchByEMPId" onkeyup="searchByEMPId()"  placeholder="search by employee id " style="width:100%;height: 30px;text-align: center;letter-spacing: 2px;">
+
+    </div>
+    <div class="col-md-3 ">
+      <input type="search" name="SearchByEMPName" id="SearchByEMPName" onkeyup="searchByEMPName()"  placeholder="search by  name" style="width:100%;height: 30px;text-align: center;letter-spacing: 2px;"> 
+
+    </div>
+    <div class="col-md-5"></div>
+   </div>
+
+
+
+  <div class="row mb-2 w-100">
+    <div class="col-md-8 col-sm-8">
+      <!-- <div style="position: relative; left: 530px; font-weight: bold; font-size: large; color: cadetblue;"> -->
+      <div class="text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">EMPLOYEE DETAILS</div>
+    </div> 
+    <!-- <div class="col-md-2 col-sm-2"></div> -->
+    <div class="col-md-3 col-sm-3" style="display: flex;">
+    <!-- <Button style="position: relative; left: 530px; font-weight: bold; font-size: large; color: cadetblue;">Add</Button> -->
+       <img onclick="addEmployee()" style="height: 30px;" width="30px" src="../images/addbutton.png" alt="">
+
+       <a href="/admin/resign" class="ms-3" style="text-decoration: none; color:rgb(34, 155, 199)">Prev Employees</a>
+       <button type="button" class="btn btn-outline-secondary" style="margin-left: 1%;" onclick="onClickOpenEdithierarchypopUp()">Edit Hierarchy</button>
+    </div>
+  </div>
+ 
+
+
+
+  
+  <div id="editHierarchyMainContainer" class="container mt-4">
+
+   
+
+
+
+    <div id="newDesigDiv1">
+
+
+      <div style="display: flex;" id="navBarOfEditHierarchy">
+            <img src="../images/logo.jpg" alt="" height="90px" width="90px" style="margin-left: 10px;" >
+            <p id="editHierarchyTitle">EDIT HIERARCHY</p>
+            
+              
+              <!-- <button type="button" class="btn btn-success" style="height: 2.3rem;margin-left: 1rem;margin-top: 2rem;display: none;" id="editHierarchySaveButton" onclick="onClickEditHierarchySave()">Save</button> -->
+                <svg xmlns="http://www.w3.org/2000/svg" id="ocloseEditHierarchyPopUp" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="onCloseEditHierarchyPopUp()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+      </div>
+
+      <!-- <form action="admin/updatementor" method="post" id="newDesigId1" > -->
+       <table id="editHierarchyTable" class="table table-striped table-bordered table-hover">
+         <thead class="thead-dark">
+           <tr class="tableHeading">
+             <th>Employee Id</th>
+             <th>Name</th>
+             <th>Department</th>
+             <th>Mentor</th>
+             <th>Position</th>
+             <th>EDIT</th>
+             <th>Action</th>
+           </tr>
+         </thead>
+         <tbody>
+
+
+
+          <% if(sampleData.length > 0) { %>
+            <% sampleData.forEach((data) => { %>
+             
+              <form action="/admin/updatementor" method="post" id="newEmployeeForm1">
+                <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+                 
+                  <input type="hidden" name="id" value="<%= data.Employee_Id %>">
+                  <td><%= data.Employee_Id %></td>
+                  <td><%= data.Employee_Name %></td>
+                  <td><%= data.Employee_Department %></td>
+                  <td><input type="text" name="updateMentor" value="<%= data.mentor %>" id="<%= data.Employee_Id %>mentorID" disabled></td>
+                  <td><input type="text" name="position_val" value="<%= data.position %>" id="<%= data.Employee_Id %>positionID" disabled></td>
+                  <td><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48" onclick="onClickEditHierarchyEditButton(<%= data.Employee_Id %>)">
+                    <path d="M 36 5.0097656 C 34.205301 5.0097656 32.410791 5.6901377 31.050781 7.0507812 L 8.9160156 29.183594 C 8.4960384 29.603571 8.1884588 30.12585 8.0253906 30.699219 L 5.0585938 41.087891 A 1.50015 1.50015 0 0 0 6.9121094 42.941406 L 17.302734 39.974609 A 1.50015 1.50015 0 0 0 17.304688 39.972656 C 17.874212 39.808939 18.39521 39.50518 18.816406 39.083984 L 40.949219 16.949219 C 43.670344 14.228094 43.670344 9.7719064 40.949219 7.0507812 C 39.589209 5.6901377 37.794699 5.0097656 36 5.0097656 z M 36 7.9921875 C 37.020801 7.9921875 38.040182 8.3855186 38.826172 9.171875 A 1.50015 1.50015 0 0 0 38.828125 9.171875 C 40.403 10.74675 40.403 13.25325 38.828125 14.828125 L 36.888672 16.767578 L 31.232422 11.111328 L 33.171875 9.171875 C 33.957865 8.3855186 34.979199 7.9921875 36 7.9921875 z M 29.111328 13.232422 L 34.767578 18.888672 L 16.693359 36.962891 C 16.634729 37.021121 16.560472 37.065723 16.476562 37.089844 L 8.6835938 39.316406 L 10.910156 31.521484 A 1.50015 1.50015 0 0 0 10.910156 31.519531 C 10.933086 31.438901 10.975086 31.366709 11.037109 31.304688 L 29.111328 13.232422 z"></path>
+                    </svg></td>
+                  <td><button type="submit" value="Submit" onclick="handleEmployeeSubmit1()" class="btn btn-success btn-sm btn-block">SAVE</button></td>
+                </tr>
+              </form>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="6" class="text-center">No Data Found</td>
+            </tr>
+          <% } %>
+
+
+
+
+
+
+
+
+
+           <!-- <%
+           if(sampleData.length > 0) {
+             sampleData.forEach((data) => {
+           %>
+           <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+            <input type="hidden" name="id" id="mentorID1" value="<%= data.Employee_Id %>" >
+             <td  ><%= data.Employee_Id %></td>
+             <td><%= data.Employee_Name %></td>
+             <td><%= data.Employee_Department %></td>
+             <td><input type="text" name="updateMentor" id="mentorID" value="<%=data.mentor%>" disabled></td>
+             <td><input type="text" name="position_val" id="positionID" value="<%=data.position%>" disabled></td>
+             <td><input type="submit" value="Submit" id="addDesigA1"  ></td>
+           </tr>
+           <%
+             });
+           } else {
+           %>
+           <tr>
+             <td colspan="8" class="text-center">No Data Found</td>
+           </tr>
+           <%
+           }
+           %> -->
+         </tbody>
+       </table>
+      <!-- </form> -->
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- <div style="display: flex;" id="navBarOfEditHierarchy">
+       <img src="../images/logo.jpg" alt="" height="90px" width="90px" style="margin-left: 10px;" >
+       <p id="editHierarchyTitle">EDIT HIERARCHY</p>
+       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48" id="editHierarchyEditButton" onclick="onClickEditHierarchyEditButton()">
+         <path d="M 36 5.0097656 C 34.205301 5.0097656 32.410791 5.6901377 31.050781 7.0507812 L 8.9160156 29.183594 C 8.4960384 29.603571 8.1884588 30.12585 8.0253906 30.699219 L 5.0585938 41.087891 A 1.50015 1.50015 0 0 0 6.9121094 42.941406 L 17.302734 39.974609 A 1.50015 1.50015 0 0 0 17.304688 39.972656 C 17.874212 39.808939 18.39521 39.50518 18.816406 39.083984 L 40.949219 16.949219 C 43.670344 14.228094 43.670344 9.7719064 40.949219 7.0507812 C 39.589209 5.6901377 37.794699 5.0097656 36 5.0097656 z M 36 7.9921875 C 37.020801 7.9921875 38.040182 8.3855186 38.826172 9.171875 A 1.50015 1.50015 0 0 0 38.828125 9.171875 C 40.403 10.74675 40.403 13.25325 38.828125 14.828125 L 36.888672 16.767578 L 31.232422 11.111328 L 33.171875 9.171875 C 33.957865 8.3855186 34.979199 7.9921875 36 7.9921875 z M 29.111328 13.232422 L 34.767578 18.888672 L 16.693359 36.962891 C 16.634729 37.021121 16.560472 37.065723 16.476562 37.089844 L 8.6835938 39.316406 L 10.910156 31.521484 A 1.50015 1.50015 0 0 0 10.910156 31.519531 C 10.933086 31.438901 10.975086 31.366709 11.037109 31.304688 L 29.111328 13.232422 z"></path>
+         </svg>
+         
+         <button type="button" class="btn btn-success" style="height: 2.3rem;margin-left: 1rem;margin-top: 2rem;display: none;" id="editHierarchySaveButton" onclick="onClickEditHierarchySave()">Save</button>
+           <svg xmlns="http://www.w3.org/2000/svg" id="ocloseEditHierarchyPopUp" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="onCloseEditHierarchyPopUp()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+           </svg>
+      </div> -->
+      <!-- <form method="post" action="/admin/updatementor" enctype="multipart/form-data" class="newEmployeeForm1 " id="newEmployeeForm1"> -->
+        <!-- <table id="editHierarchyTable" class="table table-striped table-bordered table-hover">
+         <thead class="thead-dark">
+           <tr class="tableHeading">
+             <th>Employee Id</th>
+             <th>Name</th>
+             <th>Department</th>
+             <th>Mentor</th>
+             <th>Position</th>
+             <th>Action</th>
+           </tr>
+         </thead>
+         <tbody>
+           <%
+           if(sampleData.length > 0) {
+             sampleData.forEach((data) => {
+           %>
+           <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+             <td name="id" ><%= data.Employee_Id %></td>
+             <td><%= data.Employee_Name %></td>
+             <td><%= data.Employee_Department %></td>
+             <td><input type="text" name="mentor_val" id="mentorID" value="<%=data.mentor%>" disabled></td>
+             <td><input type="text" name="position_val" id="positionID" value="<%=data.position%>" disabled></td>
+             <td><input type="submit"  class="btn btn-success btn-sm btn-block" onclick="enableAndSubmit(<%= data.Employee_Id %>)"  ></input></td>
+           </tr>
+           <%
+             });
+           } else {
+           %>
+           <tr>
+             <td colspan="8" class="text-center">No Data Found</td>
+           </tr>
+           <%
+           }
+           %>
+         </tbody>
+       </table> -->
+
+
+
+
+
+
+          <!-- 
+          <div >
+            <label for="formGroupExampleInput" class="form-label"> Enter </label>
+
+            <input type="text" class="form-control" name="Add_Mentor1" id="formEmpId1" placeholder="Enter Mentor Name"  >
+          </div>
+          <br>
+          <div class="col-12 d-flex justify-content-end">
+
+            <button type="submit" class="btn btn-success" onclick="handleEmployeeSubmit1()" >Submit</button>
+          </div> -->
+
+      <!-- </form> -->
+  </div>
+ 
+
+
+
+
+
+
+
+
+
+  <!-- <div id="updateMentor" style="border: 2px solid black; width: 50%; margin-left: 20%;" >
+   <p> &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Update Mentor</p>
+
+   <%
+   if(sampleData) {
+     sampleData.forEach((data) => {
+   %>
+    <form method="POST" action="/admin/updatementor" enctype="multipart/form-data" class="newEmployeeForm1 " id="newEmployeeForm1">
+      <label for="formGroupExampleInput" class="form-label">Employee Id</label>
+      <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" value="<%= data.Employee_Id %>" >
+      <label for="formGroupExampleInput" class="form-label">Mentor</label>
+      <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="" value="<%=data.mentor%>"  >
+      <label for="formGroupExampleInput" class="form-label">Position</label>
+      <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="" value="<%=data.position%>" >
+   
+    </form>
+    
+    <%
+  });
+}else {
+  %>
+  <tr>
+    <td colspan="8" class="text-center">No Data Found</td>
+  </tr>
+  <%
+  }
+  %>
+  </div> -->
+
+ 
+
+
+
+
+
+
+
+
+
+
+  
+  <div class="table-responsive w-100" id="adminPageMaintable">
+    <table border="1"  id="RecordsTable" class="table table-hover" >
+      
+      <tr class="tableHeading"><th>Employee_Id</th><th>Name</th><th>Department</th><th>Designation</th><th>Mail_Id</th><th>Gender</th><th>Ratings</th><th>Action</th></tr>
+        <%
+        if(sampleData.length >0)
+        {
+          sampleData.forEach((data)=>{
+            
+         %>
+       <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>" >
+        <td><%= data.Employee_Id %></td>
+         <td><%= data.Employee_Name %></td>
+         <td><%= data.Employee_Department %></td>
+         <td><%= data.Employee_Designation %></td>
+         <td><%= data.Employee_Email %></td>
+         <td><%= data.Employee_Icon %></td>
+         <td>--NA--</td>
+         <td><a href="/adminMDPopup/<%= data.Employee_Id %>" onclick="ClicktoViewEm(<%= data.Employee_Id %>)" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >View</a></td>
+         </tr>
+         <% 
+          })
+        }
+        else
+        {
+        %>
+      <tr>
+          <td>No Data Found</td>
+      </tr>
+      <%
+      }
+      %>
+    </table>
+  </div>
+ 
+    <div id="adminNotification">
+      <% if(message.length > 0){  %>
+ 
+        <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+        <div class="alert alert-success" id="alert" style="margin-top: 10px;width:250px; margin: 50px auto;text-align: center;" role="alert">
+          <%= message %>
+        </div>
+       
+      <% } %>
+    </div>
+  </div>
+  </span>
+
+  <div class="newEmployeePopup" id="addNewEmployee">
+    <!-- <div class="col-md-10 text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">
+      Search for Employee
+  </div>
+     <form action="/admin/searchEmp" id="myForm">
+
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search By Employee ID" name="searchId" id="searchEMPID" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="submit" >Search</button>
+        </div>
+      </div>
+     </form> -->
+
+     <!-- Search  -->
+   
+    <form method="POST" action="/admin/addEmployee" enctype="multipart/form-data" class="newEmployeeForm " id="newEmployeeForm" >
+      <div class="row mb-3">
+        <div class="col-md-10 text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">
+            Add New Employee
+        </div>
+        <div class="col-md-2">
+          <div class="mb-3">
+            <div style="display: flex;justify-content: flex-end;">
+              <svg xmlns="http://www.w3.org/2000/svg" id="oclosepopup" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="oCloseAddPopup()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+
+        <%
+          if(newId.length>0){
+            %>
+           
+        <label for="formGroupExampleInput" class="form-label">Employee Id</label>
+
+        <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="Enter Employee id"  >
+        <%
+          }
+        %>
+      </div>
+      <!-- <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Employee Name <span class="mandatory">*</span> </label>
+        <input type="text" class="form-control" id="formEmpName" name="Add_Employee_Name" placeholder="Enter Employee Name" >
+        <p id="formEmpIMGName" class="err">Err</p>
+      </div> -->
+
+      <div class="mb-3">
+        <label for="formGroupExampleInput2" class="form-label">Employee Image <span class="mandatory">*</span> </label>
+        <input type="file" class="form-control" id="formEmpIMG" name="Add_Employee_Image" placeholder="Enter Employee Name" >
+        <p id="formEmpIMGErr" class="err">Err</p>
+      </div>
+      <div class="mb-3">
+        <label for="formGroupExampleInput3" class="form-label">Designation <span class="mandatory">*</span> </label>
+        <select onclick="desigfunction()" class="form-select" id="formEmpDesignation" aria-label="Default select example" name="Add_Employee_Designation">
+          <option selected>---Select---</option>
+          <%
+            if(designation.length > 0){
+              designation.forEach((data)=>{
+ 
+                %>
+                <option value="<%= data.designationName %>"> <%= data.designationName %></option>
+             <% })
+            }
+          %>
+          <option value="Others"> Others</option>
+         
+         
+        </select>
+        <!-- <input type="text" placeholder="Enter new Designation" class="form-control" width="50%"> -->
+        <!-- <div class="row">
+          <div class="col">
+            <input type="text" class="form-control" placeholder="Enter new Designation" aria-label="First name">
+          </div>
+        </div> -->
+        <p id="empDesignationErr" class="err">Err</p>
+      </div>
+      <!-- <div class="mb-3">
+        <label for="formGroupExampleInput4" class="form-label">Email <span class="mandatory">*</span> </label>
+        <input type="email" class="form-control" id="formEmpEmail" name="Add_Employee_Email" placeholder="Enter Mail id">
+        <p id="formEmpEmailErr" class="err">Err</p>
+      </div> -->
+      <div class="mb-3">
+        <label for="formGroupExampleInput5" class="form-label">Department <span class="mandatory">*</span> </label>
+        <select class="form-select" id="formEmpDept" aria-label="Default select example" name="Add_Employee_Department">
+          <option selected>---Select---</option>
+          <option value="UI5">UI5</option>
+          <option value="ABAP">ABAP</option>
+          <option value="Sales Force">Sales Force</option>
+        </select>
+        <p id="formEmpDeptErr" class="err">Err</p>
+      </div>
+
+      <!-- <div >
+        <label for="formGroupExampleInput" class="form-label"> Mentor </label>
+
+        <input type="text" class="form-control" name="Add_Mentor" id="formEmpId" placeholder="Enter Mentor Name"  >
+      </div>
+      <br>
+      <div >
+        <label for="formGroupExampleInput" class="form-label"> Position </label>
+
+        <input type="text" class="form-control" name="Add_Position" id="formEmpId1" placeholder="Enter Position"  >
+      </div> -->
+
+      <!-- <div class="mb-3">
+        <label for="formGroupExampleInput6" class="form-label">Gender <span class="mandatory">*</span> </label>
+        <select class="form-select" id="formEmpGender" aria-label="Default select example" name="Add_Employee_Gender">
+          <option selected>---Select---</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Female">Others</option>
+
+        </select>
+        <p id="formEmpGenderErr" class="err">Err</p>
+      </div> -->
+     
+      <div class="col-12 d-flex justify-content-end">
+        <button type="submit" class="btn btn-success" onclick="handleEmployeeSubmit()">Submit</button>
+      </div>
+
+     
+      
+    </form>
+
+
+
+    <div id="newDesigDiv">
+      <form action="admin/designation" method="post" id="newDesigId" >
+        <div>
+          <input type="text" id="desigInpId" class="form-control" placeholder="Enter new Designation" name="designationName" aria-label="First name">
+          <input type="submit" value="Submit" id="addDesigA">
+          <!-- <a class="addDesigBtn" id="addDesigA" >Add</a> -->
+        </div>
+
+
+      </form>
+    </div>
+
+
+
+
+
+
+    
+  </div>
+  
+  <script>
+
+// document.addEventListener('DOMContentLoaded', (event) => {
+//     // Get the form element
+//     const form = document.getElementById('myForm');
+
+//     // Add an event listener for the form's submit event
+//     form.addEventListener('submit', function(event) {
+//         // Prevent the default form submission behavior
+//         event.preventDefault();
+
+//         // Call your custom method
+//         onSubmit ();
+//     });
+// });
+
+    async function onSubmit(){
+      debugger
+      let searchId = document.getElementById('searchEMPID').value;
+
+const accessToken = await generateAccessToken();
+console.log(accessToken);
+const url = ``
+const response = await fetch(`https://api.greythr.com/employee/v2/employees/${searchId}`, {
+  
+    method: "GET",
+    headers:{
+      "Access-Control-Allow-Origin": '*',
+        "Content-Type": "application/json",
+        'Access-Token': accessToken,
+        'x-greythr-domain':`signiwistech1.greythr.com`
+
+    }
+})
+const data =await response.json();
+console.log(data);
+// document.getElementById('formEmpId').value = data.employeeId;
+// req.session.dateOfBirth = data.dateOfBirth;
+// document.getElementById('') = data.email;
+// document.getElementById('')= data.employeeNo;
+// req.session.gender = data.gender;
+// req.session.mobile = data.mobile;
+// req.session.name = data.name;
+
+// req.flash('success', `Data fetched for ${data.name}`);
+// res.redirect('/admin');
+
+
+
+ } 
+
+async function generateAccessToken(){
+  // const buffer =  Buffer.alloc(50);
+    const response = await axios({
+      url:"https://signiwistech1.greythr.com/uas/v1/oauth2/client-token",
+
+        method:"post",
+        data:"grant_type=client_credentials",
+        auth: {
+            username: "Ganesh",
+            password:"89dd801c-a874-4ec5-b59d-67fa34153d18"
+        }
+    });
+    const data = await response.data;
+    return data.access_token;
+}
+    
+
+function AdminNotificationHide(){
+      debugger
+      var oContainer = document.getElementById('adminNotification');
+      setTimeout(()=>{
+          oContainer.style.display='none'
+      },3000)
+  }
+  AdminNotificationHide();
+
+  function addEmployee(){
+    document.getElementById('addNewEmployee').style.display = 'block';
+  }
+
+  function oCloseAddPopup(){
+    document.getElementById('addNewEmployee').style.display = 'none';
+  }
+
+  // ************************Adding New Employee Function************************
+
+  function handleEmployeeSubmit1(){
+    debugger
+      document.getElementById('newEmployeeForm1').addEventListener('submit',(e)=>{
+
+        e.preventDefault()
+      })
+      document.getElementById('newEmployeeForm1').submit() 
+
+      
+  }
+
+
+
+  function handleEmployeeSubmit(){
+    document.getElementById('newEmployeeForm').addEventListener('submit',(e)=>{
+        e.preventDefault()
+    })
+    document.getElementById('newEmployeeForm').submit() 
+
+                      //      var empName= document.getElementById('formEmpName')
+                      //      var empDesignation= document.getElementById('formEmpDesignation')
+                      //      var empEmail= document.getElementById('formEmpEmail')
+                      //      var empDept= document.getElementById('formEmpDept')
+                      //      var empGender= document.getElementById('formEmpGender')
+
+
+                      //      var empNameErr= document.getElementById('formEmpNameErr')
+                      //      var empDesignationErr= document.getElementById('empDesignationErr')
+                      //      var empEmailErr= document.getElementById('formEmpEmailErr')
+                      //      var empDeptErr= document.getElementById('formEmpDeptErr')
+                      //      var empGenderErr= document.getElementById('formEmpGenderErr')
+                      //      var EmailVal =/^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+                      // debugger
+
+                      //       if(empName.value == '' && empDesignation.value =='---Select---' && empEmail.value == '' && empDept.value == '---Select---' && empGender.value =='---Select---'){
+                      //         empName.style.border='1px solid red'
+                      //         empNameErr.style.visibility='visible'
+                      //         empNameErr.innerHTML = 'Please Enter Employee Name'
+
+                      //         empDesignation.style.border='1px solid red'
+                      //         empDesignationErr.style.visibility='visible'
+                      //         empDesignationErr.innerHTML = 'Please Select the Employee Designation'
+
+                      //         empEmail.style.border='1px solid red'
+                      //         empEmailErr.style.visibility='visible'
+                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
+
+                      //         empDept.style.border='1px solid red'
+                      //         empDeptErr.style.visibility='visible'
+                      //         empDeptErr.innerHTML='Please Select Department of Employee'
+
+                      //         empGender.style.border='1px solid red'
+                      //         empGenderErr.style.visibility='visible'
+                      //         empGenderErr.innerHTML='Please select Gender'
+
+                      //       }
+                      //       else if(empName.value==''){
+                      //         empName.style.border='1px solid red'
+                      //         empNameErr.style.visibility='visible'
+                      //         empNameErr.innerHTML = 'Please Enter Employee Name'
+
+                      //         empDesignation.style.border='1px solid red'
+                      //         empDesignationErr.style.visibility='visible'
+                      //         empDesignationErr.innerHTML = 'Please Select the Employee Designation'
+
+                      //         empEmail.style.border='1px solid red'
+                      //         empEmailErr.style.visibility='visible'
+                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
+
+                      //         empDept.style.border='1px solid red'
+                      //         empDeptErr.style.visibility='visible'
+                      //         empDeptErr.innerHTML='Please Select Department of Employee'
+
+                      //         empGender.style.border='1px solid red'
+                      //         empGenderErr.style.visibility='visible'
+                      //         empGenderErr.innerHTML='Please select Gender'
+                      //       }
+                      //       else if(empDesignation.value=='---Select---'){
+                      //         empName.style.border='1px solid black'
+                      //         empNameErr.style.visibility='hidden'
+
+                      //         empDesignation.style.border='1px solid red'
+                      //         empDesignationErr.style.visibility='visible'
+                      //         empDesignationErr.innerHTML = 'Please Select the Employee Designation'
+
+                      //         empEmail.style.border='1px solid red'
+                      //         empEmailErr.style.visibility='visible'
+                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
+
+                      //         empDept.style.border='1px solid red'
+                      //         empDeptErr.style.visibility='visible'
+                      //         empDeptErr.innerHTML='Please Select Department of Employee'
+
+                      //         empGender.style.border='1px solid red'
+                      //         empGenderErr.style.visibility='visible'
+                      //         empGenderErr.innerHTML='Please select Gender'
+                      //       }
+                      //       else if(empEmail.value == ''){
+                      //         empName.style.border='1px solid black'
+                      //         empNameErr.style.visibility='hidden'
+
+                      //         empDesignation.style.border='1px solid black'
+                      //         empDesignationErr.style.visibility='hidden'
+
+                      //         empEmail.style.border='1px solid red'
+                      //         empEmailErr.style.visibility='visible'
+                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
+
+                      //         empDept.style.border='1px solid red'
+                      //         empDeptErr.style.visibility='visible'
+                      //         empDeptErr.innerHTML='Please Select Department of Employee'
+
+                      //         empGender.style.border='1px solid red'
+                      //         empGenderErr.style.visibility='visible'
+                      //         empGenderErr.innerHTML='Please select Gender'
+                      //       }
+                      //       else if(empDept.value=='---Select---'){
+                      //         empName.style.border='1px solid black'
+                      //         empNameErr.style.visibility='hidden'
+
+                      //         empDesignation.style.border='1px solid black'
+                      //         empDesignationErr.style.visibility='hidden'
+
+                      //         empEmail.style.border='1px solid black'
+                      //         empEmailErr.style.visibility='hidden'
+
+                      //         empDept.style.border='1px solid red'
+                      //         empDeptErr.style.visibility='visible'
+                      //         empDeptErr.innerHTML='Please Select Department of Employee'
+
+                      //         empGender.style.border='1px solid red'
+                      //         empGenderErr.style.visibility='visible'
+                      //         empGenderErr.innerHTML='Please select Gender'
+                      //       }
+                      //       else if(empGender.value=='---Select---'){
+                      //         empName.style.border='1px solid black'
+                      //         empNameErr.style.visibility='hidden'
+
+                      //         empDesignation.style.border='1px solid black'
+                      //         empDesignationErr.style.visibility='hidden'
+
+                      //         empEmail.style.border='1px solid black'
+                      //         empEmailErr.style.visibility='hidden'
+
+                      //         empDept.style.border='1px solid black'
+                      //         empDeptErr.style.visibility='hidden'
+
+                      //         empGender.style.border='1px solid red'
+                      //         empGenderErr.style.visibility='visible'
+                      //         empGenderErr.innerHTML='Please select Gender'
+                      //       }
+                      //       else if(EmailVal.test(!empEmail.value)){
+                      //         empEmail.style.border='1px solid red'
+                      //         empEmailErr.style.visibility='visible'
+                      //         empEmailErr.innerHTML = 'Please Enter Valid Email';
+                      //       } else if(!empEmail.value.includes('signiwis.com')){
+                      //         empEmail.style.border='1px solid red'
+                      //         empEmailErr.style.visibility='visible'
+                      //         empEmailErr.innerHTML = 'Please Enter email related to your organization';
+                      //       }
+                            // else{
+                            
+                            // }
+  }
+  
+
+        // busy indicator.
+window.addEventListener("load", () => {
+        const loader = document.querySelector(".loader");
+
+        loader.classList.add("loader--hidden");
+
+        loader.addEventListener("transitionend", () => {
+          document.body.removeChild(loader);
+        });
+
+});
+
+
+
+
+
+var desigInp = document.getElementById("desigInpId")
+    desigInp.style.display='none'
+var designBtn = document.getElementById("addDesigA")
+    designBtn.style.display='none'
+var newDesigForm = document.getElementById("newDesigId")
+    newDesigForm.style.display='none'
+function desigfunction(){
+  var desId = document.getElementById("formEmpDesignation").value
+  if(desId === 'Others'){
+       desigInp.style.display='block'
+       designBtn.style.display='block'
+       desigInp.style.marginTop='2px'
+       newDesigForm.style.display='block'
+ 
+  }
+  else{
+       desigInp.style.display='none'
+       designBtn.style.display='none'
+       newDesigForm.style.display='none'
+ 
+  }
+ 
+ 
+  // alert(desId)
+}
+
+
+
+
+
+
+
+
+  function onClickOpenEdithierarchypopUp(){
+    document.getElementById('editHierarchyMainContainer').style.display='block'
+    document.getElementById('navbarSupportedContent').style.filter='blur(5px)'
+    document.getElementById('adminPageMaintable').style.filter='blur(5px)'
+    document.getElementById('mainLogo').style.filter='blur(5px)'
+    
+  }
+
+  function onCloseEditHierarchyPopUp(){
+    document.getElementById('editHierarchyMainContainer').style.display='none'
+    document.getElementById('navbarSupportedContent').style.filter='blur(0px)'
+    document.getElementById('adminPageMaintable').style.filter='blur(0px)'
+    document.getElementById('mainLogo').style.filter='blur(0px)'
+    document.getElementById('editHierarchySaveButton').style.display='none'
+    document.getElementById('editHierarchyEditButton').style.visibility='visible'
+    document.querySelectorAll('#mentorID').forEach((x)=>{console.log(x.disabled=true)})
+    document.querySelectorAll('#positionID').forEach((x)=>{console.log(x.disabled=true)})
+    
+  }
+
+  function onClickEditHierarchyEditButton(i){
+    document.getElementById(`${i}mentorID`).disabled=false
+    document.getElementById(`${i}positionID`).disabled=false
+
+  }
+
+  function onClickEditHierarchySave(){
+    
+   debugger
+  }
+
+
+  function onClickSaveEachRowHierarchy(i){
+    debugger
+    alert("Button Clicked"+i)
+  }
+
+  function enableAndSubmit(employeeId) {
+  // Enable the disabled input fields before form submission
+      document.getElementById('mentorID_' + employeeId).disabled = false;
+      document.getElementById('positionID_' + employeeId).disabled = false;
+      
+      // Submit the form
+      document.getElementById('newEmployeeForm1').submit();
+}
+
+
+
+
+
+
+
+
+
+
+  </script>
+
+  
+</body>
+</html>
