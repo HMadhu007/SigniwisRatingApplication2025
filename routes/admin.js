@@ -22,7 +22,7 @@ var connection = mysql.createConnection({
     connectionLimit: 1000,
     host: 'localhost',
     user: 'root',
-    password: 'Giri#1290',
+    password: 'Signiwis@123',
     database: 'signiwis_schema',
     port: 3306
 
@@ -91,14 +91,17 @@ router.get('/',
                     // console.log(data3[0]);
                     // res.render('admin', {title:"Welcome to Signiwis", message ,session:req.session,sampleData:data, sampleData2:data2, newId:data3})
 
+                   // Admin Notification
+
+                   connection.query('SELECT * FROM admin_notification', function (error, AdminNotifyData) {
+
                     connection.query('SELECT * FROM designation', function (error, data4) {
 
-
-                        debugger
-                        console.log(data4[0]);
-                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4 })
+                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4, AdminNotifyData:AdminNotifyData })
 
                     })
+
+                })
 
                 })
 
@@ -248,6 +251,24 @@ router.get('/fetchuser', (req, res) => {
 
     })
 })
+
+// Admin Notification Delete
+
+router.get('/delete/:id', function (req, res, next) {
+
+    var id = req.params.id;
+    connection.query(`DELETE FROM admin_notification WHERE User_Id = ${id}`, function (error, data) {
+        
+        if (error) {
+            throw error;
+
+        }
+        else {
+            res.redirect("/admin")
+        }
+    })
+})
+
 router.get('/delete/:id', function (req, res, next) {
 
     debugger

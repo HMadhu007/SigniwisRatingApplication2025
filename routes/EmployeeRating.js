@@ -38,7 +38,7 @@ var connection = mysql.createConnection({
   connectionLimit: 1000,
   host: 'localhost',
   user: 'root',
-  password: 'Giri#1290',
+  password: 'Signiwis@123',
   database: 'signiwis_schema',
   port: 3306
 

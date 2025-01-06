@@ -13,7 +13,7 @@ var connection  = mysql.createConnection({
     connectionLimit : 1000,
     host     : 'localhost',
     user     : 'root',
-    password : 'Giri#1290',
+    password : 'Signiwis@123',
     database : 'signiwis_schema',
     port : 3306
 });
@@ -319,7 +319,7 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
        
     })
   
-
+//Delete Profile from admin and inserting into resign_employeetab
  router.get('/empDelete/:id',function(req,res,next){
   debugger
     var id = req.session.UID;
@@ -336,8 +336,8 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 
     var insertData = `INSERT INTO resign_employeetab (Employee_Id, Employee_Name, Employee_Designation, Employee_Email,
     Employee_Department, Employee_Password,
-    Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given,IMG_file,dateOfBirth,mobil,employeeNo) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)`;
+    Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given,IMG_file,dateOfBirth,mobil,employeeNo, mentor, position, mentorId) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     connection.query(sqlData,function(error,data){
       if(error)
@@ -360,8 +360,11 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
         var dateOfBirth = data[0].dateOfBirth;
         var mobile = data[0].mobile;
         var employeeNo = data[0].employeeNo;
+        var mentor= data[0].mentor
+        var position = data[0].position;
+        var mentorId = data[0].mentorId;
 
-        connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,employeeImg,dateOfBirth, mobile, employeeNo],function(error, data, rows){
+        connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,employeeImg,dateOfBirth, mobile, employeeNo, mentor, position, mentorId],function(error, data, rows){
           if(error) 
           {
             debugger
@@ -404,44 +407,104 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
       }
     })
 
-
-    
-
-
-
     
  })
 
 
-  router.get('/empEdit/:id',function(req,res,next){
-    debugger
-      var empId=req.session.UID;
-      var empName=req.query.empEditName;
-      var empEmail=req.query.empEditEmail;
-      var empDesignation=req.query.empEditDesignation;
-      var empDept=req.query.empEditDept;
-      var empStatus = req.query.Status;
+ // updating Employee Profile
+ router.get('/empEdit/:id',function(req,res,next){
+  debugger
+    var empId=req.session.UID;
+    var empName=req.query.empEditName;
+    var empEmail=req.query.empEditEmail;
+    var empDesignation=req.query.empEditDesignation;
+    var empDept=req.query.empEditDept;
+    var empStatus = req.query.Status;
 
-      var sql=`UPDATE  employee_table SET 
-      Employee_Name = "${empName}",
-      Employee_Designation = "${empDesignation}",
-      Employee_Email = "${empEmail}",
-      Employee_Department = "${empDept}",
-      Employee_Status = "${empStatus}"
-       WHERE Employee_Id = "${empId}"
-      `;
+    var sql=`UPDATE  employee_table SET 
+    Employee_Name = "${empName}",
+    Employee_Designation = "${empDesignation}",
+    Employee_Email = "${empEmail}",
+    Employee_Department = "${empDept}",
+    Employee_Status = "${empStatus}"
+     WHERE Employee_Id = "${empId}"
+    `;
 
-      connection.query(sql,function(error,data){
-        if(error){
-          throw error;
-        }else{
-          // req.flash('success',`${empId} Employee Updated!!`);
-         req.flash('success',`${empId} Employee Updated!!`);
-          res.redirect(`/adminMDPopup/${empId}`)
-          
-        }
-      })
-  })
+    connection.query(sql,function(error,data){
+      if(error){
+        throw error;
+      }else{
+      // req.flash('success',`${empId} Employee Updated!!`);
+      //  req.flash('success',`${empId} Employee Updated!!`);
+      //   res.redirect(`/adminMDPopup/${empId}`)
+
+      // checking status when changing to release
+      if(empStatus === "Released"){
+
+        var sqlData=`Select * from employee_table WHERE Employee_Id = ${empId}`;
+
+        connection.query(sqlData,function(error,data){
+          if(error)
+          {
+              throw error
+          }
+          else
+          {
+            var insertData = `INSERT INTO resign_employeetab (Employee_Id, Employee_Name, Employee_Designation, Employee_Email,
+            Employee_Department, Employee_Password,
+            Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given, IMG_file, dateOfBirth, mobil, employeeNo, mentor, position, mentorId) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+            var employeeName= data[0].Employee_Name;
+            var employeeDesignation= data[0].Employee_Designation;
+            var employeeEmail= data[0].Employee_Email;
+            var employeeDept= data[0].Employee_Department;
+            var employeePassword= data[0].Employee_Password;
+            var employeeIcon= data[0].Employee_Icon;
+            var employeeeStatus= "Resigned";
+            var employeeMockTaken= data[0].Employee_Mock_Taken;
+            var employeeMockGiven= data[0].Employee_Mock_Given;
+            var img = data[0].IMG_file;
+            var dateOfBirth = data[0].dateOfBirth;
+            var mobile = data[0].mobil;
+            var employeeNo = data[0].employeeNo;
+            var mentor= data[0].mentor
+            var position = data[0].position;
+            var mentorId = data[0].mentorId;
+
+            connection.query(insertData,[empId,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,img, dateOfBirth, mobile, employeeNo, mentor, position,mentorId],function(error, data, rows){
+              if(error) 
+              {
+                throw error
+              }
+              else{
+                // when, employee in release status and deleting employee from employee_table
+                connection.query(`DELETE FROM employee_table WHERE Employee_Id = ${empId}`,function(error,data){
+                  if(error)
+                    throw error
+                  else{
+                    req.flash('success',`${empId} Employee Updated!!`);
+                    res.redirect("/admin")
+                  }
+                  
+                })
+
+              }
+            })
+
+          }
+        })
+
+      }
+      else{
+        // when updating fields without release status
+        req.flash('success',`${empId} Employee Updated!!`);
+        res.redirect(`/adminMDPopup/${empId}`)
+      }
+
+      }
+    })
+})
 
 
 
