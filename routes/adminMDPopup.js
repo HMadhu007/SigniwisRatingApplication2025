@@ -319,7 +319,7 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
        
     })
   
-
+//Delete Profile from admin and inserting into resign_employeetab
  router.get('/empDelete/:id',function(req,res,next){
   debugger
     var id = req.session.UID;
@@ -336,8 +336,8 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 
     var insertData = `INSERT INTO resign_employeetab (Employee_Id, Employee_Name, Employee_Designation, Employee_Email,
     Employee_Department, Employee_Password,
-    Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given,IMG_file,dateOfBirth,mobil,employeeNo) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)`;
+    Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given,IMG_file,dateOfBirth,mobil,employeeNo, mentor, position, mentorId) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     connection.query(sqlData,function(error,data){
       if(error)
@@ -360,8 +360,11 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
         var dateOfBirth = data[0].dateOfBirth;
         var mobile = data[0].mobile;
         var employeeNo = data[0].employeeNo;
+        var mentor= data[0].mentor
+        var position = data[0].position;
+        var mentorId = data[0].mentorId;
 
-        connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,employeeImg,dateOfBirth, mobile, employeeNo],function(error, data, rows){
+        connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,employeeImg,dateOfBirth, mobile, employeeNo, mentor, position, mentorId],function(error, data, rows){
           if(error) 
           {
             debugger
