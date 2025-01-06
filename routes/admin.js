@@ -251,6 +251,24 @@ router.get('/fetchuser', (req, res) => {
 
     })
 })
+
+// Admin Notification Delete
+
+router.get('/delete/:id', function (req, res, next) {
+
+    var id = req.params.id;
+    connection.query(`DELETE FROM admin_notification WHERE User_Id = ${id}`, function (error, data) {
+        
+        if (error) {
+            throw error;
+
+        }
+        else {
+            res.redirect("/admin")
+        }
+    })
+})
+
 router.get('/delete/:id', function (req, res, next) {
 
     debugger
