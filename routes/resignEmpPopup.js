@@ -58,63 +58,29 @@ router.get('/', function(req, res, next) {
 
 
     router.get('/delete/:id', function(req, res, next){
-      debugger
+
       var id = req.params.id;
+
       connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = ${id}`, function(error, data){
+
         if(error){
-          debugger
-          req.flash('success', error)
-          res.redirect('/')
+    
+          throw error;
+
         } else{
-          debugger
+          
           req.flash('success', id+" Deleted successfully")
           res.redirect('/resignEmpPopup');
+
         }
       })
     })
-    router.get('/delete/:id/view', function(req, res, next){
-      debugger
-      // var id = req.params.id;
-      // connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = ${id}`, function(error, data){
-      //   if(error){
-      //     debugger
-      //     req.flash('success', error)
-      //     res.redirect('/')
-      //   } else{
-      //     debugger
-      //     req.flash('success', id+" Deleted successfully")
-          
-      //   }
-      // })
 
-      // res.redirect('/adminMDPopup');
-      // res.redirect('/admin');
-
-      debugger
-    // var message = req.flash('sucess')
-
-    // UID = req.params.id
-    // this.User_Id = req.params.id
-    // UserID = UID
-    // var query = `select * from employee_rating 
-    // right join resign_employeetab on employee_rating.Employee_Id = resign_employeetab.Employee_Id`
-    // req.session.UID = UID
-    // console.log( this.User_Id)
-    // connection.query(query, function(error, data, rows){
-    //   debugger
-    //   console.log(data)
-    //     singleUserData = data
-    //     // res.render('adminMDPopup', {title:UID,message,session:req.session, sampleData:data})
-    //     return res.redirect(`/adminMDPopup/${UID}`,{title:UID,message,session:req.session, sampleData:data})
-  
-    //  })
-
-    debugger
+    // Employee Restore from resign_employeetab to admin employee_table
+    router.get('/restore/:id', function(req, res, next){
 
     var id = req.params.id;
-    var sql=`Select Employee_Name from resign_employeetab WHERE Employee_Id = ${id}`
     var sqlData=`Select * from resign_employeetab WHERE Employee_Id = ${id}`
-    var empName;
 
     var employeeName;
     var employeeDesignation;
@@ -128,8 +94,8 @@ router.get('/', function(req, res, next) {
 
     var insertData =  `INSERT INTO employee_table (Employee_Id, Employee_Name, Employee_Designation, Employee_Email,
     Employee_Department, Employee_Password,
-    Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given,IMG_file,dateOfBirth,mobil,employeeNo) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?)`;
+    Employee_Icon,Employee_Mock_Taken,Employee_Mock_Given,Employee_Status,IMG_file,dateOfBirth,mobil,employeeNo,mentor,position,mentorId) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     connection.query(sqlData,function(error,data){
       if(error)
@@ -138,67 +104,46 @@ router.get('/', function(req, res, next) {
       }
       else
       {
-        debugger
+        
         employeeName= data[0].Employee_Name
         employeeDesignation= data[0].Employee_Designation
         employeeEmail= data[0].Employee_Email
         employeeDept= data[0].Employee_Department
         employeePassword= data[0].Employee_Password
         employeeIcon= data[0].Employee_Icon
-        employeeeStatus= "Released";
+        employeeeStatus= "Working";
         employeeMockTaken= data[0].Employee_Mock_Taken;
         employeeMockGiven= data[0].Employee_Mock_Given;
-        var img = req.file.buffer.toString('base64');
+        var img = data[0].IMG_file;
         var dateOfBirth = data[0].dateOfBirth;
-        var mobile = data[0].mobile;
+        var mobile = data[0].mobil;
         var employeeNo = data[0].employeeNo;
-        connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,img, dateOfBirth, mobile, employeeNo],function(error, data, rows){
+        var mentor= data[0].mentor
+        var position = data[0].position;
+        var mentorId = data[0].mentorId;
+
+        //Inserting Employee i.e restored from resign_employeetab to 
+        connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeMockTaken,employeeMockGiven,employeeeStatus,img, dateOfBirth, mobile, employeeNo,mentor,position,mentorId],function(error, data, rows){
           if(error) 
           {
-            debugger
-            
             console.log(error);
                                       
           } 
             else 
             {
-              debugger
-                
+ 
+              connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = ${id}`, function(error, data){
+                if(error){
+                  throw error
+                } else{
+                  res.redirect('/admin');
+                }
+              })
                 
             }
-
             
         })
       }
-
-      // connection.query(sql,function(error,data){
-      //   if(error)
-      //   {
-      //       throw error
-      //   }
-      //   else
-      //   {
-      //     // debugger
-      //     empName= data[0].Employee_Name
-      //   }
-      // })
-
-      connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = ${id}`,function(error,data){
-        debugger
-        if(error)
-        {
-            throw error
-        }
-        else
-        {
-          // req.flash('success',`${id} Employee ${empName} Deleted Successfully`);
-          // res.redirect("/admin")
-        }
-      })
-
-    
-    res.redirect('/admin');
-    
 
     })
 

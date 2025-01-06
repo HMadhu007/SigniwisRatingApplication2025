@@ -93,7 +93,7 @@
        <td><%= data.Employee_Icon %></td>
        <td>--NA--</td>
        <td><a href="/resignEmpPopup/delete/<%= data.Employee_Id %>" onclick="ClicktoViewEm()" id="deleteId" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >Delete</a>
-       <a href="/resignEmpPopup/delete/<%= data.Employee_Id %>/view" onclick="ClicktoViewEmp(<%= data.Employee_Id %>)"  title="Restore Employee" id="popOut" class="ms-2"  style="color: white; text-decoration: none; border-radius: 4px;width: 80px;" ><img src="../images/popout-flat.png" alt="PopOut" id="popOutId" width="30px" height="30px"/></a></td>
+       <a href="/resignEmpPopup/restore/<%= data.Employee_Id %>" onclick="ClicktoViewEmp(<%= data.Employee_Id %>)"  title="Restore Employee" id="popOut" class="ms-2"  style="color: white; text-decoration: none; border-radius: 4px;width: 80px;" ><img src="../images/popout-flat.png" alt="PopOut" id="popOutId" width="30px" height="30px"/></a></td>
        </tr>
        <% 
         })
