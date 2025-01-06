@@ -1,4 +1,4 @@
-// for MySql Database connection, do follow the below details
+// *** For MySql Database connection, do follow the below details ***
 
 var connection  = mysql.createConnection({
     connectionLimit : 1000,
@@ -9,3 +9,6 @@ var connection  = mysql.createConnection({
     port : 3306
 });
 
+// *** To Run application after clone.
+    1. npm install 
+    2. npm install node-localstorage
