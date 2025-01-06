@@ -180,43 +180,40 @@
       <div style="overflow: auto; height: 80%;">
         <div class="table-responsive container">
           <table border='1' id="AdminNotificationPopUpId" style="width: 100%;overflow-y: scroll;height: 40px;border-collapse: collapse;font-size: 18px;text-align: center;" class="table table-hover">
-              <thead>
-            <tr style="background-color: #fff;"  ><th style="color:black;">Requested Date</th><th style="color:black;">Reviewed date</th><th  style="color:black;">Employee Name</th><th  style="color:black;">Reviewer Name</th><th  style="color:black;">Status</th><th  style="color:black;">Result</th></tr>
-          </thead>
-          <tbody>
-            <%
-            if(sampleData2.length >0)
-            {
-              sampleData2.forEach((data)=>{
-                
-             %>
-           <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
-            <td><%= data.Req_Date %></td>
-             <td><%= data.Rew_Date %></td>
-             <td><%= data.Emp_name %></td>
-             <td><%= data.Rew_name %></td>
-             <td><%= data.Status %></td>
-             <td><%= data.Result %></td>
-             
-             <td><a onclick="onPress()" href="/admin/delete/<%= data.Unique_Id %>"  style="color: red;"><i class="fa-solid fa-trash" style=" color: cadetblue;"></i></a></td>
-             <!-- <td><a href="/adminMDPopup/<%= data.Employee_Id %>" onclick="ClicktoViewEm(<%= data.Employee_Id %>)" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >X</a></td> -->
-             <!-- <td><div style="background-color:black ; color: white; font-weight: bold; width: 30px; height: 30px;border-radius: 20px; justify-content: center; align-items: center;padding: 0px 10px 10px 10px; ">X</div></td> -->
-             </tr>
-             <%
-              })
-            }
-            else
-            {
-            %>
-          <tr>
-            
-              <td style="position: absolute; left: 500px;">No Data Found</td>
-          </tr>
+            <thead>
+          <tr style="background-color: #fff;"  ><th style="color:black;">Requested Date</th><th  style="color:black;">Employee Id</th><th  style="color:black;">Reviewer Id</th><th  style="color:black;">Status</th></tr>
+        </thead>
+        <tbody>
           <%
+          if(AdminNotifyData.length >0)
+          {
+            AdminNotifyData.forEach((data)=>{
+              
+           %>
+         <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+          <td><%= data.Requested_Date %></td>
+           <td><%= data.User_Id %></td>
+           <td><%= data.selectedId %></td>
+           <td><%= data.Status %></td>
+           
+           <td><a onclick="onPress()" href="/admin/delete/<%= data.User_Id %>"  style="color: red;"><i class="fa-solid fa-trash" style=" color: cadetblue;"></i></a></td>
+           <!-- <td><a href="/adminMDPopup/<%= data.Employee_Id %>" onclick="ClicktoViewEm(<%= data.Employee_Id %>)" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >X</a></td> -->
+           <!-- <td><div style="background-color:black ; color: white; font-weight: bold; width: 30px; height: 30px;border-radius: 20px; justify-content: center; align-items: center;padding: 0px 10px 10px 10px; ">X</div></td> -->
+           </tr>
+           <%
+            })
           }
+          else
+          {
           %>
-        </tbody>
-          </table>
+        <tr>
+            <td style="position: absolute; left: 500px;">No Data Found</td>
+        </tr>
+        <%
+        }
+        %>
+      </tbody>
+      </table>
           <!-- <button onclick="AdminNotifyCloseBtn()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);">Close</button> -->
 
         </div>

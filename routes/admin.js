@@ -91,14 +91,17 @@ router.get('/',
                     // console.log(data3[0]);
                     // res.render('admin', {title:"Welcome to Signiwis", message ,session:req.session,sampleData:data, sampleData2:data2, newId:data3})
 
+                   // Admin Notification
+
+                   connection.query('SELECT * FROM admin_notification', function (error, AdminNotifyData) {
+
                     connection.query('SELECT * FROM designation', function (error, data4) {
 
-
-                        debugger
-                        console.log(data4[0]);
-                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4 })
+                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4, AdminNotifyData:AdminNotifyData })
 
                     })
+
+                })
 
                 })
 
