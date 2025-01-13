@@ -394,6 +394,7 @@ Signiwis Technologies `,
   
   connection.query(sql5, (error, data) => {
     
+    // Admin Notification Status updating
     var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${Employee_Id} && selectedId = ${req.session.EmpId}`;
 
       connection.query(updateStatus, (error, data) => {
