@@ -293,20 +293,6 @@ Signiwis Technologies `,
       }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       // console.log(hariData);
       // // res.redirect(`${Employee_Id}`)
 
@@ -333,26 +319,12 @@ Signiwis Technologies `,
       // }
 
 
-
-
-
-
-
-
-
     }
   })
 
 
-
-
-
-  debugger
-
   var sql = `INSERT INTO employee_rating (UniqueId, Employee_Id, Rew_name, Review_Date, Employee_Job_knowledge, Employee_Work_Quality, Employee_Attendence_punctuality, Employee_Productivity, Employee_Communication, Employee_Behaviour, Employee_Total_Rating, Employee_Overall_Feedback, Reviewer_Id, Table_Id) 
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`;
-
-
 
 
   connection.query(sql, [UniqueId, Employee_Id, Rew_name, Review_Date, Job_Knowladge, Work_Quality, Attendance_Punctuality, Productivity, Communication_listening_Skill, Behaviour, Overall_Ratings, Overall_Feedback, Reviewer_Id, Reviewer_Id + Employee_Id], function (error, data, rows) {
@@ -377,8 +349,6 @@ Signiwis Technologies `,
       // res.send("success")
 
     }
-
-
 
 
   })
@@ -408,53 +378,33 @@ Signiwis Technologies `,
 
   })
 
-  var sql3 = `UPDATE admin_notification SET Status = "${Status}" WHERE User_Id = "${Employee_Id}"`;
-
-  //    connection.query(sql3,(error, data,)=>{
-  //     debugger
-  //       if(error){
-  // debugger
-  //         console.log(error);
-  //       } else{
-  //         debugger
-  //         // console.log("working fine");
-
-  //         // res.render('user')
-
-  //       }
-  //   })
-
-  // connection.query(`DELETE FROM admin_notification WHERE User_Id = ${Employee_Id}`,(error,data)=>{
-  //  debugger
-  // // 
-  // req.flash('success',"Working fine")
-  // res.redirect(`${Employee_Id}`)
-  // })
-  // res.render('EmployeeRating', { title: oUser_ID });
-
   var sql4 = `UPDATE employee_table SET Employee_Mock_Given = "${parseInt(employee_Mock_Given) + 1}" WHERE Employee_Id = "${Employee_Id}"`
-  debugger
+  
   connection.query(sql4, (error, data) => {
-    debugger
+    
     if (error) {
-      debugger
       throw error
     }
     else {
-      debugger
       console.log("working fine Seema");
     }
   })
 
   var sql5 = `UPDATE employee_table SET Employee_Mock_Taken = "${parseInt(employee_Mock_Taken) + 1}" WHERE Employee_Id = "${Reviewer_Id}"`
-  debugger
+  
   connection.query(sql5, (error, data) => {
-    debugger
-    res.redirect(`${Employee_Id}`)
+    
+    var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${Employee_Id} && selectedId = ${req.session.EmpId}`;
+
+      connection.query(updateStatus, (error, data) => {
+        if(error)
+          throw error;
+        else{
+          res.redirect(`${Employee_Id}`)
+          req.flash('success', "Data submitted successfully");
+        }
+      })
   })
-
-
-
 
 });
 
