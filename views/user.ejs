@@ -72,9 +72,9 @@
  
                                                 <!-- user Reviewer popup  -->
  
-   <div style="padding-bottom: 30px;width: 90%;height: 85%;background-color:white;position: absolute;top:10%;left: 5%;display: none;z-index: 10;border-radius: 10px;border: 2px solid black; overflow: auto; " id="userReviewId">
+   <div style="padding-bottom: 30px;width: 90%;height: 85%;background-color:rgb(255, 255, 255);position: absolute;top:10%;left: 5%;display: none;z-index: 10;border-radius: 10px;border: 2px solid black; overflow: auto; " id="userReviewId">
  
-      <div style="position: sticky;top: 0px; background-color: white;z-index: 100;">
+      <div style="position: sticky;top:0px; background-color: rgb(255, 255, 255);z-index: 100;margin:-17px 0px 0px 0px;padding-top:5px">
         <div class="row mt-3 mb-3 w-100" >
           <div class="col-md-1"></div>
           <div class="col-md-3">
@@ -85,7 +85,9 @@
             <input type="search" name="SearchByEMPName" id="SearchByEMPName" onkeyup="searchByEMPName()"  placeholder="search by  name" style="width:100%;height: 30px;text-align: center;letter-spacing: 2px;">
      
           </div>
-          <div class="col-md-5"></div>
+          <div style="position:relative; left:33%;width: max-content;"> 
+            <button onclick="closeEmpDetails()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);">Close</button>
+          </div>
       </div>
      
      
@@ -96,10 +98,6 @@
               </div>
               <div class="col-md-3 col-sm-3" >
               </div>
-            </div>
- 
-            <div style="position: fixed;top: 82%;left: 88%;">
-              <button onclick="closeEmpDetails()" style="background-color: red;padding: 3px 15px 3px 15px;border-radius: 5px;border-color: rgba(207, 207, 207, 0.687);position: absolute;top: -550px;">Close</button>
             </div>
          
  
@@ -169,7 +167,7 @@
  
    <div id="bodyContainer">
  
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary" style="margin-bottom: 2%;box-shadow: 0px 1px 4px 0px gray;">
         <div class="container-fluid">
           <a class="navbar-brand" href="/user">
           <img src="../images/logo.jpg" alt="" height="90px" width="150px" style="margin-left: 10px;">
@@ -193,8 +191,7 @@
               </div>
               <div class="col-md-2">
                 <div style="display: flex; align-items: center; justify-content: space-evenly;">
-                  <div style="display: flex; justify-content: space-between; gap: 8px;">
-                    <button   style="" onclick="displayEmpDetails()">Update Review</button>
+                  <div style="display: flex; justify-content: space-between; gap: 20px;">
                     <img src="../images/notification.png" onclick="UserNotification()"  id="UserNotification" alt="User" width="34px" height="30px"/>
                     <a href="./home"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
                 </div>
@@ -233,35 +230,28 @@
 </div>
  
  
-    <div id="userInfoBlur" class="row m-0">
+    <div id="userInfoBlur" style="display: flex;">
  
-      <div class="col-md-1">
-       
-      </div>
-      <div class="col-md-8">
-          <div class="row " id="tUserInfo" style="background-color: rgba(211, 213, 213, 0.639);border: 1px solid black;border-radius: 6px;padding: 18px 25px;width: inherit;">
-            <div class="col-md-4">
-              <img width="140px" height="170px" src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png"/>
-            </div>
-            <div class="col-md-7">
+          <div style="display: flex; gap:20px" id="tUserInfo">
+            
+              <img width="220px" height="250px" src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" style="border:2px solid black;border-radius: 6px;margin: 0% 0% 0% 49px;box-shadow: 0px 0px 10px 5px gray;"/>
+            
+            <div class="col-md-7" style="padding: 5px 0px 0px 20px;width: inherit; border-left: 2px solid black;">
               <h2 style="font-weight: bold;letter-spacing: 2px;"><%= session.Name  %></h2>
-              <p >Employee_Id : <%= session.EmpId  %> </p>
-              <p>Department : <%= session.Dept  %> Consultant</p>
-              <p>Email : <%= session.Email  %></p>
+              <p ><b>Employee_Id :</b> <%= session.EmpId  %> </p>
+              <p><b>Department :</b> <%= session.Dept  %> Consultant</p>
+              <p><b>Email :</b> <a href= "#" target="_blank"><%= session.Email  %></a> </p>
               
-                  <p>No.of Mock Taken: <%= element.Employee_Mock_Taken %> </p>
-                  <p>No.of Mock Given: <%= element.Employee_Mock_Given %> </p>
+                  <p><b>No.of Mock Taken:</b> <%= element.Employee_Mock_Taken %> </p>
+                  <p><b>No.of Mock Given:</b> <%= element.Employee_Mock_Given %> </p>
                   <%
                 }
               }) %>
-              </div>
-             
+            </div>
           </div>
-      </div>
-      <div class="col-md-3">
- 
-      </div>
- 
+    </div>
+    <div style="display:flex;margin:20px 10px 0px 150px;">
+      <button style="width: 300px; border-radius: 5px;text-align:center;letter-spacing: 5px;font:bold" onclick="displayEmpDetails()">UPDATE REVIEW</button>
     </div>
  
     <div id="adminNotification" >
