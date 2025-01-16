@@ -151,7 +151,10 @@
   width: 0;
   height: 0;
 }
- 
+/* .form-select{
+  width: 50px;
+}
+  */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -199,7 +202,9 @@ input:checked + .slider:before {
  
 #swichDivId{
   position: relative;
-  left: 85%;
+  left: 80%;
+  margin: 1%;
+  width: 18%;
 }
  
  
@@ -296,16 +301,25 @@ input:checked + .slider:before {
   visibility: hidden;
  
 }
-#selectRatingsId{
-  width: 180px;
-}
+/* #selectRatingsId{
+  width: 95%;
+ 
+} */
 #departmentId{
-  width: 180px;
-  position: absolute;
-  top: 371px;
-  left:1130px ;
-
+  width: 75%;
+  position: relative;
+  /* bottom: 20%; */
+  /* top: 371px;  */
+  
 }
+#textarea{
+  resize: none;
+}
+
+#orgTitle{
+  padding-left: 20%;
+}
+
 #requestRating{
   position: relative;
   left: 120px;
