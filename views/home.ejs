@@ -5,6 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGNIWIS-HOME</title>
+    <link rel="stylesheet" href="popupS.css">
+    <style>
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+    </style>
     <style>
 *{
   box-sizing: border-box;
@@ -30,16 +40,18 @@ background: #eee;
 height: calc(100% - 73px);
 }
 #forgetPopUP{
-  height: auto;
+  z-index: 1;
+  height: 450px;
   position: absolute;
-  top: 30%;
-  left: 35%;
-  width: 400px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
   background-color: white;
   border: 1px solid black;
   border-radius:10px;
   display: none;
-  box-shadow: 3px 5px 10px 5px rgba(27,27,27,0.7);
+  box-shadow: 0px 0px 15px 2px black;
   
 }
 .pos{
@@ -53,10 +65,6 @@ height: calc(100% - 73px);
 .h-custom {
 height: 100%;
 }
-#forgetPopUP{
-  left: 10%;
-  width: 350px;
-}
 }
 #pfont{
     font-size: 30px;
@@ -69,9 +77,16 @@ height: 100%;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
 <body>
 
+   <!-- adding busy indicator -->
+   <div id="loadBusyIndicator" style="visibility:<%= ForgotPassPopup.BusyIndicator %> ;height: 100vh;width: 100vw; background-color: rgba(101, 146, 214, 0.418);z-index: 2;position: fixed;display: flex;align-items: center;justify-content: center;margin-top: -3px;">
+    <div class="spinner-grow" role="status" style="height: 50px;width: 50px;">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+
   <div class="loader"></div>
 
-    <div class="container" style="margin: 3px;">
+    <div class="container" style="margin: 3px;filter: blur(<%= ForgotPassPopup.blur %>);" id="sec">
       <div class="row ">
         <div class="col-md-1"></div>
         <div class="col-md-5">
@@ -175,66 +190,58 @@ height: 100%;
       </div>
     </div>
     
-    <div class="container p-3" id="forgetPopUP">
-      <div class="row position-relative" >
-        <div class="col-md-12">
-          <div class="row p-2">
-            <div class="col-md-5">
-              <label for="exampleFormControlInput1" class="form-label">Employee Id</label>
+    <div id="forgetPopUP" style="padding-bottom: 20px;height: max-content;background-color: rgb(255, 255, 255);padding-left: 25px;display: <%= ForgotPassPopup.forgetPopUP %>">
+        <h4 style="text-align: center;padding-top: 10px;margin-bottom: 20px;">Forgot Password?</h4>
 
-            
+          <form method="POST" action="/sendOTPEmpId"> 
+            <div id="sendOTPContent" style="display: block;">
+            <div style="display: flex; margin: 30px 0px -10px 35px;gap: 30px;">         
+            <input name="SendOTPEmpId" type="text" id="EmpForgotId" placeholder="Employee Id" value="<%= ForgotPassPopup.EmpForgotIdFieldVal %>" style="text-align: center;" width="100px" <%= ForgotPassPopup.EmpForgotIdField %>>
+            <button  class="btn btn-secondary" type="submit" onclick="loadBusyIndicator()"  <%= ForgotPassPopup.SendOTPBtn %>>Send OTP</button>
             </div>
-            <div class="col-md-1">:</div>
-            <div class="col-md-6">
           
-
-              <input type="text"  class="form-control" id="EmpForgotId" placeholder="Employee Id">
-              <span id="EmpIdforgotNotify" style="visibility: hidden;font-size: x-small;">kskj</span>
-            </div>
+          </form>
+          <span id="EmpIdforgotNotify" style="visibility: hidden;font-size: x-small;">kskj</span>
+          <p style="color: red;display: <%= ForgotPassPopup.EmpIdEmptyVal %>; margin-left: 15px;" >The field Value should not be empty</p>
+          <p style="color: green;display: <%= ForgotPassPopup.OTPSuccMSG %>; margin-left: 15px;" id="OTPSuccMSG" >OTP has been sent to your email, XXXX@signiwis.com</p>
+          <p style="color: rgb(242, 10, 10);display: <%= ForgotPassPopup.OTPErrMSG %>; margin-left:20px" id="OTPErrMSG">Employee Id not found, please contact your HR's</p>
           </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row p-2">
-            <div class="col-md-5">
-              <label for="exampleFormControlInput1" class="form-label">New Password</label>
-            
+
+          <form method="POST" action="verifyOTPEmpId" style="margin-right: 10px;display: <%= ForgotPassPopup.EmpOTPVrfyContent %>;">
+            <div id="OTPVrfyContent" style="display: flex; margin: 20px 0px 0px 35px;gap: 30px;">
+              <input type="text" name="EmpIdOTPVrfy" value="<%= ForgotPassPopup.EmpIdOTPVrfy %>" style="display: none;">
+              <input name="VerifyOTPEmpId" type="number" id="OTPValidate" placeholder="Enter OTP" value="<%= ForgotPassPopup.EmpOTPVrfyFieldVal %>" width="100px" style="text-align: center;" <%= ForgotPassPopup.EmpForgotVrfyOTPField %> >
+              <button class="btn btn-secondary" type="submit" <%= ForgotPassPopup.VerifyOTPBtn %>>Verify OTP</button> 
+              <img src="https://media.tenor.com/Hw7f-4l0zgEAAAAM/check-green.gif" alt="" width="30px" style="display: <%= ForgotPassPopup.EmpOTPVrfyAnim %>;margin-left:-5px">
+              <img src="https://media0.giphy.com/media/fADv1b0ss5Qhae2cEZ/giphy.gif" alt="" width="28px" height="28px" style="display: <%= ForgotPassPopup.EmpOTPNotVrfyAnim %>;margin-top:5px;margin-left:-5px">
             </div>
-            <div class="col-md-1">:</div>
-            <div class="col-md-6">
-              <input type="password" class="form-control" id="empForgotPassword" placeholder="New password">
-              <span id="empForgotPassNotify" style="visibility: hidden; font-size: x-small;">Password cannot be blank</span>
+          </form>
+          <br><br>
+
+          <div id="afterOTPVrfyContent" style="display: <%= ForgotPassPopup.afterOTPVrfyContent %>;margin: 0px 0px 0px 35px;">
+            <form method="post" action="/UpdatePass">
+            <!-- <label for="exampleFormControlInput1" class="form-label">New Password</label> -->
+            <input type="text" name="EmpIdOTPVrfy" value="<%= ForgotPassPopup.EmpIdOTPVrfy %>" style="display: none;">
+            <input type="password" name="NewPassword" id="empForgotPassword" placeholder="New password" style="text-align: center;height: 40px;">
+            <span id="empForgotPassNotify" style="visibility: hidden; font-size: x-small;">Password cannot be blank</span>
+            
+            <br>
+            <br>
+            <!-- <label for="exampleFormControlInput1" class="form-label">Confirm Password</label> -->
+            <input type="text" name="ConfirmPassword" id="empConfirmForgotPassword" placeholder="Confirm Password" style="text-align: center;height: 40px;">
+            <span id="forgotconfirmPassNotify" style="visibility: hidden;font-size: x-small;"> Confirm Password cannot be blank</span>
+            <span style="display: <%= ForgotPassPopup.PassMissMatch %>;color: red;margin-top: 10px;">Check with fields || Password doesn't match</span>
+          </div>
+          
               
+            <div style="display: flex;justify-content: center;margin-top: 30px;margin-left: -25px;" >
+              <input type="submit" id="ConfirmButton" class=" btn btn-success" style="width: 7rem;display: <%= ForgotPassPopup.ForgotPassPopupConfirmBTN %>;" value="Confirm" onclick="loadBusyIndicator()">
+              <a class=" btn btn-danger" style="width: 7rem;text-decoration: none;display: <%= ForgotPassPopup.ForgotPassPopupCloseBTN %>;" href="<%= ForgotPassPopup.CloseOTPPopup %>" onclick="closeforget()">Close</a>
             </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row p-2">
-            <div class="col-md-5" >
-              <label for="exampleFormControlInput1" class="form-label">Confirm Password</label>
-            
-            </div>
-            <div class="col-md-1" >:</div>
-            <div class="col-md-6" >
-              <input type="password" class="form-control" id="empConfirmForgotPassword" placeholder="Confirm Password">
-        <span id="forgotconfirmPassNotify" style="visibility: hidden;font-size: x-small;"> Confirm Password cannot be blank</span>
+            </form>
 
-            </div>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="row">
-            <div class="col-md-4">
-
-            </div>
-            <div class="text-center mx-3 mb-2 " style="padding-left: 10rem">
-              <button class=" btn btn-success" style="width: 7rem;" onclick="passwordReset()">Confirm</button>
-            </div>
-            <div class="col-md-3"></div>
-          </div>
-        </div>
       </div>
-      <b class="position-absolute pos" onclick="closeforget()">X</b>
-    <!-- </div> -->
+
   </div>
       
 
@@ -243,20 +250,13 @@ height: 100%;
             Copyright © 2023. All rights reserved.
           </div>
         </div>
-     
 <script>
+ 
+   function loadBusyIndicator(){
+    document.getElementById("loadBusyIndicator").style.visibility = "visible"
+   }
 
-    
-
-   // document.body.innerHTML = `<a href="/user"><h1>Welocme</h1></a>`
-    
-    
-
-  
-       
-    
     function passwordReset(){
-    debugger
     var EmpForgotId=document.getElementById('EmpForgotId')      
     var EmpIdforgotNotify=document.getElementById('EmpIdforgotNotify')
 
@@ -332,13 +332,6 @@ else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword
 
         empConfirmForgotPassword.style.border = "1px solid black"
         forgotconfirmPassNotify.style.visibility = "hidden"
-
-         if((EmpForgotId.value=='1234') && (empForgotPassword.value=="abc")
-        && (empConfirmForgotPassword.value =="abc") )
-        {
-            alert('password successfully changed')
-        }
-
         
     }
     else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword.value !=null && empForgotPassword.value!= '')
@@ -443,11 +436,8 @@ else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword
 
 
     }
-   
-    
-
-   }
-
+  
+  }
 
 
       //  **************************************************************************
@@ -533,20 +523,29 @@ else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword
 
       //  ****************************************************************
             document.getElementById("forgotpassword").addEventListener('click',function(){
+              debugger
              let popUp = document.getElementById("forgetPopUP")
              popUp.style.display = "block"
              let sec= document.getElementById("sec")
-             sec.style.filter = "blur(6px)"
+             sec.style.filter = "blur(6px)";
+
+             
             })
             function closeforget(){
 
               
-
-
-              let popUp = document.getElementById("forgetPopUP")
+            
+             let popUp = document.getElementById("forgetPopUP")
              popUp.style.display = "none"
              let sec= document.getElementById("sec")
              sec.style.filter = "blur(0px)"
+
+             document.getElementById("OTPValidate").style.readOnly = false;
+             document.getElementById("EmpForgotId").style.readOnly = false;
+             document.getElementById("EmpForgotId").value = '';
+             document.getElementById("OTPValidate").value = '';
+            document.getElementById("OTPSuccMSG").style.display = "none";
+            document.getElementById("OTPErrMSG").style.display = "none";
 
             var EmpForgotId=document.getElementById('EmpForgotId')      
             var EmpIdforgotNotify=document.getElementById('EmpIdforgotNotify')
@@ -571,17 +570,19 @@ else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword
             empConfirmForgotPassword.style.border = "1px solid black"
             empConfirmForgotPassword.value=''
             forgotconfirmPassNotify.style.visibility = "hidden"
-    
+            
             }
-            window.addEventListener("load", () => {
-  const loader = document.querySelector(".loader");
+          window.addEventListener("load", () => {
+            const loader = document.querySelector(".loader");
 
-  loader.classList.add("loader--hidden");
+            loader.classList.add("loader--hidden");
 
-  loader.addEventListener("transitionend", () => {
-    document.body.removeChild(loader);
-  });
-});
+            loader.addEventListener("transitionend", () => {
+            document.body.removeChild(loader);
+            });
+          });
+
+          
       </script>
       
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
