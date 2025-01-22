@@ -12,3 +12,4 @@ var connection  = mysql.createConnection({
 // *** To Run application after clone.
     1. npm install 
     2. npm install node-localstorage
+    3. npm install --save node-notifier
