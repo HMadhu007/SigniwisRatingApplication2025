@@ -223,7 +223,6 @@
           <p>Name : <%= session.Name  %></p>
           <p>Department : <%= session.Dept  %></p>
           <p>Email : <%= session.Email  %></p>
- 
     </div>
     </div>
    
@@ -234,7 +233,7 @@
  
           <div style="display: flex; gap:20px" id="tUserInfo">
             
-              <img width="220px" height="250px" src="https://icons.veryicon.com/png/o/internet--web/prejudice/user-128.png" style="border:2px solid black;border-radius: 6px;margin: 0% 0% 0% 49px;box-shadow: 0px 0px 10px 5px gray;"/>
+              <img width="220px" height="250px" src="data:image/png;base64,<%= element.IMG_file %>" style="border:2px solid black;border-radius: 6px;margin: 0% 0% 0% 49px;box-shadow: 0px 0px 10px 5px gray;"/>
             
             <div class="col-md-7" style="padding: 5px 0px 0px 20px;width: inherit; border-left: 2px solid black;">
               <h2 style="font-weight: bold;letter-spacing: 2px;"><%= session.Name  %></h2>
