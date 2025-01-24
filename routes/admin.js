@@ -297,7 +297,7 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
         var position = req.body.Add_Position
         const accessToken = await generateAccessToken();
         console.log(accessToken);
-        const url = `https://api.greythr.com/employee/v2/employees/${empId}`
+        const url = `https://api.greythr.com/employee/v2/employees?page=1&size=180`
         const response = await fetch(url, {
             method: "GET",
             headers: {
@@ -308,29 +308,32 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
         })
         const data = await response.json();
         console.log(data);
-        req.session.employeeId = data.employeeId;
-        req.session.dateOfBirth = data.dateOfBirth;
-        req.session.email = data.email;
-        req.session.employeeNo = data.employeeNo;
-        req.session.gender = data.gender;
-        req.session.mobile = data.mobile;
-        req.session.name = data.name;
+        var newID="S000"+empId
+        var empDetails
+        data.data.forEach((x)=>{if(x.employeeNo==newID){empDetails=x}})
+        req.session.employeeId = empDetails.employeeId;
+        req.session.dateOfBirth = empDetails.dateOfBirth;
+        req.session.email = empDetails.email;
+        req.session.employeeNo = empDetails.employeeNo;
+        req.session.gender = empDetails.gender;
+        req.session.mobile = empDetails.mobile;
+        req.session.name = empDetails.name;
 
         debugger
         ;
-        var empName = data.name;
+        var empName = empDetails.name;
         var empDesignation = req.body.Add_Employee_Designation;
-        var empEmail = data.email;
+        var empEmail = empDetails.email;
         var empDept = req.body.Add_Employee_Department;
-        var empGender = data.gender;
+        var empGender = empDetails.gender;
         var empPassword = 'Default@123';
         var empStatus = 'Working';
         var empMockTaken = 0;
         var empMockGiven = 0;
         var img = req.file.buffer.toString('base64');
-        var dateOfBirth = data.dateOfBirth;
-        var mobile = data.mobile;
-        var employeeNo = data.employeeNo;
+        var dateOfBirth = empDetails.dateOfBirth;
+        var mobile = empDetails.mobile;
+        var employeeNo = empDetails.employeeNo;
 
 
         console.log(img);
@@ -412,10 +415,10 @@ router.post('/updatementor', function (req, res) {
         const mentor = req.body.updateMentor;
     const position = req.body.position_val;
     var id = req.body.id
-    sqlEMPTable = `select  Employee_Name,Employee_Email from employee_table where Employee_ID="${mentor}"`;
+    var sqlEMPTable = `SELECT  Employee_Name,Employee_Email FROM employee_table WHERE Employee_Id="${mentor}"`;
 
     // var mailId = `select Employee_Name,Employee_Email from employee_table where Employee_Id="${mentor}"`
-     connection.query(sqlEMPTable, function (error, mailData, rows) {
+     connection.query(sqlEMPTable, function (error,mailData) {
         debugger
         if (error) {
             debugger
@@ -426,8 +429,9 @@ router.post('/updatementor', function (req, res) {
         }
         else {
             debugger
-            var mailname
+            var mailname =mailData[0].Employee_Name
             var mailsendid
+            // console.log(data)
             console.log(mailData);
             if (mentor == undefined || position == undefined || mentor == "" || position == "") {
                 req.flash('error', 'Please provide both mentor and position values.');
@@ -437,7 +441,7 @@ router.post('/updatementor', function (req, res) {
             else {
                             debugger
     
-                            var updateMentor = `UPDATE employee_table SET position = "${position}", mentor = "${mailname}", mentorId ="${mentor}"  WHERE Employee_Id = "${id}"`
+                            var updateMentor = `UPDATE employee_table SET position = '${position}', mentor = "${mailname}", mentorId ='${mentor}' WHERE Employee_Id = "${id}"`
     
                             connection.query(updateMentor, function (err, data) {
                                 if (err) {
