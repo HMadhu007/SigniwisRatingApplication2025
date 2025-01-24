@@ -348,15 +348,11 @@
   <div class="row mb-2 w-100">
     <div class="col-md-8 col-sm-8">
       <!-- <div style="position: relative; left: 530px; font-weight: bold; font-size: large; color: cadetblue;"> -->
-      <div class="text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">EMPLOYEE DETAILS</div>
     </div> 
     <!-- <div class="col-md-2 col-sm-2"></div> -->
     <div class="col-md-3 col-sm-3" style="display: flex;">
     <!-- <Button style="position: relative; left: 530px; font-weight: bold; font-size: large; color: cadetblue;">Add</Button> -->
-       <img onclick="addEmployee()" style="height: 30px;" width="30px" src="../images/addbutton.png" alt="">
 
-       <a href="/admin/resign" class="ms-3" style="text-decoration: none; color:rgb(34, 155, 199)">Prev Employees</a>
-       <button type="button" class="btn btn-outline-secondary" style="margin-left: 1%;" onclick="onClickOpenEdithierarchypopUp()">Edit Hierarchy</button>
     </div>
   </div>
  
@@ -590,8 +586,26 @@
 
 
   
+  
+  <div class="text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">EMPLOYEE DETAILS</div>
+ <div  style="margin-left: 70%;">
+  
+    
+       <img onclick="addEmployee()" style="height: 30px; " width="30px" src="../images/addbutton.png" alt="">       
+       <button style="border: 1px solid black; margin-left: 30px;height:35px; border-radius: 10px;background-color: rgb(84, 96, 228);">
+       <a href="/admin/resign" style="text-decoration: none;  color: white;">Prev Employees</a>
+       </button>
+        <button type="button" class="btn btn-outline-secondary"  style="background-color: rgb(84, 96, 228); color: white;margin-left: 10%;" onclick="onClickOpenEdithierarchypopUp()">Edit Hierarchy</button>
+       
+ 
+ </div>
+
   <div class="table-responsive w-100" id="adminPageMaintable">
     <table border="1"  id="RecordsTable" class="table table-hover" >
+      <thead>
+       
+       </th>
+      </thead>
       
       <tr class="tableHeading"><th>Employee_Id</th><th>Name</th><th>Department</th><th>Designation</th><th>Mail_Id</th><th>Gender</th><th>Ratings</th><th>Action</th></tr>
         <%
