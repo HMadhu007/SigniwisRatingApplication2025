@@ -164,9 +164,9 @@ router.post('/sendOTPEmpId', function(req, res, next) {
                 ForgotPassPopup.blur = "6px";
                 ForgotPassPopup.forgetPopUP="block"
                 ForgotPassPopup.EmpForgotIdFieldVal = EmpIdOTP;
-                ForgotPassPopup.CloseOTPPopup = "/CloseOTPPopup"
+                ForgotPassPopup.CloseOTPPopup = "/CloseOTPPopup";
                 ForgotPassPopup.EmpOTPVrfyContent = "none";
-
+                ForgotPassPopup.EmpIdEmptyVal = "none";
 
                 res.render('home', {title:"Welcome to Signiwis",message, session:req.session,ForgotPassPopup:ForgotPassPopup})
 
@@ -258,11 +258,13 @@ router.post('/sendOTPEmpId', function(req, res, next) {
             }
         }
         else{
-            ForgotPassPopup.EmpIdEmptyVal = "block"
+            ForgotPassPopup.EmpIdEmptyVal = "block";
+            ForgotPassPopup.OTPErrMSG = "none"
             ForgotPassPopup.blur = "6px";
             ForgotPassPopup.forgetPopUP="block"
             ForgotPassPopup.CloseOTPPopup = "/CloseOTPPopup"
             ForgotPassPopup.EmpOTPVrfyContent = "none";
+            ForgotPassPopup.EmpForgotIdFieldVal = null;
 
 
             res.render('home', {title:"Welcome to Signiwis",message, session:req.session,ForgotPassPopup:ForgotPassPopup})    
@@ -415,7 +417,7 @@ router.post('/UpdatePass',function(req, res, next){
 
             notifier.notify({
                 title: 'Success!',
-                message: 'Your password has been updated',
+                message: 'Your Rating-App password has been updated',
                 icon: path.join(__dirname, 'logo.jpg'),
                 sound: true
             });
@@ -444,9 +446,9 @@ router.get('/CloseOTPPopup', function(req, res){
     ForgotPassPopup.afterOTPVrfyContent = "none";
     ForgotPassPopup.ForgotPassPopupCloseBTN = "block";
     ForgotPassPopup.ForgotPassPopupConfirmBTN = "none";
-    ForgotPassPopup.VerifyOTPBtn = ""
-    ForgotPassPopup.SendOTPBtn = ""
-    ForgotPassPopup.EmpIdEmptyVal = "none"
+    ForgotPassPopup.VerifyOTPBtn = "";
+    ForgotPassPopup.SendOTPBtn = "";
+    ForgotPassPopup.EmpIdEmptyVal = "none";
 
     res.render('home', {title:"Welcome to Signiwis",message, session:req.session,ForgotPassPopup:ForgotPassPopup})
 
