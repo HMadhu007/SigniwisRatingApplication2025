@@ -101,12 +101,9 @@ debugger
  
    })
 
-router.post('/quterlyKPI/:id',function(req,res){
+router.post('/UpdateKPI',function(req,res){
  debugger
- reviewEmpId = req.params.id;
- reviewerEmpId = req.session.EmpId;
- debugger;
- res.redirect(`/KPI/${reviewEmpId}`)
+ 
 })
 
 

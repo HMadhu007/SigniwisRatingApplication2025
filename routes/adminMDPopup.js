@@ -5,7 +5,8 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 const {generateReport} = require('../controller/userController');
 
-
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('../localStorage');
 var mysql = require('mysql');
 const session = require('express-session');
 
@@ -192,45 +193,6 @@ debugger
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ------------------------------------------------------------------------------------------------------------------------------------------
   router.get('/pdf/:id', generateReport);
 
@@ -270,10 +232,12 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
     const prefix = 'M001';
 const randomNumber = Math.floor(Math.random() * 10000);
 const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
+var selectedId = req.query.Reviewer_Id;
+
     
     let sql = `INSERT into employee_review (employee_id, unique_id,employee_review_val, review_points,Request_Id,Requested_Date) values ?`;
-    let sql1 = `INSERT INTO admin_notification (User_Id, Requested_Date, Status,Reviewer_name, Mock_Type,Request_Id) VALUES (?,?,?,?,?,?)`;
-    connection.query(sql1,[req.session.UID, vFormattedDate, 'pending',meetingId, 'KPI',requestId, ], function(error, data){
+    let sql1 = `INSERT INTO admin_notification (User_Id, Requested_Date, Status,Reviewer_name, Mock_Type,Request_Id, selectedId) VALUES (?,?,?,?,?,?,?)`;
+    connection.query(sql1,[req.session.UID, vFormattedDate, 'pending',meetingId, 'KPI',requestId, selectedId], function(error, data){
       if(error){
         req.flash('success',`Previous Ratings Not yet Reviewed`);
         res.redirect(`/adminMDPopup/${req.session.UID}`)
@@ -295,23 +259,23 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
                       arr.push([requestId,ele.Employee_Id,ele.Employee_Name,vFormattedDate,"KPI", meetingId]);
                   }
               })
-              // var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES ? `
-              // connection.query(reference, [arr], function( error, refData){
-              //       if(error){
-              //         throw error
-              //       }
-              //       else{
-              //         // console.log("success");
-              //         connection.query(sql,[value],function(error, data){
-              //           if(error){
-              //             throw error
-              //           } else{
-              //           req.flash('success',`KPI Request sent`);
-              //             res.redirect(`/adminMDPopup/${req.session.UID}`)
-              //           }
-              //         })
-              //       }
-              //    })
+              var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES ? `
+              connection.query(reference, [arr], function( error, refData){
+                    if(error){
+                      throw error
+                    }
+                    else{
+                      // console.log("success");
+                      connection.query(sql,[value],function(error, data){
+                        if(error){
+                          throw error
+                        } else{
+                        req.flash('success',`KPI Request sent`);
+                          res.redirect(`/adminMDPopup/${req.session.UID}`)
+                        }
+                      })
+                    }
+                 })
                }    
             });  
           }
