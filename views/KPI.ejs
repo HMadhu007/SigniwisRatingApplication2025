@@ -93,30 +93,12 @@
 
 
   <div id="Candidate-Container" style="display: flex;justify-content: center;gap: 16%;" >
-    <%
    
-    singleUserData.forEach((data)=>{
-          
-          
+    <div><img width="160px" height="170px" src="data:image/png;base64,<%= singleUserData[0].IMG_file %>"></div>
 
-  %>
-    <div><img width="160px" height="170px" src="data:image/png;base64,<%= data.IMG_file %>""></div>
-    
-  
+              <div><p><span style="font-weight: bold;">Emp_Id</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= singleUserData[0].Employee_Id %> </p><p><span style="font-weight: bold;">Name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= singleUserData[0].Employee_Name %></p><p> <span style="font-weight: bold;">Department</span> &nbsp;:  &nbsp;<%= singleUserData[0].Employee_Department %></p></div>
+              <div><p> <span style="font-weight: bold;">Mail_Id</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;<%= singleUserData[0].Employee_Email %></p></div>
 
-              <div><p><span style="font-weight: bold;">Emp_Id</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= data.Employee_Id %> </p><p><span style="font-weight: bold;">Name</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :  &nbsp;<%= data.Employee_Name %></p><p> <span style="font-weight: bold;">Department</span> &nbsp;:  &nbsp;<%= data.Employee_Department %></p></div>
-              <div><p> <span style="font-weight: bold;">Mail_Id</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : &nbsp;<%= data.Employee_Email %></p></div>
-
-  <%
-          
-})
-  %>
- 
-
-          
-     
-    
-    
     
   </div>
 
@@ -137,249 +119,40 @@
           <%
           if(KPIData1.length > 0){
             KPIData1.forEach((data)=>{
+
+              if(data.review_points.length>5 )
+              {
   
               %>
           <div class="form-group row" >
             <label for="inputPassword" class="col-sm-5 col-form-label"><%= data.review_points %></label>
             <div class="col-sm-3">
-              <input type="text" class="form-control" id="CTCinputPassword2" name="<%= data.employee_review_val %>" placeholder="">
+              <input type="text" class="form-control" id="CTCinputPassword2" name="<%= data.employee_review_val %>" placeholder="Enter the val. between 0 to 10">
             </div>
           </div>
-          <% })
+          <% }})
         }
       %>
         
 
       </div>
-       
-     
-   
-          <div style="text-align: center;">
-            <input class="btn btn-primary" type="submit" value="Submit1" id="kpiSubmitId"  />
-          </div>
-        </form>
-        <Button onclick="quterlyKPISection()" id="QuaterlyKPIBtn"> Quterly KPI Review</Button>
+
+      <!-- KPI Doc. link -->
+      <div style="margin: 20px 0px 10px 80px; display: flex;align-items: center;gap: 490px;">
+        <label >KPI Document link </label> 
+      <textarea  name="KPI_Doc_Link" id="" rows="3" cols="43"></textarea>
         
-        <!-- <form id="quaterlyReviewSection" action="/KPI/quterlyKPI/<%= singleUserData[0].Employee_Id %>" method="post" enctype="multipart/form-data" class="borderDiv" style="display: none;">
-          <table class="form-group row">
-            <thead>
-              <tr>
-                <th>KPI Piont</th><th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% 
-           kpi1TableData.forEach((data)=>{
-            for(const key in data){              
-              if(data[key] !== null){
-                %> 
-            <tr>
-              <td class="col-sm-5 col-form-label"><%= key %> </td>
-
-               <td><input type="text" id="<%= key %>_Id" class="col-sm-3 form-control" placeholder="<%= data[key ]%>" name="<%= key %>_Name" ></td>
-                <%
-              }
-            
-              }
-           })
-             %>
-          </tr>
-            </tbody>
-          </table>          
-           <div style="text-align: center;">
-            <input class="btn btn-primary" type="submit" value="Submit" id="kpiReviewPointSubmitBtn"  />
-          </div>
-        </form> -->
-        <form method="post" action="/KPI/kpiUpload"  id="kpiUpload" style="display: none;">
-          <%
-            console.log("guru",kpi1TableData)
-            let tabledata=kpi1TableData[0]
-            
-          %>
+      </div>       
+     
           
-          
-          <table id="kpiTable">
-            <tr >
-              <td>
-                <label for="">Appreciation from the Client:</label>
-              </td>
-              <td>
-                <input type="text" name="CF_Appreciate_Mail_Client" placeholder="Mail From the Client" id=""  style="width: 400px;text-align: center;"  <%= tabledata.CF_Appreciate_Mail_Client==='REQUEST'?'enabled':'readonly' %>  />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label >Project Release Feedback</label>
-              </td>
-              <td>
-                <input type="text" name="CF_Project_Release_Feedb" placeholder="Project Release Feedback" id="" style="width: 400px;text-align: center;"  <%= tabledata.CF_Project_Release_Feedb==='REQUEST'?'enabled':'readonly' %> /> <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Sessions Given On Saturday</label>
-              </td>
-              <td>
-                <input  type="text" name="TMS_Session_On_Sat" placeholder=" Sessions Given On Saturday" id="" style="width: 400px;text-align: center;"  required="true"  <%= tabledata.TMS_Session_On_Sat==='REQUEST'?'enabled':'readonly' %>  /> <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Number of Leave taken</label>
-              </td>
-              <td>
-                <input  type="text"  name="CTC_Num_Leave_Taken" placeholder=" Number of Leave taken" id="" style="width: 400px;text-align: center;"  required <%= tabledata.CTC_Num_Leave_Taken==='REQUEST'?'enabled':'readonly' %>  /> <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Reviewer Name</label>
-              </td>
-              <td>
-                <input required type="text" name="Reviewer_Name" placeholder=" Reviewer Name" id="" value="<%= tabledata.Reviewer_Name%>" style="width: 400px;text-align: center;"   <%= tabledata.Reviewer_Name==='REQUEST'?'enabled':'readonly' %>  /> <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Reviewer ID</label>
-              </td>
-              <td>
-                <input required type="text" name="ReviewerId" placeholder=" Reviewer ID" id="" style="width: 400px;text-align: center;" value="<%= tabledata.ReviewerId%>"   <%= tabledata.ReviewerId ==='REQUEST'?'enabled':'readonly' %> /> <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Employee ID</label>
-              </td>
-              <td>
-                <input required type="text" name="Emp_Id" placeholder="Employee ID" id="" style="width: 400px;text-align: center;" value="<%= tabledata.Emp_Id%>"   <%= tabledata.Emp_Id==='REQUEST'?'enabled':'readonly' %> /> <br>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Company Growth</label>
-              </td>
-              <td>
-                <input required type="text" name="CTC_Company_Growth" placeholder=" Company Growth" id="" style="width: 400px;text-align: center;"   <%= tabledata.CTC_Company_Growth==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Information from HR</label>
-              </td>
-              <td>
-                <input required type="text" name="HRF_Emp_Need_Inform_HR" placeholder=" Information From HR" id="ggggg" style="width: 400px;text-align: center;"   <%= tabledata.HRF_Emp_Need_Inform_HR==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Available Attendence :-</label>
-              </td>
-              <td>
-                <input required type="text" name="HRF_Reg_Avail_Attendance" placeholder="Available Attendence" id="" style="width: 400px;text-align: center;"   <%= tabledata.HRF_Reg_Avail_Attendance==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Number of Sessions Taken in Year :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TMS_Taken_Session_Year" placeholder="Number of Sessions taken in Year" id="" style="width: 400px;text-align: center;"   <%= tabledata.TMS_Taken_Session_Year==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Train Two Candidates</label>
-              </td>
-              <td>
-                <input required type="text" name="TMS_Train_Two_Candidates" placeholder="Train Two Dandidates" id="" style="width: 400px;text-align: center;"   <%= tabledata.TMS_Train_Two_Candidates==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Documents Prepared for New Topics :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TL_Documents_New_Topics" placeholder="Documents Prepared for New Topics" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Documents_New_Topics==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Learning New Topics In a Year :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TL_Two_Topics_Year" placeholder="Learning New Topics in Year" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Two_Topics_Year==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Blogs Published :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TL_Publish_Blogs" placeholder="Blogs Published" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Publish_Blogs==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Mock Performance :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TL_Performance_Mock" placeholder="Mock Performance" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Performance_Mock==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Learning Advance Concepts in Fiori :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TL_Adv_Concept_Fiori" placeholder="Advance Concepts in Fiori" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Adv_Concept_Fiori==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">Time Taken To Complete Training :-</label>
-              </td>
-              <td>
-                <input required type="text" name="TL_Complete_Training" placeholder="Time Taken To Complete Training" id="" style="width: 400px;text-align: center;"   <%= tabledata.TL_Complete_Training==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label for="">KPI ID :-</label>
-              </td>
-              <td>
-                <input required type="text" name="KPI_UId"  placeholder="KPI ID" id="" style="width: 400px;text-align: center;" value="<%= tabledata.KPI_UId %>"  <%= tabledata.KPI_UId==='REQUEST'?'enabled':'readonly' %> /> <br> 
-              </td>
-            </tr>
-            <!-- <tr>
-              <td>
-                <button type="submit">Submit KPI Rating</button>
-              </td>
-            </tr> -->
-          </table>
-          <div style="padding-left: 25%; padding-top: 2%;">
-            <button type="submit" style="background-color: rgb(58, 137, 255); border: none; color: blanchedalmond;">Submit KPI Rating</button>
-          </div>
-
-        </form>
-      <!-- <form action="KPI/KPI">
-          <div class="form-group row" >
-            <label for="inputPassword" class="col-sm-5 col-form-label">Number of leaves taken</label>
-            <div class="col-sm-3">
-              <input type="password" class="form-control" id="CTCinputPassword2" name="CTC_Num_Leave_Taken" placeholder="Password">
-            </div>
-          </div>
-
           <div style="text-align: center;">
-            <input type="submit" value="Submit" onclick="handleSubmit()" />
+            <input class="btn btn-primary" type="submit" value="Submit" id="kpiSubmitId"  />
           </div>
-      </form> -->
+        </form>
+        <!-- <Button onclick="quterlyKPISection()" id="QuaterlyKPIBtn"> Quterly KPI Review</Button> -->
+    
       <br>
-    <!-- <div class="table-responsive">
-        <h1>Contribution towards Company</h1>
-        <h6>Contribution for Company growth</h6>
-        <h6>Number of leaves taken</h6>
-    </div> -->
+   
       <div class="mt-4 mb-3">
         <div class="row m-0">
           <div class="col-md-1"></div>
@@ -420,30 +193,8 @@
           </div>
           </div>
         </div>
-      </div>  
-     <!-- <div style="display: flex;justify-content: space-around;margin-top: 10px;width: 100%;align-items: center;gap: 50%;margin-top: 2%;">
-      <div id="Reviewer-comments-area">
-        <div>
-          <span class="Mandatory">* </span>  
-          <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
-          <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
-        </div>
-      </div> -->
- 
-      <!-- <div >
-        <div style="margin-bottom: 25px;">
-          <span class="Mandatory">* </span>
-          <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;">
-          <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div>
-        <div>
-            <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
-        </form></div>
-      </div>
-     </div> -->
-     
-     <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
-   
-    <!-- </div> -->
+      </div>   
+  
   </div>
   <div id="adminNotification">
    

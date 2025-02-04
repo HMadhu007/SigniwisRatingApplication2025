@@ -329,7 +329,6 @@
 
             <form method="POST" action="/adminMDPopup/rating/<%= vSingleEmpData[0].Employee_Department %>" id="requestRatingID" style="height: max-content; margin-top: 65px;">
               <div id="departmentId"></div>
-              
               <!-- Container for aligning selects side by side -->
               <div style="display: flex; gap: 5px;width: 390px;">
                 <select class="form-select" id="selectRatingsId" name="Mock_Type" aria-label="Default select example" onchange="onSelctReviewtype()">
@@ -340,7 +339,7 @@
                   <option value="KPI">KPI</option>
                 </select>
                 
-                <select class="form-select" id="formEmpDesignation1" aria-label="Default select example" name="Reviewer_name">
+                <select class="form-select" id="formEmpDesignation1" aria-label="Default select example" name="Reviewer_name" onchange="onSelectReviewer_name()">
                   <option selected>-Select Employee-</option>
                   <%
                     if (sampleData.length > 0) {
@@ -639,7 +638,9 @@
 
    <div class="container" id="kpiContainerId" style=" border: 2px solid;display: none;position: absolute;top: 100px;left: 100px;background-color: white;">
 <form action="/adminMDPopup/updatekpipoits/<%= vSingleEmpData[0].Employee_Department %> " method="get">
-    <h3 style="display: inline-block;"> Select KPI points to be Reviewed</h3><i onclick="onCloseKPIPoints()" style="display: inline-block; float: right;height: 25px;padding: 2px;"  class="fa-solid fa-xmark"></i>
+  <input type="text" id="Reviewer_name_inp" style="display: none;" name="Reviewer_Id">
+   
+  <h3 style="display: inline-block;"> Select KPI points to be Reviewed</h3><i onclick="onCloseKPIPoints()" style="display: inline-block; float: right;height: 25px;padding: 2px;"  class="fa-solid fa-xmark"></i>
 
     <div class="form-check sectionClass" >
       <input class="form-check-input" type="checkbox" value="Should complete training on SAP UI5, SAP OData, SAP ABAP." name="TL_Complete_Training" id="flexCheckDefault">
@@ -758,14 +759,14 @@
  
    if(KPIdata.length > 0){
   %>
-    <div class="container" id="KPI_Form" style="display: none;overflow: auto;">
+    <div class="container" id="KPI_Form" style="display: none;margin-bottom: 50px;">
       <div class="frequently-parent">
         <div class="frequently-header"><br> <br> <br>
           <h2>KPI Points </h2>
           <hr>
           <!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
       </div>
-      <div class="frequently-child" style="overflow: auto;">
+      <div class="frequently-child" style="padding-bottom: 50px;">
 <%
     var outputArray = [];
     var count = 0;
@@ -794,21 +795,24 @@
     <%
       KPIdata.forEach((val, index)=>{
         if(val.reviewer_id == ele.reviewer_id){
+          if(val.review_points.length>5 )
+              {
     %>
                 
     <form class="borderDiv" id="" action="" method="" >
       <!-- <h4>Training and Learning</h4><br> -->
       <div>
-                    <div class="form-group row" >
-                      <label for="inputPassword" class="col-sm-5 col-form-label"> <%= val.review_points %></label>
-                      <div class="col-sm-3">
-                        <input type="text" class="form-control"  value="<%= val.review_value %>" name="" placeholder="">
-                      </div>
+                   <!-- KPI Doc. link -->
+                    <div style="display: flex;">
+                      <label for="inputPassword" class="col-sm-5 col-form-label" style="margin-bottom: 5px;"> <%= val.review_points %></label>
+                    
+                      <input type="text" class="form-control" style="margin-bottom: 5px;"  value="<%= val.review_value %>" name="" readonly>
+                      
                     </div>
                   </div>
                 </form>
                 <% 
-              }
+              }}
 
             })
             %>
@@ -831,6 +835,10 @@
 
  
    <script>
+
+  function onSelectReviewer_name(){
+    document.getElementById("Reviewer_name_inp").value = document.getElementById("formEmpDesignation1").value.split(",")[1]
+  }
 
 var desigInp12 = document.getElementById("desigInpId12")
     desigInp12.style.display='none'
