@@ -142,12 +142,14 @@ debugger;
                }
                const timestamp = Date.now(); // Current timestamp in milliseconds
     const randomNum = Math.floor(Math.random() * 10000); // Random number between 0 and 9999
+    var kpiDocLink=req.body.KPI_Doc_Link
     const UnqKPI =   `${prefix}${timestamp}${randomNum}`
-               value.push([req.session.EmpId,UnqKPI, element.employee_review_val, element.review_points, element.Request_Id, element.Requested_Date,element.review_value,element.employee_id])
+               value.push([req.session.EmpId,UnqKPI, element.employee_review_val, element.review_points, element.Request_Id, element.Requested_Date,element.review_value,element.employee_id,kpiDocLink])
                console.log(value);
+
             });
             
-            var sql = `INSERT into kpi (reviewer_id, unique_id, employee_review_val, review_points,Request_Id,Requested_Date,review_value, employee_id) values ?`;
+            var sql = `INSERT into kpi (reviewer_id, unique_id, employee_review_val, review_points,Request_Id,Requested_Date,review_value, employee_id,document_link) values ?`;
             connection.query(sql, [value], function(err, data){
               debugger
               if(err){

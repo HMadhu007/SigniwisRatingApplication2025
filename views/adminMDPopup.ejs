@@ -792,43 +792,52 @@
         <details>
             <summary> Requested Date: <%= ele.Requested_Date %> Reviewed by : <%= ele.reviewer_id %></summary>
             
-    <%
-      KPIdata.forEach((val, index)=>{
-        if(val.reviewer_id == ele.reviewer_id){
-          if(val.review_points.length>5 )
-              {
-    %>
+              <%
+                KPIdata.forEach((val, index)=>{
+                  if(val.reviewer_id == ele.reviewer_id){
+                    if(val.review_points.length>5 )
+                      {
+              %>
                 
-    <form class="borderDiv" id="" action="" method="" >
-      <!-- <h4>Training and Learning</h4><br> -->
-      <div>
+          <form class="borderDiv" id="" action="" method="" >
+              <!-- <h4>Training and Learning</h4><br> -->
+               <div>
                    <!-- KPI Doc. link -->
                     <div style="display: flex;">
                       <label for="inputPassword" class="col-sm-5 col-form-label" style="margin-bottom: 5px;"> <%= val.review_points %></label>
-                    
+                      
                       <input type="text" class="form-control" style="margin-bottom: 5px;"  value="<%= val.review_value %>" name="" readonly>
                       
+                      
                     </div>
+                    
                   </div>
-                </form>
-                <% 
+                  
+                  
+                  
+                <!-- <% 
               }}
-
+              
             })
-            %>
-          
-                
-          
-            </details>
+            %> -->
+            
+          </form>
+            <label for="">Document Link</label>
+            <a href="<%= val.document_link%>">Click Here</a>
+            
+          </details>
             <hr>
         </div>
+        
         <%
   
 })
 }
 %>
+
    </div>
       <!-- <br> <br> <br> <br> -->
+       
   </div>
    </div>
    
