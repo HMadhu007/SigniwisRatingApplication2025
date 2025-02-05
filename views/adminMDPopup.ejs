@@ -756,7 +756,7 @@
 
   <%
 }
- 
+  var DocLink = "";
    if(KPIdata.length > 0){
   %>
     <div class="container" id="KPI_Form" style="display: none;margin-bottom: 50px;">
@@ -797,10 +797,10 @@
                   if(val.reviewer_id == ele.reviewer_id){
                     if(val.review_points.length>5 )
                       {
+                        DocLink = val.document_link
               %>
                 
           <form class="borderDiv" id="" action="" method="" >
-              <!-- <h4>Training and Learning</h4><br> -->
                <div>
                    <!-- KPI Doc. link -->
                     <div style="display: flex;">
@@ -815,15 +815,20 @@
                   
                   
                   
-                <!-- <% 
+                <% 
               }}
+              %>
+             
+              
+              <%
               
             })
-            %> -->
             
+          %>
+          <label for="">Document Link</label>
+          <a href="<%= DocLink %>">Click Here</a>
           </form>
-            <label for="">Document Link</label>
-            <a href="<%= val.document_link%>">Click Here</a>
+            
             
           </details>
             <hr>
@@ -836,7 +841,7 @@
 %>
 
    </div>
-      <!-- <br> <br> <br> <br> -->
+      
        
   </div>
    </div>
