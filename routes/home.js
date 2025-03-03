@@ -372,12 +372,12 @@ router.post('/verifyOTPEmpId',function(req, res, next){
 
 
 router.post('/UpdatePass',function(req, res, next){
-
+    debugger
     var message = req.flash('success');    
     var NewPass = req.body.NewPassword;
     var ConfirmPass = req.body.ConfirmPassword;
     var EmpIdOTPVrfy1 = req.body.EmpIdOTPVrfy;
-    var getEmpData = `UPDATE employee_table SET Employee_Password = ${NewPass} WHERE employeeNo = '${EmpIdOTPVrfy1}'`
+    var getEmpData = `UPDATE employee_table SET Employee_Password = '${NewPass}' WHERE employeeNo = '${EmpIdOTPVrfy1}'`
 
     if((NewPass!= ConfirmPass)){
         
