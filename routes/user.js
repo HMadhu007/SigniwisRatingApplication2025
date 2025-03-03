@@ -181,59 +181,69 @@ router.post(['/sendmail/:id/:tableUID'], function (req, res, next) {
       throw err;
     } else {
       connection.query(`DELETE FROM accept_reject where emp_id = '${employee_id1}' `, function (err, data) {
-        connection.query(`DELETE FROM admin_notification where User_Id = '${employee_id1}'`, function (error, deleteAdminNotofication) {
+        // connection.query(`DELETE FROM admin_notification where User_Id = '${employee_id1}'`, function (error, deleteAdminNotofication) {
 
 
-          if (err) {
-            console.log(err);
-          } else {
-            const transporter = nodemailer.createTransport({
-              service: "gmail",
-              secureConnection: false,
-              auth: {
-                user: 'ganeshjkoppad@gmail.com',
-                pass: 'wpwyawesxyolwdpc'
-              }
-
-
-
-            });
-
-            transporter.verify(function (error, success) {
-              if (error) {
-                console.log(error);
-              } else {
-                console.log('Server is ready to take our messages');
-              }
-            });
-
-            const options = {
-              from: "Derr",
-              to: `${data1[0].Employee_Email}`,
-              subject: "Mock Update",
-              html: `<p> Hi <strong>${data1[0].Employee_Name} </strong> your mock is scheduled on <strong>${req.body.date}</strong>, It will be taken by  <strong>${req.session.Name}</strong> in ${req.body.mode} mode Please be prepared for the mock. </br> </br>
-                                                                            
-              <strong>
-              -- </br>
-              Thanks & Regards, </br>
-              Signiwis Technologies.
-              </strong> </br>
-              <a href="https://www.signiwis.com/">www.signiwis.com</a>
-              </p>
-              `
+          
+        // })
+        if (err) {
+          console.log(err);
+        } else {
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            secureConnection: false,
+            auth: {
+              user: 'ganeshjkoppad@gmail.com',
+              pass: 'wpwyawesxyolwdpc'
             }
 
-            transporter.sendMail(options, (error, info) => {
-              if (error) {
-                req.flash('success', err);
-              }
-              else {
-                req.flash('success', `Mail sent succesfully`);
-                res.redirect('/user')
-              }
-            })
+
+
+          });
+
+          transporter.verify(function (error, success) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Server is ready to take our messages');
+            }
+          });
+
+          const options = {
+            from: "Derr",
+            to: `${data1[0].Employee_Email}`,
+            subject: "Mock Update",
+            html: `<p> Hi <strong>${data1[0].Employee_Name} </strong> your mock is scheduled on <strong>${req.body.date}</strong>, It will be taken by  <strong>${req.session.Name}</strong> in ${req.body.mode} mode Please be prepared for the mock. </br> </br>
+                                                                          
+            <strong>
+            -- </br>
+            Thanks & Regards, </br>
+            Signiwis Technologies.
+            </strong> </br>
+            <a href="https://www.signiwis.com/">www.signiwis.com</a>
+            </p>
+            `
           }
-        })
+
+          transporter.sendMail(options, (error, info) => {
+            if (error) {
+              req.flash('success', err);
+            }
+            else {
+                  var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${employee_id1} && selectedId = ${req.session.EmpId}`;
+
+                  connection.query(updateStatus, (error, data) => {
+                    if(error)
+                      throw error;
+                    else{
+                      req.flash('success', `Mail sent succesfully`);
+                      res.redirect('/user')
+                    }
+                  })
+                  
+            }
+          })
+        }
       })
     }
   })
