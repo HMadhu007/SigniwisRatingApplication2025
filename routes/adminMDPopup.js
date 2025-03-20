@@ -93,9 +93,6 @@ router.post('/rating/:Department',(req,res,next)=>{
     var sMockType = req.body.Mock_Type;
     var selectedId = req.body.Reviewer_name.split(',')[1]
 
-    // var reference = `INSERT INTO accept_reject `;
-    //               connection.query(reference, [requestId, ])
-
     var MentieName = "";
     var MentorName = "";
     var MentorEmail = "";

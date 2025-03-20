@@ -415,7 +415,23 @@ router.post('/updatementor', function (req, res) {
         const mentor = req.body.updateMentor;
     const position = req.body.position_val;
     var id = req.body.id
-    var sqlEMPTable = `SELECT  Employee_Name,Employee_Email FROM employee_table WHERE Employee_Id="${mentor}"`;
+
+    if(position == "Lead"){
+
+        var updateMentor = `UPDATE employee_table SET position = '${position}', mentor = 'Lead', mentorId ='${id}' WHERE Employee_Id = "${id}"`
+        connection.query(updateMentor, function (err, data) {
+            if (err) {
+                throw err
+            }
+            else {
+                req.flash('success', `Updated succesfully`);
+                res.statusCode
+            }
+        })
+
+    }
+    else{
+        var sqlEMPTable = `SELECT  Employee_Name,Employee_Email FROM employee_table WHERE Employee_Id="${mentor}"`;
 
     // var mailId = `select Employee_Name,Employee_Email from employee_table where Employee_Id="${mentor}"`
      connection.query(sqlEMPTable, function (error,mailData) {
@@ -428,83 +444,42 @@ router.post('/updatementor', function (req, res) {
 
         }
         else {
-            debugger
-            var mailname =mailData[0].Employee_Name
-            var mailsendid
-            // console.log(data)
-            console.log(mailData);
-            if (mentor == undefined || position == undefined || mentor == "" || position == "") {
-                req.flash('error', 'Please provide both mentor and position values.');
+                debugger
+                var mailname =mailData[0].Employee_Name
+                var mailsendid
+                // console.log(data)
+                console.log(mailData);
+                if (mentor == undefined || position == undefined || mentor == "" || position == "") {
+                    req.flash('error', 'Please provide both mentor and position values.');
 
-                // return res.redirect("/admin");
-            }
-            else {
-                            debugger
-    
-                            var updateMentor = `UPDATE employee_table SET position = '${position}', mentor = "${mailname}", mentorId ='${mentor}' WHERE Employee_Id = "${id}"`
-    
-                            connection.query(updateMentor, function (err, data) {
-                                if (err) {
-                                    console.log("error hai yaha")
-                                    throw err
-                                }
-                                else {
-                                    console.log("Record updated successfully");
-                                    res.statusCode
-                                }
-                            })
-    
+                    // return res.redirect("/admin");
+                }
+                else {
+                        
+                                        var updateMentor = `UPDATE employee_table SET position = '${position}', mentor = "${mailname}", mentorId ='${mentor}' WHERE Employee_Id = "${id}"`
+                    
+                                        connection.query(updateMentor, function (err, data) {
+                                            if (err) {
+                                                console.log("error hai yaha")
+                                                throw err
+                                            }
+                                            else {
+                                                console.log("Record updated successfully");
+                                                res.statusCode
+                                            }
+                                        })
+                
+                            
+                            return res.statusCode;
                         }
-            return res.statusCode;
-            // mailData.forEach((ele1) => {
-            //     if (ele1.Employee_Id == mentor) {
-            //         debugger
-            //         mailname = ele1.Employee_Name
-
-            //         mailsendid = ele1.Employee_Email
-            //         console.log(mailname);
-            //         console.log(mailsendid);
-
-
-            //         if (mentor == undefined || position == undefined || mentor == "" || position == "") {
-            //             req.flash('error', 'Please provide both mentor and position values.');
-
-            //             return res.redirect("/admin");
-
-            //         }
-            //         else {
-            //             debugger
-
-            //             var updateMentor = `UPDATE employee_table SET position = "${position}", mentor = "${mailname}", mentorId ="${mentor}"  WHERE Employee_Id = "${id}"`
-
-            //             connection.query(updateMentor, function (err, data) {
-            //                 if (err) {
-            //                     throw err
-            //                 }
-            //                 else {
-            //                     console.log("Record updated successfully");
-            //                     res.redirect("/admin")
-            //                 }
-            //             })
-
-            //         }
-
-
-            //     }
-
-            // })
-
-
+        
+                        
+                    
+            
         }
 
     })
-
-    console.log(mentor);
-    console.log(position);
-    console.log(id);
-    console.log(res);
-    // res.redirect('/admin');
-    // res.message("ty")
+    }
 
     res.redirect('/admin')
     
@@ -514,10 +489,6 @@ router.post('/updatementor', function (req, res) {
         res.redirect('/admin')
     }
 
-    
-
-
-   
 
 })
 
