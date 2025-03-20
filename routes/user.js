@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 const nodemailer = require("nodemailer");
 
-
 // var database = require('../database')
 var mysql = require('mysql');
 
@@ -15,36 +14,39 @@ var connection = mysql.createConnection({
   port: 3306
 
 });
+
+
 /* GET users listing. */
 router.get('/', function (req, res, next) {
 
-  debugger
+
 
   var loggedUser = req.session.EmpId
   var message = req.flash('success');
   if (req.session.currId) { }
-  connection.query(`SELECT * FROM admin_notification as ad inner join accept_reject as ar ON ad.Request_Id = ar.Request_Id AND ar.emp_id = ${req.session.EmpId}`, function (error, data) {
-    debugger
+  connection.query(`SELECT * FROM admin_notification where selectedId = ${req.session.EmpId}`, function (error, data) {
+    
     connection.query('SELECT * FROM employee_table', function (err, data1) {
-
+      var LeadCheck = "hidden";
       debugger
+      data1.forEach((val)=>{
+        if(val.Employee_Id == loggedUser && val.position == "Lead"){
+          LeadCheck = "visible";
+        }
+      })
+
       connection.query('SELECT * FROM review_status', function (error, data2) {
         connection.query(`SELECT * FROM admin_notification`, function (error, allData) {
 
-          debugger;
+          
           console.log(data);
 
           if (error) { throw error } else {
 
-
-
-
-
             //  var selected_Id=data.filter(element=>element.selectedId===loggedUser)
 
-
-            res.render('user', { title: "Welcome to Signiwis", message, session: req.session, oReviewEmpData: data, oEmp_Data: data1, oEmp_ReviewStatus: data2, loggedUser1: loggedUser })
-            debugger
+            res.render('user', { title: "Welcome to Signiwis", message, session: req.session, oReviewEmpData: data, oEmp_Data: data1, oEmp_ReviewStatus: data2, loggedUser1: loggedUser, LeadCheck:LeadCheck})
+            
           }
 
 
@@ -144,12 +146,12 @@ router.get('/mail/:tableUID/:id', function (req, res, next) {
     `)
 }),
 
-  router.get('/delete/:table_UId/:id', function (req, res, next) {
+  router.get('/delete/:id', function (req, res, next) {
     debugger
 
-    const tableid = req.params.table_UId;
     var id = req.params.id
     connection.query(`DELETE FROM accept_reject where emp_id = '${id}'`, function (err, data) {
+      debugger
       connection.query(`DELETE FROM admin_notification where User_Id = '${id}'`, function (error, deleteAdminNotofication1) {
         if (err) {
           console.log(err);
@@ -251,6 +253,61 @@ router.post(['/sendmail/:id/:tableUID'], function (req, res, next) {
 
 })
 
+var date = new Date()
+var sStrRevrs = date.toISOString().split(":")[0].split("T")[0]
+var cDate = sStrRevrs.split("-")
+var vFormattedDate = cDate[2]+"/"+cDate[1]+"/"+cDate[0]
+
+router.post('/leadMockRequest',function (req, res){
+ var User_Id = req.session.EmpId;
+ var selectedId = req.body.Reviewer_name.split(',')[1] // Mentor Id
+ var MenteeId = req.body.Reviewer_name2.split(',')[1]
+ var MenteeName = req.body.Reviewer_name2.split(',')[0]
+ var sMockType = req.body.Mock_Type;
+
+ const reqId = Math.floor(Math.random() * 1000000);
+ const requestId = 'REQID' + reqId; 
+ const prefix = 'M001';
+ const randomNumber = Math.floor(Math.random() * 10000);
+ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
+
+
+ var sql = `INSERT INTO admin_notification (User_Id, Requested_Date, Status, Reviewer_name, Mock_Type, Request_Id, selectedId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+ var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES (?, ?, ?, ?, ?, ?)`
+
+ connection.query(sql, [req.body.Reviewer_name2.split(',')[1], vFormattedDate, "Pending",meetingId, sMockType, requestId,selectedId], (error, results)=>{
+  debugger
+  if(error){
+      if(error.code == 'ER_DUP_ENTRY'){
+        req.flash('success', `Request already sent`);
+        res.redirect("/user")
+      }
+      else{
+        req.flash('error', `Something went wrong`);
+        res.redirect("/user")
+      }
+
+    debugger
+  }
+  else{
+    connection.query(reference,[requestId, MenteeId, MenteeName, vFormattedDate,sMockType,meetingId],(err, data)=>{
+      debugger
+      if(err){
+        req.flash('success', `Something went wrong`);
+        res.redirect("/user")
+      }
+      else{
+        req.flash('success', `Request sent succesfully`);
+        res.redirect("/user")
+      }
+    })
+    
+  }
+
+ })
+
+ 
+})
 
 
 

@@ -1,6 +1,7 @@
 var express = require('express');
 let ejs = require('ejs');
 var router = express.Router();
+const nodemailer = require("nodemailer");
 const puppeteer = require('puppeteer');
 const path = require('path');
 const {generateReport} = require('../controller/userController');
@@ -65,50 +66,18 @@ router.get(['/','/:id'], (req, res)=>{
 
 
 var date = new Date()
-debugger
 var sStrRevrs = date.toISOString().split(":")[0].split("T")[0]
 var cDate = sStrRevrs.split("-")
 var vFormattedDate = cDate[2]+"/"+cDate[1]+"/"+cDate[0]
-debugger
+
 // console.log("Current Date", cDate[2]+"/"+cDate[1]+"/"+cDate[0])
 
-// router.post('/rating',(req,res,next)=>{
-
-//   var UserID = "MD102";
-// var singleUserData=null
-// var ReviewDate = "nulldate"
-// var ReviewName = "nullName"
-// var Status = "nullStatus"
-// var ReviewRate = 5
-
-//     // var UID = req.params.id
-//     var sql = `INSERT INTO employee_notifaction (Employee_Id, Requested_Date, Review_Date, Review_Rating, Reviewer_Name, Status) VALUES ("${UserID}", "${date}", "${ReviewDate}", "${ReviewRate}", "${ReviewName}", "${Status}")`;
-   
-//                 connection.query(sql, (error, results)=>{
-
-//                 if(error) 
-//                 {
-                    
-//                     res.send("Error occured") 
-                         
-//                 } 
-//                 else 
-//                 {
-//                     // console.log('data created successfully');
-//                     res.redirect("admin")
-                    
-//                 }
-//                 // res.redirect('admin')
-        
-//             })
-  
-// })
 // -------------------------------------------------------------------------------------------------------------------------
 
 
 
 router.post('/rating/:Department',(req,res,next)=>{
-debugger
+
 
   var Status = "Pending"
   
@@ -124,9 +93,9 @@ debugger
     var sMockType = req.body.Mock_Type;
     var selectedId = req.body.Reviewer_name.split(',')[1]
 
-    // var reference = `INSERT INTO accept_reject `;
-    //               connection.query(reference, [requestId, ])
-
+    var MentieName = "";
+    var MentorName = "";
+    var MentorEmail = "";
     const prefix = 'M001';
     const randomNumber = Math.floor(Math.random() * 10000);
     const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
@@ -135,23 +104,23 @@ debugger
           connection.query(sql, [this.User_Id, vFormattedDate, Status,meetingId, sMockType, requestId,selectedId], (error, results)=>{
                   if(error) 
                   {
-                    debugger
+                    
                     req.flash('success', "Request already sent")
 
                     res.redirect(`/adminMDPopup/${User_Id}`);
                   } 
                   else 
                   {
-                    debugger
+                    
                     connection.query(`SELECT * FROM employee_table`, function (error, emp_data) {
-                      debugger
+                      
                      
                       if (error) {
                           debugger;
                           console.error('Error fetching employee data:', error);
 
                       } else {
-                          debugger;
+                          
                           var arr = []
                           console.log('Employee Data:', emp_data);
                           emp_data.forEach((ele)=>{
@@ -173,10 +142,74 @@ debugger
                                   throw error
                                 }
                                 else{
-                                  // console.log("success");
-                                  req.flash('success', "Request sent successfully");
-                                  res.redirect(`/adminMDPopup/${User_Id}`);
+
+                                  emp_data.forEach(ele=>{
+                                    if(ele.Employee_Id == selectedId){
+
+                                          MentorName = ele.Employee_Name;
+                                          MentorEmail = ele.Employee_Email;
+                                  }
+                                  if(ele.Employee_Id == User_Id){
+                                    MentieName = ele.Employee_Name;
+
+                                  }
+                                })
+                                  
+                                const transporter = nodemailer.createTransport({
+                                  service: "gmail",
+                                  secureConnection: false,
+                                  auth: {
+                                    user: 'ganeshjkoppad@gmail.com',
+                                    pass: 'wpwyawesxyolwdpc'
+                                  }              
+                                });
+            
+                                transporter.verify(function (error, success) {
+                                  if (error) {
+                                    console.log(error);
+                                  } else {
+                                    console.log('Server is ready to take our messages');
+                                  }
+                                });
+            
+                                const options = {
+                                  from: "Derr",
+                                  to: `${MentorEmail}`,
+                                  subject: "Mock-Assigned",
+                                  html: `<p> Hi ${MentorName} 
+                                  <br>
+                                  <br>
+                                  <i>hope this mail finds you well.</i>
+                                  <br>
+                                  <br>
+                                  Please take mock for <strong> ${MentieName}</strong> , and provide us the feedback after the discussion.
+                                  <br>
+                                  <br>
+                                  <strong> Note:</strong><br>
+                                  The mock ratings should be updated through the Rating Application.
+                                                                                                
+                                  
+                                  <br>
+                                  <br>
+                                  <br>
+                                  Thanks & Regards
+                                  </br>
+                                  <strong>Signiwis Technologies.
+                                  </strong> </br>
+                                  <a href="https://www.signiwis.com/">www.signiwis.com</a>
+                                  </p>
+                                  `
                                 }
+                    
+                                transporter.sendMail(options, (error, info) => {
+                                  if (error) {
+                                    throw error;
+                                  }
+                                })  
+
+                                req.flash('success', "Request sent successfully");
+                                res.redirect(`/adminMDPopup/${User_Id}`);
+                              }
 
                           })
 
@@ -197,24 +230,24 @@ debugger
   router.get('/pdf/:id', generateReport);
 
   router.get('/delete/:id/:id2', function(req,res,next){
-    debugger
+    
     var id = req.params.id;
     var id2 = req.params.id2;
     connection.query(`DELETE FROM employee_rating WHERE UniqueId = ${id}`, function(error,data){
-        debugger
+        
         if(error)
         {
             throw error
         }
         else
         {
-            debugger
+            
             res.redirect(`/adminMDPopup/${id2}`)
         }
     })
  })
  router.get('/updatekpipoits/:Department', function(req, res){
-    debugger;
+    
     // :Department
     var Departmenet = req.params.Department;
     var kpiPoint = req.query;
@@ -245,10 +278,10 @@ var selectedId = req.query.Reviewer_Id;
 
         connection.query(`SELECT * FROM employee_table`, function (error, emp_data) {
           if (error) {
-              debugger;
+              
               console.error('Error fetching employee data:', error);
           } else {
-              debugger;
+              
               var arr = []
               console.log('Employee Data:', emp_data);
               emp_data.forEach((ele)=>{
@@ -285,7 +318,7 @@ var selectedId = req.query.Reviewer_Id;
   
 //Delete Profile from admin and inserting into resign_employeetab
  router.get('/empDelete/:id',function(req,res,next){
-  debugger
+  
     var id = req.session.UID;
     var sql=`Select Employee_Name from employee_table WHERE Employee_Id = ${id}`;
     var sqlData=`Select * from employee_table WHERE Employee_Id = ${id}`;
@@ -310,7 +343,7 @@ var selectedId = req.query.Reviewer_Id;
       }
       else
       {
-        debugger
+        
         employeeName= data[0].Employee_Name;
         employeeDesignation= data[0].Employee_Designation;
         employeeEmail= data[0].Employee_Email;
@@ -331,14 +364,13 @@ var selectedId = req.query.Reviewer_Id;
         connection.query(insertData,[id,employeeName,employeeDesignation,employeeEmail,employeeDept,employeePassword,employeeIcon,employeeeStatus,employeeMockTaken,employeeMockGiven,employeeImg,dateOfBirth, mobile, employeeNo, mentor, position, mentorId],function(error, data, rows){
           if(error) 
           {
-            debugger
             
             console.log(error);
                                       
           } 
             else 
             {
-              debugger
+              
               connection.query(sql,function(error,data){
                 if(error)
                 {
@@ -346,10 +378,10 @@ var selectedId = req.query.Reviewer_Id;
                 }
                 else
                 {
-                  // debugger
+                  
                   empName= data[0].Employee_Name
                   connection.query(`DELETE FROM employee_table WHERE Employee_Id = ${id}`,function(error,data){
-                    debugger
+                    
                     if(error)
                     {
                         throw error
@@ -377,7 +409,7 @@ var selectedId = req.query.Reviewer_Id;
 
  // updating Employee Profile
  router.get('/empEdit/:id',function(req,res,next){
-  debugger
+  
     var empId=req.session.UID;
     var empName=req.query.empEditName;
     var empEmail=req.query.empEditEmail;
