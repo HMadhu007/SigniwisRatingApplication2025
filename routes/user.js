@@ -28,7 +28,6 @@ router.get('/', function (req, res, next) {
     
     connection.query('SELECT * FROM employee_table', function (err, data1) {
       var LeadCheck = "hidden";
-      debugger
       data1.forEach((val)=>{
         if(val.Employee_Id == loggedUser && val.position == "Lead"){
           LeadCheck = "visible";
@@ -37,9 +36,6 @@ router.get('/', function (req, res, next) {
 
       connection.query('SELECT * FROM review_status', function (error, data2) {
         connection.query(`SELECT * FROM admin_notification`, function (error, allData) {
-
-          
-          console.log(data);
 
           if (error) { throw error } else {
 
@@ -51,13 +47,6 @@ router.get('/', function (req, res, next) {
 
 
         })
-
-
-
-
-
-
-
 
       })
 
@@ -259,11 +248,14 @@ var cDate = sStrRevrs.split("-")
 var vFormattedDate = cDate[2]+"/"+cDate[1]+"/"+cDate[0]
 
 router.post('/leadMockRequest',function (req, res){
+  debugger
  var User_Id = req.session.EmpId;
  var selectedId = req.body.Reviewer_name.split(',')[1] // Mentor Id
  var MenteeId = req.body.Reviewer_name2.split(',')[1]
  var MenteeName = req.body.Reviewer_name2.split(',')[0]
+ var MentorName = req.body.Reviewer_name.split(',')[0]
  var sMockType = req.body.Mock_Type;
+ var MentorEmailID = req.body.Reviewer_name.split(',')[2]
 
  const reqId = Math.floor(Math.random() * 1000000);
  const requestId = 'REQID' + reqId; 
@@ -271,42 +263,116 @@ router.post('/leadMockRequest',function (req, res){
  const randomNumber = Math.floor(Math.random() * 10000);
  const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 
-
- var sql = `INSERT INTO admin_notification (User_Id, Requested_Date, Status, Reviewer_name, Mock_Type, Request_Id, selectedId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
- var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES (?, ?, ?, ?, ?, ?)`
-
- connection.query(sql, [req.body.Reviewer_name2.split(',')[1], vFormattedDate, "Pending",meetingId, sMockType, requestId,selectedId], (error, results)=>{
-  debugger
-  if(error){
-      if(error.code == 'ER_DUP_ENTRY'){
-        req.flash('success', `Request already sent`);
-        res.redirect("/user")
-      }
-      else{
-        req.flash('error', `Something went wrong`);
-        res.redirect("/user")
-      }
-
-    debugger
-  }
-  else{
-    connection.query(reference,[requestId, MenteeId, MenteeName, vFormattedDate,sMockType,meetingId],(err, data)=>{
-      debugger
-      if(err){
-        req.flash('success', `Something went wrong`);
-        res.redirect("/user")
-      }
-      else{
-        req.flash('success', `Request sent succesfully`);
-        res.redirect("/user")
-      }
-    })
-    
-  }
-
+ var validateQuery = `select * from admin_notification`
+ connection.query(validateQuery, (err, data)=>{
+    if(err){
+      req.flash('success', `Something went wrong`);
+      res.redirect("/user")
+    }
+    else{
+        if(data.some((ele, ind)=>{ 
+          debugger
+          return ele.User_Id == MenteeId && ele.Mock_Type == sMockType && ele.Status == 'Pending'
+        }))
+        {
+          req.flash('success', `Request already sent`);
+          res.redirect("/user")
+        }
+        else{
+          var sql = `INSERT INTO admin_notification (User_Id, Requested_Date, Status, Reviewer_name, Mock_Type, Request_Id, selectedId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES (?, ?, ?, ?, ?, ?)`
+         
+          connection.query(sql, [req.body.Reviewer_name2.split(',')[1], vFormattedDate, "Pending",meetingId, sMockType, requestId,selectedId], (error, results)=>{
+           
+           if(error){
+             debugger
+               if(error.code == 'ER_DUP_ENTRY'){
+                 debugger
+                 req.flash('success', `Request already sent`);
+                 res.redirect("/user")
+               }
+               else{
+                 req.flash('error', `Something went wrong`);
+                 res.redirect("/user")
+               }
+         
+             
+           }
+           else{
+             connection.query(reference,[requestId, MenteeId, MenteeName, vFormattedDate,sMockType,meetingId],(err, data)=>{
+               debugger
+               if(err){
+                 req.flash('success', `Something went wrong`);
+                 res.redirect("/user")
+               }
+               else{
+                 req.flash('success', `Request sent succesfully`);
+               //Sending email to Mentor
+                 const transporter = nodemailer.createTransport({
+                   service: "gmail",
+                   secureConnection: false,
+                   auth: {
+                     user: 'ganeshjkoppad@gmail.com',
+                     pass: 'wpwyawesxyolwdpc'
+                   }              
+                 });
+         
+                 transporter.verify(function (error, success) {
+                   if (error) {
+                     console.log(error);
+                   } else {
+                     console.log('Server is ready to take our messages');
+                   }
+                 });
+         
+                 const options = {
+                   from: "Derr",
+                   to: `${MentorEmailID}`,
+                   subject: "Mock-Assigned",
+                   html: `<p> Hi ${MentorName} 
+                   <br>
+                   <br>
+                   <i>hope this mail finds you well.</i>
+                   <br>
+                   <br>
+                   Please take mock for <strong> ${MenteeName}</strong> , and provide us the feedback after the discussion.
+                   <br>
+                   <br>
+                   <strong> Note:</strong><br>
+                   The mock ratings should be updated through the Rating Application.
+                                                                                 
+                   
+                   <br>
+                   <br>
+                   <br>
+                   Thanks & Regards
+                   </br>
+                   <strong>Signiwis Technologies.
+                   </strong> </br>
+                   <a href="https://www.signiwis.com/">www.signiwis.com</a>
+                   </p>
+                   `
+                 }
+         
+                 transporter.sendMail(options, (error, info) => {
+                   if (error) {
+                     throw error;
+                   }
+                   else {   
+                     res.redirect("/user")
+                   }
+                 })
+           
+               }
+             })
+             
+           }
+         
+          })
+        }
+    }
  })
 
- 
 })
 
 
