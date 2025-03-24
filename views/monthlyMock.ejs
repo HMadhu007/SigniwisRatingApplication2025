@@ -19,6 +19,14 @@
   </head>
 <body>
  
+  <!-- BusyIndicator -->
+  <div id="loadBusyIndicator" style="visibility:<%= BusyIndicator.BusyIndicator %> ;height: 100vh;width: 100vw; background-color: rgba(101, 146, 214, 0.418);z-index: 2;position: fixed;display: flex;align-items: center;justify-content: center;margin-top: -3px;">
+    <div class="spinner-grow" role="status" style="height: 50px;width: 50px;">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+<!-- .................... -->
+
   <div class="loader"></div>
  
  
@@ -332,6 +340,10 @@
  
  
  <script>
+
+  function loadBusyIndicator(){
+    document.getElementById("loadBusyIndicator").style.visibility = "visible";
+   }
       // function for hover effect
  
       var coll = document.getElementsByClassName("collapsible");
@@ -447,6 +459,7 @@ function onChange(){
    
       debugger
       // Fetching data
+      
       var Job_Knowladge = document.getElementById('job')
       var Work_Quality = document.getElementById('work')
       var Attendance_Punctuality = document.getElementById('attendance')
@@ -939,6 +952,7 @@ function onChange(){
         if(validation==true){
           validation=false
           document.getElementById('Employee_Feedback').submit();
+          document.getElementById("loadBusyIndicator").style.visibility = "visible";
         }else{
           alert("correct the details")
           validation=false

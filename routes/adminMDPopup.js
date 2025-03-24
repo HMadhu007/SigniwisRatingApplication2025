@@ -70,11 +70,7 @@ var sStrRevrs = date.toISOString().split(":")[0].split("T")[0]
 var cDate = sStrRevrs.split("-")
 var vFormattedDate = cDate[2]+"/"+cDate[1]+"/"+cDate[0]
 
-// console.log("Current Date", cDate[2]+"/"+cDate[1]+"/"+cDate[0])
-
 // -------------------------------------------------------------------------------------------------------------------------
-
-
 
 router.post('/rating/:Department',(req,res,next)=>{
 
@@ -100,131 +96,148 @@ router.post('/rating/:Department',(req,res,next)=>{
     const randomNumber = Math.floor(Math.random() * 10000);
     const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
     var sql = `INSERT INTO admin_notification (User_Id, Requested_Date, Status, Reviewer_name, Mock_Type, Request_Id, selectedId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-   
-          connection.query(sql, [this.User_Id, vFormattedDate, Status,meetingId, sMockType, requestId,selectedId], (error, results)=>{
-                  if(error) 
-                  {
-                    
-                    req.flash('success', "Request already sent")
+    var validateQuery = `select * from admin_notification`;
 
-                    res.redirect(`/adminMDPopup/${User_Id}`);
-                  } 
-                  else 
-                  {
-                    
-                    connection.query(`SELECT * FROM employee_table`, function (error, emp_data) {
+    connection.query(validateQuery,(err,data)=>{
+      if(err){
+        req.flash('success', `Something went wrong`);
+        res.redirect(`/adminMDPopup/${User_Id}`);
+      }
+      else{
+        if(data.some((ele, ind)=>{ 
+          debugger
+          return ele.User_Id == this.User_Id && ele.Mock_Type == sMockType && ele.Status == 'Pending' && ele.selectedId == selectedId
+        }))
+        {
+          req.flash('success', `Request already sent`);
+          res.redirect(`/adminMDPopup/${User_Id}`);
+        
+        }
+        else{
+
+            connection.query(sql, [this.User_Id, vFormattedDate, Status,meetingId, sMockType, requestId,selectedId], (error, results)=>{
+              if(error) 
+              {
+                
+                req.flash('success', "Something went wrong")
+
+                res.redirect(`/adminMDPopup/${User_Id}`);
+              } 
+              else 
+              {
+                
+                connection.query(`SELECT * FROM employee_table`, function (error, emp_data) {
+                  
+                
+                  if (error) {
+                      debugger;
+                      console.error('Error fetching employee data:', error);
+
+                  } else {
                       
-                     
-                      if (error) {
-                          debugger;
-                          console.error('Error fetching employee data:', error);
+                      var arr = []
+                      console.log('Employee Data:', emp_data);
+                      emp_data.forEach((ele)=>{
+                          if( Departmenet == ele.Employee_Department){
+                            const prefix1 = 'M001';
+                              const randomNumber = Math.floor(Math.random() * 100000000);
+                              const meetingId = `${prefix1}${randomNumber.toString().padStart(4, '0')}`;
 
-                      } else {
-                          
-                          var arr = []
-                          console.log('Employee Data:', emp_data);
-                          emp_data.forEach((ele)=>{
-                              if( Departmenet == ele.Employee_Department){
-                                const prefix1 = 'M001';
-                                  const randomNumber = Math.floor(Math.random() * 100000000);
-                                  const meetingId = `${prefix1}${randomNumber.toString().padStart(4, '0')}`;
+                              arr.push([requestId,ele.Employee_Id,ele.Employee_Name,vFormattedDate,sMockType, meetingId]);                         
+                          }
+                      
+                      })
+                      var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES ? `
+                      connection.query(reference, [arr], function( error, refData){
 
-                                  arr.push([requestId,ele.Employee_Id,ele.Employee_Name,vFormattedDate,sMockType, meetingId]);                         
+                            if(error){
+
+
+                              throw error
+                            }
+                            else{
+
+                              emp_data.forEach(ele=>{
+                                if(ele.Employee_Id == selectedId){
+
+                                      MentorName = ele.Employee_Name;
+                                      MentorEmail = ele.Employee_Email;
                               }
-                           
-                          })
-                          var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES ? `
-                          connection.query(reference, [arr], function( error, refData){
+                              if(ele.Employee_Id == User_Id){
+                                MentieName = ele.Employee_Name;
 
-                                if(error){
-
-
-                                  throw error
-                                }
-                                else{
-
-                                  emp_data.forEach(ele=>{
-                                    if(ele.Employee_Id == selectedId){
-
-                                          MentorName = ele.Employee_Name;
-                                          MentorEmail = ele.Employee_Email;
-                                  }
-                                  if(ele.Employee_Id == User_Id){
-                                    MentieName = ele.Employee_Name;
-
-                                  }
-                                })
-                                  
-                                const transporter = nodemailer.createTransport({
-                                  service: "gmail",
-                                  secureConnection: false,
-                                  auth: {
-                                    user: 'ganeshjkoppad@gmail.com',
-                                    pass: 'wpwyawesxyolwdpc'
-                                  }              
-                                });
-            
-                                transporter.verify(function (error, success) {
-                                  if (error) {
-                                    console.log(error);
-                                  } else {
-                                    console.log('Server is ready to take our messages');
-                                  }
-                                });
-            
-                                const options = {
-                                  from: "Derr",
-                                  to: `${MentorEmail}`,
-                                  subject: "Mock-Assigned",
-                                  html: `<p> Hi ${MentorName} 
-                                  <br>
-                                  <br>
-                                  <i>hope this mail finds you well.</i>
-                                  <br>
-                                  <br>
-                                  Please take mock for <strong> ${MentieName}</strong> , and provide us the feedback after the discussion.
-                                  <br>
-                                  <br>
-                                  <strong> Note:</strong><br>
-                                  The mock ratings should be updated through the Rating Application.
-                                                                                                
-                                  
-                                  <br>
-                                  <br>
-                                  <br>
-                                  Thanks & Regards
-                                  </br>
-                                  <strong>Signiwis Technologies.
-                                  </strong> </br>
-                                  <a href="https://www.signiwis.com/">www.signiwis.com</a>
-                                  </p>
-                                  `
-                                }
-                    
-                                transporter.sendMail(options, (error, info) => {
-                                  if (error) {
-                                    throw error;
-                                  }
-                                })  
-
-                                req.flash('success', "Request sent successfully");
-                                res.redirect(`/adminMDPopup/${User_Id}`);
                               }
+                            })
+                              
+                            const transporter = nodemailer.createTransport({
+                              service: "gmail",
+                              secureConnection: false,
+                              auth: {
+                                user: 'ganeshjkoppad@gmail.com',
+                                pass: 'wpwyawesxyolwdpc'
+                              }              
+                            });
+        
+                            transporter.verify(function (error, success) {
+                              if (error) {
+                                console.log(error);
+                              } else {
+                                console.log('Server is ready to take our messages');
+                              }
+                            });
+        
+                            const options = {
+                              from: "Derr",
+                              to: `${MentorEmail}`,
+                              subject: "Mock-Assigned",
+                              html: `<p> Hi ${MentorName} 
+                              <br>
+                              <br>
+                              <i>hope this mail finds you well.</i>
+                              <br>
+                              <br>
+                              Please take mock for <strong> ${MentieName}</strong> , and provide us the feedback after the discussion.
+                              <br>
+                              <br>
+                              <strong> Note:</strong><br>
+                              The mock ratings should be updated through the Rating Application.
+                                                                                            
+                              
+                              <br>
+                              <br>
+                              <br>
+                              Thanks & Regards
+                              </br>
+                              <strong>Signiwis Technologies.
+                              </strong> </br>
+                              <a href="https://www.signiwis.com/">www.signiwis.com</a>
+                              </p>
+                              `
+                            }
+                
+                            transporter.sendMail(options, (error, info) => {
+                              if (error) {
+                                throw error;
+                              }
+                            })  
 
-                          })
+                            req.flash('success', "Request sent successfully");
+                            res.redirect(`/adminMDPopup/${User_Id}`);
+                          }
 
-                      }
-              });
-              
-            }
+                      })
+
+                  }
+          });
           
-          })
-    
+        }
+      
+            })
+        }
+      }
+    })    
 
-  })
-
-
-
+})
 
 // ------------------------------------------------------------------------------------------------------------------------------------------
   router.get('/pdf/:id', generateReport);
@@ -314,7 +327,7 @@ var selectedId = req.query.Reviewer_Id;
           }
        })
        
-    })
+ })
   
 //Delete Profile from admin and inserting into resign_employeetab
  router.get('/empDelete/:id',function(req,res,next){
@@ -517,20 +530,6 @@ var selectedId = req.query.Reviewer_Id;
     // You can query your database or process as needed
     res.send(`Department: ${department}`);
 });
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   //---------------------------------------------------------------------------

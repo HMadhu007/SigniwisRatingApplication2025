@@ -15,7 +15,9 @@ var connection = mysql.createConnection({
 
 });
 
-
+var BusyIndicator = {
+  "BusyIndicator":"hidden"
+}
 /* GET users listing. */
 router.get('/', function (req, res, next) {
 
@@ -28,7 +30,6 @@ router.get('/', function (req, res, next) {
     
     connection.query('SELECT * FROM employee_table', function (err, data1) {
       var LeadCheck = "hidden";
-      debugger
       data1.forEach((val)=>{
         if(val.Employee_Id == loggedUser && val.position == "Lead"){
           LeadCheck = "visible";
@@ -38,26 +39,16 @@ router.get('/', function (req, res, next) {
       connection.query('SELECT * FROM review_status', function (error, data2) {
         connection.query(`SELECT * FROM admin_notification`, function (error, allData) {
 
-          
-          console.log(data);
-
           if (error) { throw error } else {
 
             //  var selected_Id=data.filter(element=>element.selectedId===loggedUser)
 
-            res.render('user', { title: "Welcome to Signiwis", message, session: req.session, oReviewEmpData: data, oEmp_Data: data1, oEmp_ReviewStatus: data2, loggedUser1: loggedUser, LeadCheck:LeadCheck})
+            res.render('user', { title: "Welcome to Signiwis", message, session: req.session, oReviewEmpData: data, oEmp_Data: data1, oEmp_ReviewStatus: data2, loggedUser1: loggedUser, LeadCheck:LeadCheck, BusyIndicator:BusyIndicator})
             
           }
 
 
         })
-
-
-
-
-
-
-
 
       })
 
@@ -68,11 +59,12 @@ router.get('/', function (req, res, next) {
 );
 
 
-router.get('/mail/:tableUID/:id', function (req, res, next) {
+router.get('/mail/:tableUID/:id/:mocktype', function (req, res, next) {
   debugger
   // var message = req.flash('success');
   let table_UId = req.params.tableUID;
   let id = req.params.id;
+  let mock_type = req.params.mocktype
 
   res.send(`
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -122,7 +114,7 @@ router.get('/mail/:tableUID/:id', function (req, res, next) {
  
     <div style=" width:600px;height:350px; position: absolute; top: 20%;left:28%; background-color:white;padding: 30px; border-radius: 5px;z-index: 50; box-shadow:0 4px 8px 0 rgba(3, 3, 2, 3);" id="Mode_of_review">
     <a style="position:relative; left:530px; top:-20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background-color: #f0f0f0; font-size: 30px; text-decoration: none;" href="/user"><i class="fa-solid fa-xmark"></i></a>
-    <form action="/user/sendmail/${id}/${table_UId}" method="post"  style="padding:10px;">
+    <form action="/user/sendmail/${id}/${table_UId}/${mock_type}" method="post"  style="padding:10px;">
  
      
       <div class="mb-3">
@@ -146,30 +138,28 @@ router.get('/mail/:tableUID/:id', function (req, res, next) {
     `)
 }),
 
-  router.get('/delete/:id', function (req, res, next) {
-    debugger
+  router.get('/delete/:id/:mock_type', function (req, res, next) {
 
-    var id = req.params.id
-    connection.query(`DELETE FROM accept_reject where emp_id = '${id}'`, function (err, data) {
-      debugger
-      connection.query(`DELETE FROM admin_notification where User_Id = '${id}'`, function (error, deleteAdminNotofication1) {
-        if (err) {
-          console.log(err);
+    var Mock_Type = req.params.mock_type;
 
-        } else {
-          req.flash('success', `ID  ${req.params.id} Removed successfully`);
-          res.redirect('/user')
-        }
-      })
-
+    var updateStatus = `UPDATE admin_notification SET Status = 'Rejected' WHERE User_Id = '${req.params.id}' && selectedId = '${req.session.EmpId}' && Mock_Type = '${Mock_Type}' && Status = 'Pending'`;
+    connection.query(updateStatus, (error, data) => {
+      if(error)
+        throw error;
+      else{
+        req.flash('success', `Request Rejected`);
+        res.redirect('/user')
+      }
     })
+                  
   })
 
-router.post(['/sendmail/:id/:tableUID'], function (req, res, next) {
+router.post(['/sendmail/:id/:tableUID/:mocktype'], function (req, res, next) {
 
   debugger
   let id = req.params.id;
   let table_UId = req.params.tableUID;
+  let mock_type = req.params.mocktype == 'hierarchyMock' ? 'Hierarchy Mock' : 'Monthly Mock';
   connection.query(`SELECT * FROM employee_table WHERE Employee_Id = '${id}'`, function (err, data1) {
     debugger
     console.log(data1)
@@ -232,13 +222,13 @@ router.post(['/sendmail/:id/:tableUID'], function (req, res, next) {
               req.flash('success', err);
             }
             else {
-                  var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${employee_id1} && selectedId = ${req.session.EmpId}`;
+                  var updateStatus = `UPDATE admin_notification SET Status = 'Accepted' WHERE User_Id = '${employee_id1}' && selectedId = '${req.session.EmpId}' && Mock_Type = '${mock_type}' && Status = 'Pending'`;
 
                   connection.query(updateStatus, (error, data) => {
                     if(error)
                       throw error;
                     else{
-                      req.flash('success', `Mail sent succesfully`);
+                      req.flash('success', `Request Accepted and Mail sent`);
                       res.redirect('/user')
                     }
                   })
@@ -259,11 +249,14 @@ var cDate = sStrRevrs.split("-")
 var vFormattedDate = cDate[2]+"/"+cDate[1]+"/"+cDate[0]
 
 router.post('/leadMockRequest',function (req, res){
+  debugger
  var User_Id = req.session.EmpId;
  var selectedId = req.body.Reviewer_name.split(',')[1] // Mentor Id
  var MenteeId = req.body.Reviewer_name2.split(',')[1]
  var MenteeName = req.body.Reviewer_name2.split(',')[0]
+ var MentorName = req.body.Reviewer_name.split(',')[0]
  var sMockType = req.body.Mock_Type;
+ var MentorEmailID = req.body.Reviewer_name.split(',')[2]
 
  const reqId = Math.floor(Math.random() * 1000000);
  const requestId = 'REQID' + reqId; 
@@ -271,44 +264,117 @@ router.post('/leadMockRequest',function (req, res){
  const randomNumber = Math.floor(Math.random() * 10000);
  const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 
-
- var sql = `INSERT INTO admin_notification (User_Id, Requested_Date, Status, Reviewer_name, Mock_Type, Request_Id, selectedId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
- var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES (?, ?, ?, ?, ?, ?)`
-
- connection.query(sql, [req.body.Reviewer_name2.split(',')[1], vFormattedDate, "Pending",meetingId, sMockType, requestId,selectedId], (error, results)=>{
-  debugger
-  if(error){
-      if(error.code == 'ER_DUP_ENTRY'){
-        req.flash('success', `Request already sent`);
-        res.redirect("/user")
-      }
-      else{
-        req.flash('error', `Something went wrong`);
-        res.redirect("/user")
-      }
-
-    debugger
-  }
-  else{
-    connection.query(reference,[requestId, MenteeId, MenteeName, vFormattedDate,sMockType,meetingId],(err, data)=>{
-      debugger
-      if(err){
-        req.flash('success', `Something went wrong`);
-        res.redirect("/user")
-      }
-      else{
-        req.flash('success', `Request sent succesfully`);
-        res.redirect("/user")
-      }
-    })
-    
-  }
-
+ var validateQuery = `select * from admin_notification`;
+ connection.query(validateQuery, (err, data)=>{
+    if(err){
+      req.flash('success', `Something went wrong`);
+      res.redirect("/user")
+    }
+    else{
+        if(data.some((ele, ind)=>{ 
+          debugger
+          return ele.User_Id == MenteeId && ele.Mock_Type == sMockType && ele.Status == 'Pending' || ele.Status == 'Accepted' && ele.selectedId == selectedId
+        }))
+        {
+          req.flash('success', `Request already sent`);
+          res.redirect("/user")
+        }
+        else{
+          var sql = `INSERT INTO admin_notification (User_Id, Requested_Date, Status, Reviewer_name, Mock_Type, Request_Id, selectedId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES (?, ?, ?, ?, ?, ?)`
+         
+          connection.query(sql, [req.body.Reviewer_name2.split(',')[1], vFormattedDate, "Pending",meetingId, sMockType, requestId,selectedId], (error, results)=>{
+           
+           if(error){
+             debugger
+               if(error.code == 'ER_DUP_ENTRY'){
+                 debugger
+                 req.flash('success', `Request already sent`);
+                 res.redirect("/user")
+               }
+               else{
+                 req.flash('error', `Something went wrong`);
+                 res.redirect("/user")
+               }
+         
+             
+           }
+           else{
+             connection.query(reference,[requestId, MenteeId, MenteeName, vFormattedDate,sMockType,meetingId],(err, data)=>{
+               debugger
+               if(err){
+                 req.flash('success', `Something went wrong`);
+                 res.redirect("/user")
+               }
+               else{
+                 req.flash('success', `Request sent succesfully`);
+               //Sending email to Mentor
+                 const transporter = nodemailer.createTransport({
+                   service: "gmail",
+                   secureConnection: false,
+                   auth: {
+                     user: 'ganeshjkoppad@gmail.com',
+                     pass: 'wpwyawesxyolwdpc'
+                   }              
+                 });
+         
+                 transporter.verify(function (error, success) {
+                   if (error) {
+                     console.log(error);
+                   } else {
+                     console.log('Server is ready to take our messages');
+                   }
+                 });
+         
+                 const options = {
+                   from: "Derr",
+                   to: `${MentorEmailID}`,
+                   subject: "Mock-Assigned",
+                   html: `<p> Hi ${MentorName} 
+                   <br>
+                   <br>
+                   <i>hope this mail finds you well.</i>
+                   <br>
+                   <br>
+                   Please take mock for <strong> ${MenteeName}</strong> , and provide us the feedback after the discussion.
+                   <br>
+                   <br>
+                   <strong> Note:</strong><br>
+                   The mock ratings should be updated through the Rating Application.
+                                                                                 
+                   
+                   <br>
+                   <br>
+                   <br>
+                   Thanks & Regards
+                   </br>
+                   <strong>Signiwis Technologies.
+                   </strong> </br>
+                   <a href="https://www.signiwis.com/">www.signiwis.com</a>
+                   </p>
+                   `
+                 }
+         
+                 transporter.sendMail(options, (error, info) => {
+                   if (error) {
+                     throw error;
+                   }
+                   else {   
+                     res.redirect("/user")
+                   }
+                 })
+           
+               }
+             })
+             
+           }
+         
+          })
+        }
+    }
  })
 
- 
 })
-
 
 
 

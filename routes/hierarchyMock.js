@@ -8,6 +8,8 @@ var ID = Math.ceil(radnm)
 var UniqueId =ID
 let employee_Mock_Given = 0
 let employee_Mock_Taken = 0
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('../localStorage');
 
 const app = express()
 var session = require('express-session')
@@ -53,6 +55,8 @@ var vid = null
 // })
 router.get ( ['/hierarchyMock','/:id'], function(req, res, next) {
 debugger
+
+localStorage.setItem("Mocktype", "Hierarchy Mock")
 
   this.oUser_ID = req.params.id
   var message = req.flash('success')

@@ -8,6 +8,8 @@ var ID = Math.ceil(radnm)
 var UniqueId =ID
 let employee_Mock_Given = 0
 let employee_Mock_Taken = 0
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('../localStorage');
 
 const app = express()
 var session = require('express-session')
@@ -27,8 +29,9 @@ app.use(session({
 }))
 app.use(flash())
  
-
-
+var BusyIndicator = {
+  "BusyIndicator":"hidden"
+}
 
 debugger
 var mysql = require('mysql');
@@ -50,7 +53,7 @@ var vid = null
 
 router.get ( ['/monthlyMock','/:id'], function(req, res, next) {
 debugger
-
+  localStorage.setItem("Mocktype", "Monthly Mock")
   this.oUser_ID = req.params.id
   var message = req.flash('success')
 
@@ -67,7 +70,7 @@ connection.query(query2,function(error2,data2,rows2){
       if(data[i].Employee_Id == req.params.id)
       {
         debugger
-      res.render('monthlyMock', {title:oUser_ID, message ,singleUserData:data })
+      res.render('monthlyMock', {title:oUser_ID, message ,singleUserData:data,BusyIndicator:BusyIndicator })
       if(data2.length == 0){
         // RequestedDate = data2[0].Requested_Date;
       revrid = data[i].Employee_Id
@@ -165,13 +168,7 @@ debugger
   var Rew_name = req.session.Name
   var Status = "Done"
   var Result = req.body.Overall_Ratings
-  
-  
 
-
-  
-
-debugger
 
   var sql = `INSERT INTO employee_rating (UniqueId, Employee_Id, Rew_name, Review_Date, Employee_Job_knowledge, Employee_Work_Quality, Employee_Attendence_punctuality, Employee_Productivity, Employee_Communication, Employee_Behaviour, Employee_Total_Rating, Employee_Overall_Feedback, Reviewer_Id, Table_Id) 
   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)`;
@@ -181,7 +178,7 @@ debugger
 debugger
     if(error) 
     {
-      debugger
+      
       // req.flash('error'," req sent already")
       // res.redirect(`Employee_review/${vid}`)
       // res.send("Request Already Sent")
