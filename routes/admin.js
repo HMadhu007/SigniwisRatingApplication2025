@@ -177,10 +177,11 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
             }
         })
         const data = await response.json();
-        console.log(data);
-        var newID="S000"+empId
         var empDetails
-        data.data.forEach((x)=>{if(x.employeeNo==newID){empDetails=x}})
+        data.data.forEach((x)=>{
+            if(x.employeeNo==empId){
+                empDetails=x
+            }})
         req.session.employeeId = empDetails.employeeId;
         req.session.dateOfBirth = empDetails.dateOfBirth;
         req.session.email = empDetails.email;
@@ -220,7 +221,7 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
     VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)`;
 
 
-        connection.query(sql, [empId, empName, empDesignation, empEmail, empDept, empPassword, empGender, empStatus, empMockTaken, empMockGiven, img, dateOfBirth, mobile, employeeNo, mentor, position], function (error, data, rows) {
+        connection.query(sql, [empId.split("0")[empId.split("0").length-1], empName, empDesignation, empEmail, empDept, empPassword, empGender, empStatus, empMockTaken, empMockGiven, img, dateOfBirth, mobile, employeeNo, mentor, position], function (error, data, rows) {
             if (error) {
                 debugger
 
