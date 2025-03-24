@@ -15,7 +15,9 @@ var connection = mysql.createConnection({
 
 });
 
-
+var BusyIndicator = {
+  "BusyIndicator":"hidden"
+}
 /* GET users listing. */
 router.get('/', function (req, res, next) {
 
@@ -41,7 +43,7 @@ router.get('/', function (req, res, next) {
 
             //  var selected_Id=data.filter(element=>element.selectedId===loggedUser)
 
-            res.render('user', { title: "Welcome to Signiwis", message, session: req.session, oReviewEmpData: data, oEmp_Data: data1, oEmp_ReviewStatus: data2, loggedUser1: loggedUser, LeadCheck:LeadCheck})
+            res.render('user', { title: "Welcome to Signiwis", message, session: req.session, oReviewEmpData: data, oEmp_Data: data1, oEmp_ReviewStatus: data2, loggedUser1: loggedUser, LeadCheck:LeadCheck, BusyIndicator:BusyIndicator})
             
           }
 
@@ -57,11 +59,12 @@ router.get('/', function (req, res, next) {
 );
 
 
-router.get('/mail/:tableUID/:id', function (req, res, next) {
+router.get('/mail/:tableUID/:id/:mocktype', function (req, res, next) {
   debugger
   // var message = req.flash('success');
   let table_UId = req.params.tableUID;
   let id = req.params.id;
+  let mock_type = req.params.mocktype
 
   res.send(`
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -111,7 +114,7 @@ router.get('/mail/:tableUID/:id', function (req, res, next) {
  
     <div style=" width:600px;height:350px; position: absolute; top: 20%;left:28%; background-color:white;padding: 30px; border-radius: 5px;z-index: 50; box-shadow:0 4px 8px 0 rgba(3, 3, 2, 3);" id="Mode_of_review">
     <a style="position:relative; left:530px; top:-20px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background-color: #f0f0f0; font-size: 30px; text-decoration: none;" href="/user"><i class="fa-solid fa-xmark"></i></a>
-    <form action="/user/sendmail/${id}/${table_UId}" method="post"  style="padding:10px;">
+    <form action="/user/sendmail/${id}/${table_UId}/${mock_type}" method="post"  style="padding:10px;">
  
      
       <div class="mb-3">
@@ -135,30 +138,28 @@ router.get('/mail/:tableUID/:id', function (req, res, next) {
     `)
 }),
 
-  router.get('/delete/:id', function (req, res, next) {
-    debugger
+  router.get('/delete/:id/:mock_type', function (req, res, next) {
 
-    var id = req.params.id
-    connection.query(`DELETE FROM accept_reject where emp_id = '${id}'`, function (err, data) {
-      debugger
-      connection.query(`DELETE FROM admin_notification where User_Id = '${id}'`, function (error, deleteAdminNotofication1) {
-        if (err) {
-          console.log(err);
+    var Mock_Type = req.params.mock_type;
 
-        } else {
-          req.flash('success', `ID  ${req.params.id} Removed successfully`);
-          res.redirect('/user')
-        }
-      })
-
+    var updateStatus = `UPDATE admin_notification SET Status = 'Rejected' WHERE User_Id = '${req.params.id}' && selectedId = '${req.session.EmpId}' && Mock_Type = '${Mock_Type}' && Status = 'Pending'`;
+    connection.query(updateStatus, (error, data) => {
+      if(error)
+        throw error;
+      else{
+        req.flash('success', `Request Rejected`);
+        res.redirect('/user')
+      }
     })
+                  
   })
 
-router.post(['/sendmail/:id/:tableUID'], function (req, res, next) {
+router.post(['/sendmail/:id/:tableUID/:mocktype'], function (req, res, next) {
 
   debugger
   let id = req.params.id;
   let table_UId = req.params.tableUID;
+  let mock_type = req.params.mocktype == 'hierarchyMock' ? 'Hierarchy Mock' : 'Monthly Mock';
   connection.query(`SELECT * FROM employee_table WHERE Employee_Id = '${id}'`, function (err, data1) {
     debugger
     console.log(data1)
@@ -221,13 +222,13 @@ router.post(['/sendmail/:id/:tableUID'], function (req, res, next) {
               req.flash('success', err);
             }
             else {
-                  var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${employee_id1} && selectedId = ${req.session.EmpId}`;
+                  var updateStatus = `UPDATE admin_notification SET Status = 'Accepted' WHERE User_Id = '${employee_id1}' && selectedId = '${req.session.EmpId}' && Mock_Type = '${mock_type}' && Status = 'Pending'`;
 
                   connection.query(updateStatus, (error, data) => {
                     if(error)
                       throw error;
                     else{
-                      req.flash('success', `Mail sent succesfully`);
+                      req.flash('success', `Request Accepted and Mail sent`);
                       res.redirect('/user')
                     }
                   })
@@ -263,7 +264,7 @@ router.post('/leadMockRequest',function (req, res){
  const randomNumber = Math.floor(Math.random() * 10000);
  const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 
- var validateQuery = `select * from admin_notification`
+ var validateQuery = `select * from admin_notification`;
  connection.query(validateQuery, (err, data)=>{
     if(err){
       req.flash('success', `Something went wrong`);
@@ -272,7 +273,7 @@ router.post('/leadMockRequest',function (req, res){
     else{
         if(data.some((ele, ind)=>{ 
           debugger
-          return ele.User_Id == MenteeId && ele.Mock_Type == sMockType && ele.Status == 'Pending'
+          return ele.User_Id == MenteeId && ele.Mock_Type == sMockType && ele.Status == 'Pending' || ele.Status == 'Accepted' && ele.selectedId == selectedId
         }))
         {
           req.flash('success', `Request already sent`);
@@ -374,7 +375,6 @@ router.post('/leadMockRequest',function (req, res){
  })
 
 })
-
 
 
 

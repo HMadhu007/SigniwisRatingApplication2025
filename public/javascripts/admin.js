@@ -100,8 +100,3 @@ function ClicktoViewEmp(id){
     // document.getElementById("EmployeeData").innerHTML = `
     //     `
   }
-
-function onPress() {
-    debugger
-    alert("data deleted successfully")
-}

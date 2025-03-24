@@ -9,7 +9,8 @@ var UniqueId = ID
 let employee_Mock_Given = 0
 let employee_Mock_Taken = 0
 const nodemailer = require('nodemailer');
-
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('../localStorage');
 const app = express()
 var session = require('express-session')
 var bodyParser = require('body-parser')
@@ -29,9 +30,6 @@ app.use(session({
 app.use(flash())
 
 
-
-
-debugger
 var mysql = require('mysql');
 var connection = mysql.createConnection({
 
@@ -394,17 +392,47 @@ Signiwis Technologies `,
   
   connection.query(sql5, (error, data) => {
     
-    // Admin Notification Status updating
-    var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${Employee_Id} && selectedId = ${req.session.EmpId}`;
+    var validateQuery = `select * from admin_notification`;
+    connection.query(validateQuery,(err, data)=>{
+      if(err){
+        req.flash('success', `Something went wrong`);
+        res.redirect(`${Employee_Id}`);
+      }else{
 
-      connection.query(updateStatus, (error, data) => {
-        if(error)
-          throw error;
-        else{
-          res.redirect(`${Employee_Id}`)
-          req.flash('success', "Data submitted successfully");
+        if(data.some((ele, ind)=>{ 
+          debugger
+          return ele.User_Id == Employee_Id && ele.Mock_Type == mock_type && ele.Status == 'Pending' && ele.selectedId == req.session.EmpId
+        }))
+        {
+          req.flash('success', `Request not yet accepted`);
+          res.redirect(`${Employee_Id}`);
         }
-      })
+        else if(data.some((ele, ind)=>{ 
+          debugger
+          return ele.User_Id == Employee_Id && ele.Mock_Type == mock_type && ele.Status == 'Done'
+        }))
+        {
+          req.flash('success', `Mock review already updated`);
+          res.redirect(`${Employee_Id}`);
+        }
+        else{
+          // Admin Notification Status updating
+          var mock_type = localStorage.getItem("Mocktype")
+          var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${Employee_Id} && selectedId = '${req.session.EmpId}' && Mock_Type = '${mock_type}' && Status = "Accepted"`;
+
+          connection.query(updateStatus, (error, data) => {
+          if(error)
+            throw error;
+          else{
+            res.redirect(`${Employee_Id}`)
+            req.flash('success', "Data submitted successfully");
+          }
+          })
+        }
+      }
+    })
+    
+
   })
 
 });

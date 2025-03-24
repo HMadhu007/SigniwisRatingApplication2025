@@ -30,49 +30,7 @@ var connection = mysql.createConnection({
 debugger
 /* GET users listing. */
 router.get('/',
-    // async(req, res)=>{
-    // try {
-
-    //     const response = await axios.get('https://api.greythr.com/employee/v2/employees',{
-    //         Headers: {
-    //             'Access-Token': '3EugofsPmeIqG8_OtLacebu8GNRah8emajQvsL1l7Po.wNX32VD57Wurnp53hYYaMJZE8wLXXVzqPxhp12fXnpc',
-    //             'x-greythr-domain': 'signiwistech1.greythr.com'
-    //         } 
-    //     })
-    //     res.json(response.data);
-
-    // } catch (error) {
-    //     debugger
-    // }
-
-    // const accessToken = await generateAccessToken();
-    // const url = `https://api.greythr.com/employee/v2/employees`
-    // const response = await fetch(url, {
-    //     method: "GET",
-    //     headers:{
-    //         "Content-Type": "application/json",
-    //         'Access-Token': accessToken,
-    //         'x-greythr-domain':`signiwistech1.greythr.com`
-
-    //     }
-    // })
-    // const data =await response.json();
-    // console.log(data);
-    // res.write(data)
-
-    // })
-    // async function generateAccessToken(){
-    //     const response = await axios({
-    //         url: "https://signiwistech1.greythr.com/uas/v1/oauth2/client-token",
-    //         method:"post",
-    //         data:"grant_type=client_credentials",
-    //         auth: {
-    //             username: "Ganesh",
-    //             password:"89dd801c-a874-4ec5-b59d-67fa34153d18"
-    //         }
-    //     })
-    //     return response.data.access_token;
-    // }
+   
     function (req, res, next) {
         debugger
         var message = req.flash('success');
@@ -113,72 +71,12 @@ router.get('/',
 
 
     });
-// router.get('/searchEmp', async(req, res)=>{
-// debugger
-//     var searchId = req.query.searchId;
-
-//       try {
-
-//         const accessToken = await generateAccessToken();
-// console.log(accessToken);
-// const url = `https://api.greythr.com/employee/v2/employees/${searchId}`
-// const response = await fetch(url, {
-//     method: "GET",
-//     headers:{
-//         "Content-Type": "application/json",
-//         'Access-Token': accessToken,
-//         'x-greythr-domain':`signiwistech1.greythr.com`
-//     }
-// })
-// const data =await response.json();
-// console.log(data);
-// req.session.employeeId = data.employeeId;
-// req.session.dateOfBirth = data.dateOfBirth;
-// req.session.email = data.email;
-// req.session.employeeNo = data.employeeNo;
-// req.session.gender = data.gender;
-// req.session.mobile = data.mobile;
-// req.session.name = data.name;
-//     res.end();
-// // req.flash('success', `Data fetched for ${data.name}`);
-// // res.redirect('/admin');
-
-
-
-//     } catch (error) {
-//         debugger
-//         req.flash('success', error)
-//         res.redirect('/admin')
-
-//     }
-
-
-
-
-// })
-// async function generateAccessToken(){
-//     const response = await axios({
-//         url: "https://signiwistech1.greythr.com/uas/v1/oauth2/client-token",
-//         method:"post",
-//         data:"grant_type=client_credentials",
-//         auth: {
-//             username: "Ganesh",
-//             password:"89dd801c-a874-4ec5-b59d-67fa34153d18"
-//         }
-//     })
-//     return response.data.access_token;
-// }
-
 
 router.get('/resign', function (req, res, next) {
-    debugger
 
     // connection.query('SELECT * FROM employee_table', function(error, data){
 
-
     res.redirect('/resignEmpPopup')
-
-
 
     // })
 });
@@ -199,8 +97,6 @@ router.get('/admin/:id', function (req, res) {
 })
 
 
-
-
 router.post('/designation', function (req, res) {
     debugger;
     var sNewDesignation = req.body.designationName;
@@ -214,23 +110,6 @@ router.post('/designation', function (req, res) {
     })
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 router.get('/fetchuser', (req, res) => {
@@ -254,40 +133,31 @@ router.get('/fetchuser', (req, res) => {
 
 // Admin Notification Delete
 
-router.get('/delete/:id', function (req, res, next) {
-
-    var id = req.params.id;
-    connection.query(`DELETE FROM admin_notification WHERE User_Id = ${id}`, function (error, data) {
+router.get('/delete/:id/:sId/:mocktype', function (req, res, next) {
+    debugger
+    var id = req.params.id.split(":")[1];
+    connection.query(`DELETE FROM admin_notification WHERE User_Id = '${id}' && selectedId = '${req.params.sId.split(":")[1]}' && Mock_Type = '${req.params.mocktype.split(":")[1]}' && Status = 'Done'`, function (error, data) {
         
         if (error) {
-            throw error;
+            req.flash('success', `Something went wrong`);
+            res.redirect("/admin");
 
         }
         else {
-            res.redirect("/admin")
+            if(data.affectedRows == 0){
+                req.flash('success', `Can't delete, untill the mock get's complete`);
+                res.redirect("/admin");        
+            }
+            else{
+                req.flash('success', `Data deleted`);
+
+                res.redirect("/admin")
+            }
+            
         }
     })
 })
 
-router.get('/delete/:id', function (req, res, next) {
-
-    debugger
-    var id = req.params.id;
-    connection.query(`DELETE FROM review_status WHERE Unique_Id = ${id}`, function (error, data) {
-        debugger
-        if (error) {
-            debugger
-            throw error;
-
-
-
-        }
-        else {
-            debugger
-            res.redirect("/admin")
-        }
-    })
-})
 
 router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res, next) => {
     debugger
