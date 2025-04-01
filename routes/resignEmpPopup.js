@@ -61,7 +61,7 @@ router.get('/', function(req, res, next) {
 
       var id = req.params.id;
 
-      connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = ${id}`, function(error, data){
+      connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = '${id}'`, function(error, data){
 
         if(error){
     
@@ -80,7 +80,7 @@ router.get('/', function(req, res, next) {
     router.get('/restore/:id', function(req, res, next){
 
     var id = req.params.id;
-    var sqlData=`Select * from resign_employeetab WHERE Employee_Id = ${id}`
+    var sqlData=`Select * from resign_employeetab WHERE Employee_Id = '${id}'`
 
     var employeeName;
     var employeeDesignation;
@@ -132,7 +132,7 @@ router.get('/', function(req, res, next) {
             else 
             {
  
-              connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = ${id}`, function(error, data){
+              connection.query(`DELETE FROM resign_employeetab WHERE Employee_Id = '${id}'`, function(error, data){
                 if(error){
                   throw error
                 } else{

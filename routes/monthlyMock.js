@@ -58,7 +58,7 @@ debugger
   var message = req.flash('success')
 
   var query = `SELECT * FROM employee_table`
-  var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = ${req.params.id}`
+  var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = '${req.params.id}'`
   var query3 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.params.id}'`
   var query4 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.session.EmpId}'`
   

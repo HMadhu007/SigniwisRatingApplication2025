@@ -91,17 +91,15 @@ router.post('/user', function(req, res, next){
                 req.flash('success',"Incorrect Admin password")
                         res.redirect('home');
             }
-            else if(data.some((val) =>{ return  val.Employee_Id == EmpId })){
+            else if(data.some((val) =>{ return  val.employeeNo == EmpId })){
                 for(var count=0; count<data.length;count++){
-                    if( data[count].Employee_Password == 'Default@123' && data[count].Employee_Id == EmpId ){
+                    if( data[count].Employee_Password == 'Default@123' && data[count].employeeNo == EmpId ){
                         if(EmpPass != 'Default@123'){
                             req.flash('success',`Invalid Password ` );
                             res.redirect('/');    
                             break;
-                        }else{
+                        }else{                        
                         req.session.EmpId = data[count].Employee_Id
-                        
-                        req.session.EmpId = EmpId
                         req.session.Name = data[count].Employee_Name
                         req.session.Dept = data[count].Employee_Department
                         req.session.Email = data[count].Employee_Email
@@ -111,9 +109,8 @@ router.post('/user', function(req, res, next){
                         break;
                         }
                     }
-                    else if(data[count].Employee_Id == EmpId && data[count].Employee_Password == EmpPass){
+                    else if(data[count].employeeNo == EmpId && data[count].Employee_Password == EmpPass){
                         req.session.EmpId = data[count].Employee_Id
-                        req.session.EmpId = EmpId
                         req.session.Name = data[count].Employee_Name
                         req.session.Dept = data[count].Employee_Department
                         req.session.Email = data[count].Employee_Email
@@ -121,7 +118,7 @@ router.post('/user', function(req, res, next){
                         res.redirect('/user');
                         break;
                     }
-                    else if(data[count].Employee_Id == EmpId && data[count].Employee_Password != EmpPass){
+                    else if(data[count].employeeNo == EmpId && data[count].Employee_Password != EmpPass){
                         req.flash('success',`Invalid Password ` );
                     res.redirect('/');    
                     break;
@@ -146,7 +143,7 @@ router.post('/user', function(req, res, next){
 })
 
 
-// Forgot Password
+//Forgot Password
 
 
 router.post('/sendOTPEmpId', function(req, res, next) {

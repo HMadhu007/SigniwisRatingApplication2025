@@ -13,7 +13,65 @@
         color: red;
         font-weight: bolder;
       }
-     
+      .wave-text span {
+        display: inline-block;
+        font-size: 2rem;
+        animation: wave 3s ease-in-out infinite;
+    }
+    
+    .wave-text span:nth-child(1) {
+        animation-delay: 0s;
+    }
+    .wave-text span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    .wave-text span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    .wave-text span:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+    .wave-text span:nth-child(5) {
+      animation-delay: 0.8s;
+    }
+    .wave-text span:nth-child(6) {
+      animation-delay: 1s;
+    }
+    .wave-text span:nth-child(7) {
+      animation-delay: 1.2s;
+    }
+    .wave-text span:nth-child(8) {
+      animation-delay: 1.3s;
+    }
+    .wave-text span:nth-child(9) {
+      animation-delay: 1.4s;
+    }
+    .wave-text span:nth-child(10) {
+      animation-delay: 1.5s;
+    }
+    .wave-text span:nth-child(11) {
+      animation-delay: 1.6s;
+    } 
+    .wave-text span:nth-child(12) {
+      animation-delay: 1.7s;
+    }
+    .wave-text span:nth-child(13) {
+      animation-delay: 1.8s;
+    }
+
+    .wave-text span:nth-child(14) {
+      animation-delay: 1.9s;
+    }
+    @keyframes wave {
+        0%, 100% {
+            transform: translateY(5px);
+            color: rgba(52, 10, 238, 0.514);
+        }
+        80% {
+            transform: translateY(-10px);
+            color: black;
+        }
+    }
     </style>
  
   </head>
@@ -93,7 +151,21 @@
       <h1 style="text-align: center; display: inline;">Review hhh</h1>
       <span><i class="fa-solid fa-info"></i></span> -->
       <div class="heder-info" style="width: 50%; display: flex;justify-content: space-between;margin-left: 40%;position: relative;">
-        <h1 style="text-align: center;">Review</h1>
+        <h1 style="text-align: center;" class="wave-text">
+          <span>H</span>
+          <span>I</span>
+          <span>E</span>
+          <span>R</span>
+          <span>A</span>
+          <span>R</span>
+          <span>C</span>
+          <span>H</span>
+          <span>Y&nbsp;</span>
+          <span>M</span>
+          <span>O</span>
+          <span>C</span>
+          <span>K</span>
+          </h1>
         <!-- <div>
         <span onclick="" class="hover-affect"><i style="background-color: rgba(0, 255, 255, 0.347);padding: 10px;border-radius: 50%;font-size: 90;color:rgb(34, 155, 199)"  class="fa-solid fa-info"></i></span>
         <div  >

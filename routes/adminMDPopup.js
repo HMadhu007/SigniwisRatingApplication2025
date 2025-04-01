@@ -20,6 +20,9 @@ var connection  = mysql.createConnection({
     port : 3306
 });
 
+var BusyIndicator = {
+  "BusyIndicator":"hidden"
+}
 this.User_Id = null
 
 router.get(['/','/:id'], (req, res)=>{
@@ -38,12 +41,12 @@ router.get(['/','/:id'], (req, res)=>{
           connection.query(` SELECT * FROM employee_table    ` , function(error,sameDept){
             
             var Departmenet = null;
-             data.forEach((data)=>{
+            sameDept.forEach((data)=>{
               if(data.Employee_Id == req.params.id){
                  Departmenet = data.Employee_Department
               }
             })
-            res.render('adminMDPopup', {title:UID,message,session:req.session, sampleData:data, currDepartment:Departmenet, disignationArr:designationdata, KPIdata: kpiData,sameDept:sameDept})
+            res.render('adminMDPopup', {title:UID,message,session:req.session, sampleData:data, currDepartment:Departmenet, disignationArr:designationdata, KPIdata: kpiData,sameDept:sameDept, BusyIndicator:BusyIndicator})
           })
           // res.render('adminMDPopup', {title:UID,message,session:req.session, sampleData:data, currId:UID, disignationArr:designationdata, KPIdata: kpiData})
       
@@ -246,7 +249,7 @@ router.post('/rating/:Department',(req,res,next)=>{
     
     var id = req.params.id;
     var id2 = req.params.id2;
-    connection.query(`DELETE FROM employee_rating WHERE UniqueId = ${id}`, function(error,data){
+    connection.query(`DELETE FROM employee_rating WHERE UniqueId = '${id}'`, function(error,data){
         
         if(error)
         {
@@ -283,7 +286,7 @@ var selectedId = req.query.Reviewer_Id;
     
     let sql = `INSERT into employee_review (employee_id, unique_id,employee_review_val, review_points,Request_Id,Requested_Date) values ?`;
     let sql1 = `INSERT INTO admin_notification (User_Id, Requested_Date, Status,Reviewer_name, Mock_Type,Request_Id, selectedId) VALUES (?,?,?,?,?,?,?)`;
-    connection.query(sql1,[req.session.UID, vFormattedDate, 'pending',meetingId, 'KPI',requestId, selectedId], function(error, data){
+    connection.query(sql1,[req.session.UID, vFormattedDate, 'Pending',meetingId, 'KPI',requestId, selectedId], function(error, data){
       if(error){
         req.flash('success',`Previous Ratings Not yet Reviewed`);
         res.redirect(`/adminMDPopup/${req.session.UID}`)
@@ -333,8 +336,8 @@ var selectedId = req.query.Reviewer_Id;
  router.get('/empDelete/:id',function(req,res,next){
   
     var id = req.session.UID;
-    var sql=`Select Employee_Name from employee_table WHERE Employee_Id = ${id}`;
-    var sqlData=`Select * from employee_table WHERE Employee_Id = ${id}`;
+    var sql=`Select Employee_Name from employee_table WHERE Employee_Id = '${id}'`;
+    var sqlData=`Select * from employee_table WHERE Employee_Id = '${id}'`;
     var empName;
     var employeeName;
     var employeeDesignation;
@@ -393,7 +396,7 @@ var selectedId = req.query.Reviewer_Id;
                 {
                   
                   empName= data[0].Employee_Name
-                  connection.query(`DELETE FROM employee_table WHERE Employee_Id = ${id}`,function(error,data){
+                  connection.query(`DELETE FROM employee_table WHERE Employee_Id = '${id}'`,function(error,data){
                     
                     if(error)
                     {
@@ -450,7 +453,7 @@ var selectedId = req.query.Reviewer_Id;
       // checking status when changing to release
       if(empStatus === "Released"){
 
-        var sqlData=`Select * from employee_table WHERE Employee_Id = ${empId}`;
+        var sqlData=`Select * from employee_table WHERE Employee_Id = '${empId}'`;
 
         connection.query(sqlData,function(error,data){
           if(error)
@@ -488,7 +491,7 @@ var selectedId = req.query.Reviewer_Id;
               }
               else{
                 // when, employee in release status and deleting employee from employee_table
-                connection.query(`DELETE FROM employee_table WHERE Employee_Id = ${empId}`,function(error,data){
+                connection.query(`DELETE FROM employee_table WHERE Employee_Id = '${empId}'`,function(error,data){
                   if(error)
                     throw error
                   else{
