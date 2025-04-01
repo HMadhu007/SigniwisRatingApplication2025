@@ -49,6 +49,18 @@
   </head>
 <body>
  
+
+<div id="adminNotification">
+  <% if(message.length > 0){  %>
+
+    <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+    <div class="alert alert-success" id="alert" style="margin-top: 10px;width:250px; margin: 50px auto;text-align: center; position: absolute;left: 500px;z-index: 100;" role="alert">
+      <%= message %>
+    </div>
+   
+  <% } %>
+</div>
+
   <div class="loader"></div>
  
  
@@ -117,10 +129,11 @@
         <!-- <h4>Training and Learning</h4><br> -->
         <div>
           <%
+          debugger
           if(KPIData1.length > 0){
             KPIData1.forEach((data)=>{
 
-              if(data.review_points.length>5 )
+              if(data.review_points.length>8 )
               {
   
               %>

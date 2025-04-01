@@ -46,7 +46,7 @@ var connection  = mysql.createConnection({
  
 });
  
-debugger
+
 
 this.oUser_ID
 var vid = null
@@ -59,12 +59,9 @@ localStorage.setItem("Mocktype", "KPI")
   // req.session.reviewedId = req.params.id;
   this.reviewerUserId = req.session.EmpId
  
-  var query = `SELECT * FROM employee_table where Employee_Id = ${req.params.id}`
-  var querr1 = `SELECT Request_Id From admin_notification where User_Id = ${req.params.id}`
-  var kpiPointQuterly = `SELECT * From kpi1 where Emp_Id = ${this.oUser_ID} and ReviewerId = ${this.reviewerUserId}`
-  // var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = ${req.params.id}`
-  // var query3 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.params.id}'`
-  // var query4 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.session.EmpId}'`
+  var query = `SELECT * FROM employee_table where Employee_Id = '${req.params.id}'`
+  var querr1 = `SELECT Request_Id From admin_notification where User_Id = '${req.params.id}'`
+  var kpiPointQuterly = `SELECT * From kpi1 where Emp_Id = '${this.oUser_ID}' and ReviewerId = '${this.reviewerUserId}'`
  
   connection.query(query, function(error, data, rows){
   connection.query(querr1, function(err, data1){
@@ -89,7 +86,7 @@ localStorage.setItem("Mocktype", "KPI")
             }
             debugger
             console.log(kpiPointData)
-          res.render('KPI', {message ,singleUserData:data, KPIData1:kpiData, kpi1TableData:kpiPointData });
+            res.render('KPI', {message ,singleUserData:data, KPIData1:kpiData, kpi1TableData:kpiPointData });
 
           })
         
@@ -109,11 +106,6 @@ router.post('/UpdateKPI',function(req,res){
 })
 
 
- 
-  
- 
- 
- 
 
 
 //---------------------------------------------------------------------------------------------------
@@ -122,7 +114,7 @@ debugger;
   router.post('/ratings/:id',function(req, res ){
     debugger;
     
-    connection.query(`SELECT Request_Id From admin_notification where User_Id = ${req.params.id}`, function(err, data1){
+    connection.query(`SELECT Request_Id From admin_notification where User_Id = '${req.params.id}'`, function(err, data1){
       if(err){
         debugger
       }else{
@@ -143,9 +135,9 @@ debugger;
                 }
                }
                const timestamp = Date.now(); // Current timestamp in milliseconds
-    const randomNum = Math.floor(Math.random() * 10000); // Random number between 0 and 9999
-    var kpiDocLink=req.body.KPI_Doc_Link
-    const UnqKPI =   `${prefix}${timestamp}${randomNum}`
+              const randomNum = Math.floor(Math.random() * 10000); // Random number between 0 and 9999
+              var kpiDocLink=req.body.KPI_Doc_Link
+              const UnqKPI =   `${prefix}${timestamp}${randomNum}`
                value.push([req.session.EmpId,UnqKPI, element.employee_review_val, element.review_points, element.Request_Id, element.Requested_Date,element.review_value,element.employee_id,kpiDocLink])
                console.log(value);
 
@@ -153,13 +145,24 @@ debugger;
             
             var sql = `INSERT into kpi (reviewer_id, unique_id, employee_review_val, review_points,Request_Id,Requested_Date,review_value, employee_id,document_link) values ?`;
             connection.query(sql, [value], function(err, data){
-              debugger
+              
               if(err){
-                throw err;
+                req.flash('sucess', 'Something went wrong');
+                res.redirect(`/user`)
               } else{
                 debugger
-                // req.flash('sucess', 'Data submitted successfully');
-                res.redirect(`/user`)
+                connection.query(`UPDATE admin_notification SET Status ="Done" where User_Id = '${req.params.id}' && selectedId = '${req.session.EmpId}' && Mock_Type = 'KPI' && Status = 'Accepted'`, (err, data)=>{
+                  if(err){
+                    req.flash('success', 'Something went wrong');
+                    res.redirect(`/user`)
+                  }
+                  else{
+                    req.flash('success', 'Data submitted successfully');
+                    res.redirect(`/user`)
+                  }
+                })
+
+                
               }
             })
           }
@@ -167,19 +170,6 @@ debugger;
       }
     })
 
-  //   let value = []
-  //   for(const property in req.body){    
-  // value.push([property,req.query[property]]);
-  //   }
-
-    // var sql = `INSERT INTO kpi (KPI_UId, TL_Complete_Training, TL_Adv_Concept_Fiori, TL_Performance_Mock, TL_Publish_Blogs, TL_Two_Topics_Year, TL_Reg_Avail_Attendance, TL_Documents_New_Topics, TMS_Train_Two_Candidates, TMS_Taken_Session_Year, TMS_Session_On_Sat, HRF_Reg_Avail_Attendance, HRF_Emp_Need_Inform_HR, CF_Appreciate_Mail_Client, CF_Project_Release_Feedb, CTC_Company_Growth, CTC_Num_Leave_Taken, Emp_Id, ReviewerId, Reviewer_Name) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`
-    // connection.query(sql,[KPI_UId, sTL_Complete_Training, sTL_Adv_Concept_Fiori, sTL_Performance_Mock, sTL_Publish_Blogs, sTL_Two_Topics_Year, sTL_Reg_Avail_Attendance, sTL_Documents_New_Topics, sTMS_Train_Two_Candidates, sTMS_Taken_Session_Year, sTMS_Session_On_Sat, sHRF_Reg_Avail_Attendance, sHRF_Emp_Need_Inform_HR, sCF_Appreciate_Mail_Client, sCF_Project_Release_Feedb, sCTC_Company_Growth, sCTC_Num_Leave_Taken, EmpId, reviewerId, reviewerName],function(error, data){
-    //     if(error){
-    //         console.log(error);
-    //     } else{
-    //         res.redirect(`/KPI/${EmpId}`);
-    //     }
-    // }) 
   });
 
 
@@ -209,7 +199,7 @@ TL_Publish_Blogs='${req.body.TL_Publish_Blogs}',
 TL_Two_Topics_Year='${req.body.TL_Two_Topics_Year}',
 TMS_Session_On_Sat='${req.body.TMS_Session_On_Sat}',
 TMS_Taken_Session_Year='${req.body.TMS_Taken_Session_Year}',
-TMS_Train_Two_Candidates='${req.body.TMS_Train_Two_Candidates}' WHERE KPI_UId='${req.body.KPI_UId}'`
+TMS_Train_Two_Candidates='${req.body.TMS_Train_Two_Candidates}' WHERE KPI_UId= '${req.body.KPI_UId}'`
 
 console.log(query_String)
   connection.query(query_String, function(err, data){

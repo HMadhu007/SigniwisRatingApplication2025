@@ -39,6 +39,15 @@
     </style>
 </head>
 <body >
+
+  <!-- BusyIndicator -->
+  <div id="loadBusyIndicator" style="visibility:<%= BusyIndicator.BusyIndicator %> ;height: 100vh;width: 100vw; background-color: rgba(101, 146, 214, 0.418);z-index: 2;position: fixed;display: flex;align-items: center;justify-content: center;margin-top: -3px;">
+    <div class="spinner-grow" role="status" style="height: 50px;width: 50px;">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+<!-- .................... -->
+
   <div   id="alert1" style=" display: none; width:350px;text-align: center;position: absolute;left: 36%;z-index: 100;background-color: rgb(12, 241, 164);border-radius: 5px;padding: 2px;" role="alert"> </div>
 
   <div id="adminNotification">
@@ -209,69 +218,9 @@
               %>
           </div>
         </div> 
-          <!-- <div class="empBandge mt-5 mb-5 ">
-            <%
-              for(let i = 0; i < sampleData.length;i++){
-                if(sampleData[i].Employee_Id == session.UID){
-                  if(sampleData[i].Employee_Status == 'Working')
-
-                  {
-                  %>
-                  <span class="badge rounded-pill text-bg-success" style="width: 125px;padding: 12px 22px;font-weight: bold;">
-                    <%= sampleData[i].Employee_Status %>
-                    <% break %>
-                  </span>
-                  <%
-                  }
-                  else if(sampleData[i].Employee_Status == 'Released'){
-                    %>
-                    <span class="badge rounded-pill text-bg-primary" style="width: 125px;padding: 12px 22px; font-weight: bold;">
-                      <%= sampleData[i].Employee_Status %>
-                      <% break %>
-                    </span>
-                    <%
-                    
-                  }else{
-                    %>
-                    <span class="badge rounded-pill text-bg-danger" style="width: 125px;padding: 12px 22px;font-weight: bold;">
-                      <%= sampleData[i].Employee_Status %>
-                      <% break %>
-                    </span>
-                    <%
-                    
-                  }
-                }
-            }
-            
-            %>
-
-          </div>
-          <!-- <div class="col-md-3 mt-2">
-            <div class="d-flex ">
-                <div onclick="handleEditPopUp()">
-                  <i class="fas fa-edit" style="font-size: 25px;color: black;cursor: pointer;"></i>
-                </div>
-                <div class="ms-3">
-                  <a href="/adminMDPopup/empDelete/:id" title="Delete"><i class="fa-solid fa-trash" style="font-size: 25px;color: black;"></i></a>
-                </div>
-
-            </div>
-            <form  method="POST" action="/adminMDPopup/rating" style="height: max-content;margin-top: 125px;">
-
-              <input style="padding: 2px 20px 2px 20px;border-radius: 5px;background-color: rgb(35, 239, 107);" type="submit" value="Request Rating">
-                
-            </form>  
-          </div> -->
+          
           <div class="col-md-3 mt-2">
-            <!-- <div class="d-flex ">
-                <div onclick="handleEditPopUp()">
-                  <i class="fas fa-edit" style="font-size: 25px;color: black;cursor: pointer;"></i>
-                </div>
-                <div class="ms-3">
-                  <a href="/adminMDPopup/empDelete/:id" title="Delete"><i class="fa-solid fa-trash" style="font-size: 25px;color: black;"></i></a>
-                </div>
-
-            </div> -->
+            
             <% if(vSingleEmpData[0].Employee_Total_Rating < 5 ) {%>
               <h6 >Latest Ratings : <strong style="color: red"> <%= vSingleEmpData[0].Employee_Total_Rating %> </strong></h6>
 
@@ -291,48 +240,13 @@
             <label>Feedback : </label><br>
             <textarea name="feedback" id="textarea" cols="42" rows="5"> <%= vSingleEmpData[0].Employee_Overall_Feedback %></textarea>
 
-<!--             
-            <form  method="POST" action="/adminMDPopup/rating/<%= vSingleEmpData[0].Employee_Department %>" id="requestRatingID" style="height: max-content;margin-top: 65px;">
-              <select class="form-select" id="selectRatingsId" name="Mock_Type" aria-label="Default select example" onchange="onSelctReviewtype()">
-                <option selected >--- Select Review ---</option>
-                <option value="monthlyMock">Monthly Mock</option>
-                <option value="hierarchyMock">Hierarchy Mock</option>
-                <option value="Technology">Technology completion Mock</option>
-                <option  value="KPI">KPI</option>
-              </select>
-              <div id="departmentId" style=" left: 78%; top: 80%;">
-                <select onclick="" class="form-select" id="formEmpDesignation1" aria-label="Default select example" name="Reviewer_name" >
-                  <option selected>--- Select Employee ---</option>
-                  <%
-                    if(sampleData.length > 0){
-                      sampleData.forEach((data)=>{
-                        if(data.Employee_Department == currDepartment && data.Employee_Id !=title  ){
-                  %>
-                          <option value="<%= data.Employee_Name %><%= ',' %><%= data.Employee_Id %>"> <%= data.Employee_Name %> </option>
-                       
-                        <%
-                        }
-                     })                  
-                      }
-                  %>
-  
-                </select>
-               </div>
-              <br>
-              <input style="padding: 2px 20px 2px 20px;border-radius: 5px;background-color: #212529;color: white;padding-bottom:6px ;font-weight: bold;" type="submit" id="requestRating" onclick="handleSubmit()" value="Request Rating">
-                
-
-
-
-            </form>   -->
-
 
             <form method="POST" action="/adminMDPopup/rating/<%= vSingleEmpData[0].Employee_Department %>" id="requestRatingID" style="height: max-content; margin-top: 65px;">
               <div id="departmentId"></div>
               <!-- Container for aligning selects side by side -->
               <div style="display: flex; gap: 5px;width: 390px;">
                 <select class="form-select" id="selectRatingsId" name="Mock_Type" aria-label="Default select example" onchange="onSelctReviewtype()">
-                  <option selected>-Select Review-</option>
+                  <option selected>-Mock Type-</option>
                   <option value="Monthly Mock">Monthly Mock</option>
                   <option value="Hierarchy Mock">Hierarchy Mock</option>
                   <option value="Technology completion Mock">Technology completion Mock</option>
@@ -342,8 +256,9 @@
                 <select class="form-select" id="formEmpDesignation1" aria-label="Default select example" name="Reviewer_name" onchange="onSelectReviewer_name()">
                   <option selected>-Select Employee-</option>
                   <%
-                    if (sampleData.length > 0) {
-                      sampleData.forEach((data) => {
+                    if (sameDept.length > 0) {
+                      sameDept.forEach((data) => {
+                        debugger
                         if (data.Employee_Department == currDepartment && data.Employee_Id != title) {
                   %>
                           <option value="<%= data.Employee_Name %><%= ',' %><%= data.Employee_Id %>">
@@ -401,9 +316,9 @@
         </label>
         <label id="kpiLabel" >KPI</label>
       </div>
-      <div id="EmployeeReviewDetails"  class="table-responsive">
+      <div id="EmployeeReviewDetails"  class="table-responsive" style="display: flex;align-items: center;justify-content: center;">
         
-        <table class="table table-hover" border="1"> 
+        <table class="table table-hover" style="margin-left: 0%;" border="1"> 
             <tr>
             <th>Reviewer_Id</th>
             <th>Reviewer Name</th>
@@ -795,7 +710,7 @@
               <%
                 KPIdata.forEach((val, index)=>{
                   if(val.reviewer_id == ele.reviewer_id){
-                    if(val.review_points.length>5 )
+                    if(val.review_points.length>8 )
                       {
                         DocLink = val.document_link
               %>
@@ -826,7 +741,7 @@
             
           %>
           <label for="">Document Link</label>
-          <a href="<%= DocLink %>">Click Here</a>
+          <a href="<%= DocLink %>" target="_blank">Click Here</a>
           </form>
             
             
@@ -931,25 +846,35 @@ function checkKPInRatings(){
 
 
     function handleSubmit(){
-      debugger
+      
       document.getElementById('requestRatingID').addEventListener('submit',(e)=>{
         e.preventDefault()
       });
 
       var oSelectRatings = document.getElementById('selectRatingsId');
-      if(oSelectRatings.value == "Select Review"){
+      var MentorSelected = document.getElementById('formEmpDesignation1');
+      debugger
+      if(oSelectRatings.value == "-Select Review-"){
           document.getElementById('alert1').style.display = 'block';
           document.getElementById('alert1').innerHTML = `<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i> Please select Mock Type`;
           setTimeout(()=>{
           document.getElementById('alert1').style.display = 'none';
 
-          },5000)
+          },3000)
 
       }
-      // else if(){
+      else if(MentorSelected.value == "-Mock Type-"){
 
-      // }
+        document.getElementById('alert1').style.display = 'block';
+          document.getElementById('alert1').innerHTML = `<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i> Please select Employee`;
+          setTimeout(()=>{
+          document.getElementById('alert1').style.display = 'none';
+
+          },3000)
+      }
       else {
+    
+        document.getElementById('loadBusyIndicator').style.visibility = "visible";
         document.getElementById('requestRatingID').submit();
       }
     }

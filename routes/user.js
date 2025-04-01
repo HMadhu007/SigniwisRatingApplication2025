@@ -1,6 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const nodemailer = require("nodemailer");
+const schedule = require('node-schedule');
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('../localStorage');
+
 
 // var database = require('../database')
 var mysql = require('mysql');
@@ -21,12 +25,11 @@ var BusyIndicator = {
 /* GET users listing. */
 router.get('/', function (req, res, next) {
 
-
-
+  debugger
   var loggedUser = req.session.EmpId
   var message = req.flash('success');
   if (req.session.currId) { }
-  connection.query(`SELECT * FROM admin_notification where selectedId = ${req.session.EmpId}`, function (error, data) {
+  connection.query(`SELECT * FROM admin_notification where selectedId = '${req.session.EmpId}'`, function (error, data) {
     
     connection.query('SELECT * FROM employee_table', function (err, data1) {
       var LeadCheck = "hidden";
@@ -60,6 +63,7 @@ router.get('/', function (req, res, next) {
 
 
 router.get('/mail/:tableUID/:id/:mocktype', function (req, res, next) {
+
   debugger
   // var message = req.flash('success');
   let table_UId = req.params.tableUID;
@@ -127,16 +131,16 @@ router.get('/mail/:tableUID/:id/:mocktype', function (req, res, next) {
         </select>
       </div>
       <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">Select Date :</label>
-        <input type="date" class="form-control" name = "date" id="exampleInputPassword1">
+        <label for="selectedDate" class="form-label">Select Date :</label>
+        <input type="date" class="form-control" name = "date" id="selectedDate">
       </div>
      
       <button type="submit" class="btn btn-primary" value="Add" style="position:absolute;top:300px;left:500px;" >Submit</button>
     </form>
   </div>
-   
+    
     `)
-}),
+});
 
   router.get('/delete/:id/:mock_type', function (req, res, next) {
 
@@ -159,7 +163,7 @@ router.post(['/sendmail/:id/:tableUID/:mocktype'], function (req, res, next) {
   debugger
   let id = req.params.id;
   let table_UId = req.params.tableUID;
-  let mock_type = req.params.mocktype == 'hierarchyMock' ? 'Hierarchy Mock' : 'Monthly Mock';
+  let mock_type = req.params.mocktype;
   connection.query(`SELECT * FROM employee_table WHERE Employee_Id = '${id}'`, function (err, data1) {
     debugger
     console.log(data1)
@@ -173,11 +177,7 @@ router.post(['/sendmail/:id/:tableUID/:mocktype'], function (req, res, next) {
       throw err;
     } else {
       connection.query(`DELETE FROM accept_reject where emp_id = '${employee_id1}' `, function (err, data) {
-        // connection.query(`DELETE FROM admin_notification where User_Id = '${employee_id1}'`, function (error, deleteAdminNotofication) {
-
-
-          
-        // })
+      
         if (err) {
           console.log(err);
         } else {
@@ -228,6 +228,23 @@ router.post(['/sendmail/:id/:tableUID/:mocktype'], function (req, res, next) {
                     if(error)
                       throw error;
                     else{
+
+                      debugger
+                      //Remainder mail data config.
+                      var selectedDatesForMock = req.body.date.split("-");
+
+                      let mailRemainderData = new Date(selectedDatesForMock[0], parseInt(selectedDatesForMock[1]) - 1, selectedDatesForMock[2], 9, 0);//(year month date hour minuts)
+
+                      //Remainder email
+                      let job = schedule.scheduleJob(mailRemainderData, function() {
+                        
+                          transporter.sendMail(options, (error, info) => {
+                            if (error) {
+                              return console.log('Error:', error);
+                            }
+                            
+                          });
+                      }); 
                       req.flash('success', `Request Accepted and Mail sent`);
                       res.redirect('/user')
                     }
@@ -272,11 +289,19 @@ router.post('/leadMockRequest',function (req, res){
     }
     else{
         if(data.some((ele, ind)=>{ 
-          debugger
-          return ele.User_Id == MenteeId && ele.Mock_Type == sMockType && ele.Status == 'Pending' || ele.Status == 'Accepted' && ele.selectedId == selectedId
+          
+          return ele.User_Id == parseInt(MenteeId) && ele.Mock_Type == sMockType && ele.Status == 'Pending' && ele.selectedId == selectedId
         }))
         {
-          req.flash('success', `Request already sent`);
+          req.flash('success', `Request already sent the status is Pending`);
+          res.redirect("/user")
+        }
+        else if(data.some((ele, ind)=>{ 
+          
+          return ele.User_Id == parseInt(MenteeId) && ele.Mock_Type == sMockType && ele.Status == 'Accepted' && ele.selectedId == selectedId
+        }))
+        {
+          req.flash('success', `Request already sent the status is Accepted`);
           res.redirect("/user")
         }
         else{
@@ -301,7 +326,6 @@ router.post('/leadMockRequest',function (req, res){
            }
            else{
              connection.query(reference,[requestId, MenteeId, MenteeName, vFormattedDate,sMockType,meetingId],(err, data)=>{
-               debugger
                if(err){
                  req.flash('success', `Something went wrong`);
                  res.redirect("/user")
@@ -362,7 +386,7 @@ router.post('/leadMockRequest',function (req, res){
                    else {   
                      res.redirect("/user")
                    }
-                 })
+                 })                
            
                }
              })

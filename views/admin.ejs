@@ -14,6 +14,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
+
+
+      
+      .UI5-TEAM-HIERARCHY span{
+        animation: mad 5s infinite ;
+      } 
+      .UI5-TEAM-HIERARCHY span:nth-child(1){
+        animation-delay: 1s;
+      }
+      .UI5-TEAM-HIERARCHY span:nth-child(2){
+        animation-delay: 1.5s;
+      }
+      .UI5-TEAM-HIERARCHY span:nth-child(3){
+        animation-delay: 2s;
+      }
       .PositionShowInp{
         width: 60px;
         text-align: center;
@@ -99,9 +114,29 @@
     border-bottom: 2px solid #dee2e6; /* Optional: Adds a border at the bottom */
 }
 
+@keyframes mad{
+  0%, 50% {
+    
+    color: rgba(52, 10, 238, 0.912);
+}
+0%, 100% {
+  
+    color: black;
+}
+}
+
     </style>
 </head>
 <body style="padding: 0px; margin: 0px;z-index: -1;" id="body">
+
+  <!-- BusyIndicator -->
+  <div id="loadBusyIndicator" style="visibility:<%= BusyIndicator.BusyIndicator %> ;height: 100vh;width: 100vw; background-color: rgba(101, 146, 214, 0.418);z-index: 2;position: fixed;display: flex;align-items: center;justify-content: center;margin-top: -3px;">
+    <div class="spinner-grow" role="status" style="height: 50px;width: 50px;">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+<!-- .................... -->
+ 
   <div   id="alert1" style=" display: none; width:350px;text-align: center;position: absolute;left: 36%;z-index: 100;background-color: rgb(12, 241, 164);border-radius: 5px;padding: 2px;" role="alert"> </div>
 
   <div id="adminNotification">
@@ -155,23 +190,6 @@
         </div>
       </div>
     </nav>
-    <!-- <div style="display: flex; align-items: center; justify-content: space-between; margin: 0px;padding: 0px;">
-      <div>
-        <img src="../images/images.png" alt="" height="90px" width="150px" style="margin-left: 10px;">
-      </div>
-      <div >
-        <h2 id="orgTitle">--SIGNIWIS TECHNOLOGIES--</h2>
-      </div>
-      
-        <div style="width: 200px; display: flex; align-items: center; justify-content: flex-start;">
-          <div style="display: flex;width: 190px; justify-content: space-between;">
-            <img src="../images/notification.png" onclick="AdminNotification()" id="AdminNotification" alt="User" width="34px" height="30px"/>
-            <img src="../images/profile.png" onclick="userProfileinfo()" id="userProfileinfo" alt="User" width="30px" height="30px"/>
-            <a href="../home" style="position: relative; left: -100px;"><img src="../images/logout-8-512.png" alt="Logout" id="ologout" width="30px" height="30px"/></a>
-        </div>
-        </div>
-  
-  </div>   -->
   
   
    <!-- ********************************Admin Notification popup****************************** -->
@@ -197,16 +215,24 @@
       
       <div style="overflow: auto; height: 80%;">
         <div class="table-responsive container">
-          <table border='1' id="AdminNotificationPopUpId" style="width: 100%;overflow-y: scroll;height: 40px;border-collapse: collapse;font-size: 18px;text-align: center;" class="table table-hover">
-            <thead>
+          <table class="table" border='1' id="AdminNotificationPopUpId" style="width: 100%;overflow-y: scroll;height: 40px;border-collapse: collapse;font-size: 18px;text-align: center;" >
+          <thead class=".thead-dark">
           <tr style="background-color: #fff;"  ><th style="color:black;">Mock Type</th><th style="color:black;">Requested Date</th><th  style="color:black;">Employee Id</th><th  style="color:black;">Reviewer Id</th><th  style="color:black;">Status</th></tr>
         </thead>
         <tbody>
           <%
+          debugger
+          var oDateFormatter = [];
+          AdminNotifyData.forEach((ele)=>{
+            oDateFormatter.push(
+              {Mock_Type:ele.Mock_Type,Request_Id:ele.Request_Id,Requested_Date:new Date(ele.Requested_Date.split("/")[2]+'-'+ele.Requested_Date.split("/")[1]+'-'+ele.Requested_Date.split("/")[0]),Reviewer_name:ele.Reviewer_name,Status:ele.Status,User_Id:ele.User_Id,selectedId:ele.selectedId
+            })})
+            AdminNotifyData = oDateFormatter;
+            <!-- AdminNotifyData.sort((a,b)=>a.Requested_Date - b.Requested_Date) -->
           if(AdminNotifyData.length >0)
           {
             AdminNotifyData.forEach((data)=>{
-              debugger
+              
            %>
          <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
           <td><%= data.Mock_Type %></td>
@@ -215,7 +241,7 @@
            <td><%= data.selectedId %></td>
            <td><%= data.Status %></td>
            
-           <td><a onclick="onPress()" href="/admin/delete/:<%= data.User_Id %>/:<%= data.selectedId %>/:<%= data.Mock_Type %>"  style="color: red;"><i class="fa-solid fa-trash" style=" color: cadetblue;"></i></a></td>
+           <td><a onclick="onPress()" href="/admin/delete/<%= data.User_Id %>/<%= data.selectedId %>/<%= data.Mock_Type %>/<%= data.Status %>/<%= data.Request_Id %> "  style="color: red;"><i class="fa-solid fa-trash" style=" color: cadetblue;"></i></a></td>
            <!-- <td><a href="/adminMDPopup/<%= data.Employee_Id %>" onclick="ClicktoViewEm(<%= data.Employee_Id %>)" style="background-color: rgb(154, 153, 153);color: white; text-decoration: none;padding: 4px 8px 4px 8px;border-radius: 4px;width: 80px;" >X</a></td> -->
            <!-- <td><div style="background-color:black ; color: white; font-weight: bold; width: 30px; height: 30px;border-radius: 20px; justify-content: center; align-items: center;padding: 0px 10px 10px 10px; ">X</div></td> -->
            </tr>
@@ -331,24 +357,6 @@
       </div>
   
   
-      
-    <!-- ***********************************Search fields********************************************* -->
-    <!-- ********************************************************************************************* -->
-    <!-- <div style="display: flex;justify-content: space-around;" class="row">
-      <div class="col-md-12">
-        <div class="row"  style="display: flex;align-items:center;justify-content: space-around;width:max-content;margin: 10px;padding:0px">
-          <div class="col-md-6 mt-3">
-          <input type="search" name="SearchByEMPId" id="SearchByEMPId" onkeyup="searchByEMPId()"  placeholder="search by employee id " style="width:250px;height: 30px;text-align: center;letter-spacing: 2px;margin: 0px 10px 0px 10px;">
-          </div>
-          <div class="col-md-6 mt-3">
-          <input type="search" name="SearchByEMPName" id="SearchByEMPName" onkeyup="searchByEMPName()"  placeholder="search by  name" style="width:250px;height: 30px;text-align: center;letter-spacing: 2px;margin: 0px 10px 0px 10px;"> 
-  
-          </div>
-        </div>
-      </div>
-      
-  </div>
-   -->
    <div class="row mt-3 mb-3 w-100">
     <div class="col-md-1"></div>
     <div class="col-md-3">
@@ -399,8 +407,18 @@
                 </svg>
       </div>
 
+      
+
       <!-- <form action="admin/updatementor" method="post" id="newDesigId1" > -->
-       <table id="editHierarchyTable" class="table table-striped table-bordered table-hover">
+        <div style="display: flex;justify-content: end;gap: 5px;width: 100%;">
+
+
+        <button onclick="oViewUI5TeamHirerarchy()" style="border-radius: 4px;background-color: rgb(104, 224, 224);margin-bottom: 5px;">UI5-Hierarchy</button>
+        <button onclick="oViewABAPTeamHirerarchy()" style="border-radius: 4px;background-color: rgb(104, 224, 224);margin-bottom: 5px;">ABAP-Hierarchy</button>
+
+        </div>
+      
+        <table id="editHierarchyTable" class="table table-striped table-bordered table-hover">
          <thead class="thead-dark">
            <tr class="tableHeading">
              <th>Employee Id</th>
@@ -414,23 +432,35 @@
          </thead>
          <tbody>
 
-
-
+          <!-- UI5 Team Hierarchy data -->
+          <p style="display: none;" id="allData">
+          
+           <% 
+            sampleData.forEach((ele)=>{
+          %>
+              debugger
+             if(ele.Employee_Department == "UI5"){
+              /<%= ele.Employee_Name %>*<%= ele.Employee_Id %>*<%= ele.mentorId %>
+             }
+          <%
+            })
+          %> 
+        </p>
           <% if(sampleData.length > 0) { %>
             <% sampleData.forEach((data) => { %>
              
               <form action="/admin/updatementor" method="post" id="newEmployeeForm1">
                 <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
                  
-                  <input type="hidden" name="id" value="<%= data.Employee_Id %>">
+                  <input type="hidden" name="id" value="<%= data.Employee_Id %>" id="MentorID">
                   <td><%= data.Employee_Id %></td>
                   <td><%= data.Employee_Name %></td>
                   <td><%= data.Employee_Department %></td>
-                  <td><input type="text" name="updateMentor" value="<%= data.mentor %>" id="<%= data.Employee_Id %>mentorID" placeholder="Fill Mentor Id" disabled></td>
+                  <td><input type="text" name="updateMentor" value="<%= data.mentor %>" id="<%= data.Employee_Id %>mentorID" placeholder="Fill Mentor Id S00XXXX" disabled></td>
                   <!-- <td><input type="text" name="position_val" value="<%= data.position %>" id="<%= data.Employee_Id %>positionID" disabled></td> -->
                   <td>
                     <input value="<%= data.position %>" placeholder="--#--" width="5px" class="PositionShowInp" disabled>
-                    <select disabled id="<%= data.Employee_Id %>positionID" name="position_val">
+                    <select disabled id="<%= data.Employee_Id %>positionID" name="position_val" onchange="onValidateFields(<%= data.Employee_Id %>)">
                       <option  value="select">--select--</option>
                       <option value="Lead">Lead</option>
                       <option value="L1">L1</option>
@@ -441,7 +471,7 @@
                     </select>
 
                   </td>
-                  <td><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48" onclick="onClickEditHierarchyEditButton(<%= data.Employee_Id %>)">
+                  <td><svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48" onclick="onClickEditHierarchyEditButton('<%= data.Employee_Id %>')">
                     <path d="M 36 5.0097656 C 34.205301 5.0097656 32.410791 5.6901377 31.050781 7.0507812 L 8.9160156 29.183594 C 8.4960384 29.603571 8.1884588 30.12585 8.0253906 30.699219 L 5.0585938 41.087891 A 1.50015 1.50015 0 0 0 6.9121094 42.941406 L 17.302734 39.974609 A 1.50015 1.50015 0 0 0 17.304688 39.972656 C 17.874212 39.808939 18.39521 39.50518 18.816406 39.083984 L 40.949219 16.949219 C 43.670344 14.228094 43.670344 9.7719064 40.949219 7.0507812 C 39.589209 5.6901377 37.794699 5.0097656 36 5.0097656 z M 36 7.9921875 C 37.020801 7.9921875 38.040182 8.3855186 38.826172 9.171875 A 1.50015 1.50015 0 0 0 38.828125 9.171875 C 40.403 10.74675 40.403 13.25325 38.828125 14.828125 L 36.888672 16.767578 L 31.232422 11.111328 L 33.171875 9.171875 C 33.957865 8.3855186 34.979199 7.9921875 36 7.9921875 z M 29.111328 13.232422 L 34.767578 18.888672 L 16.693359 36.962891 C 16.634729 37.021121 16.560472 37.065723 16.476562 37.089844 L 8.6835938 39.316406 L 10.910156 31.521484 A 1.50015 1.50015 0 0 0 10.910156 31.519531 C 10.933086 31.438901 10.975086 31.366709 11.037109 31.304688 L 29.111328 13.232422 z"></path>
                     </svg></td>
                   <td><button type="submit" value="Submit" onclick="handleEmployeeSubmit1()" class="btn btn-success btn-sm btn-block">SAVE</button></td>
@@ -455,166 +485,13 @@
           <% } %>
 
 
-
-
-
-
-
-
-
-           <!-- <%
-           if(sampleData.length > 0) {
-             sampleData.forEach((data) => {
-           %>
-           <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
-            <input type="hidden" name="id" id="mentorID1" value="<%= data.Employee_Id %>" >
-             <td  ><%= data.Employee_Id %></td>
-             <td><%= data.Employee_Name %></td>
-             <td><%= data.Employee_Department %></td>
-             <td><input type="text" name="updateMentor" id="mentorID" value="<%=data.mentor%>" disabled></td>
-             <td><input type="text" name="position_val" id="positionID" value="<%=data.position%>" disabled></td>
-             <td><input type="submit" value="Submit" id="addDesigA1"  ></td>
-           </tr>
-           <%
-             });
-           } else {
-           %>
-           <tr>
-             <td colspan="8" class="text-center">No Data Found</td>
-           </tr>
-           <%
-           }
-           %> -->
          </tbody>
        </table>
       <!-- </form> -->
     </div>
 
-
-
-
-
-
-
-
-
-    <!-- <div style="display: flex;" id="navBarOfEditHierarchy">
-       <img src="../images/logo.jpg" alt="" height="90px" width="90px" style="margin-left: 10px;" >
-       <p id="editHierarchyTitle">EDIT HIERARCHY</p>
-       <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48" id="editHierarchyEditButton" onclick="onClickEditHierarchyEditButton()">
-         <path d="M 36 5.0097656 C 34.205301 5.0097656 32.410791 5.6901377 31.050781 7.0507812 L 8.9160156 29.183594 C 8.4960384 29.603571 8.1884588 30.12585 8.0253906 30.699219 L 5.0585938 41.087891 A 1.50015 1.50015 0 0 0 6.9121094 42.941406 L 17.302734 39.974609 A 1.50015 1.50015 0 0 0 17.304688 39.972656 C 17.874212 39.808939 18.39521 39.50518 18.816406 39.083984 L 40.949219 16.949219 C 43.670344 14.228094 43.670344 9.7719064 40.949219 7.0507812 C 39.589209 5.6901377 37.794699 5.0097656 36 5.0097656 z M 36 7.9921875 C 37.020801 7.9921875 38.040182 8.3855186 38.826172 9.171875 A 1.50015 1.50015 0 0 0 38.828125 9.171875 C 40.403 10.74675 40.403 13.25325 38.828125 14.828125 L 36.888672 16.767578 L 31.232422 11.111328 L 33.171875 9.171875 C 33.957865 8.3855186 34.979199 7.9921875 36 7.9921875 z M 29.111328 13.232422 L 34.767578 18.888672 L 16.693359 36.962891 C 16.634729 37.021121 16.560472 37.065723 16.476562 37.089844 L 8.6835938 39.316406 L 10.910156 31.521484 A 1.50015 1.50015 0 0 0 10.910156 31.519531 C 10.933086 31.438901 10.975086 31.366709 11.037109 31.304688 L 29.111328 13.232422 z"></path>
-         </svg>
-         
-         <button type="button" class="btn btn-success" style="height: 2.3rem;margin-left: 1rem;margin-top: 2rem;display: none;" id="editHierarchySaveButton" onclick="onClickEditHierarchySave()">Save</button>
-           <svg xmlns="http://www.w3.org/2000/svg" id="ocloseEditHierarchyPopUp" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="onCloseEditHierarchyPopUp()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
-             <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-           </svg>
-      </div> -->
-      <!-- <form method="post" action="/admin/updatementor" enctype="multipart/form-data" class="newEmployeeForm1 " id="newEmployeeForm1"> -->
-        <!-- <table id="editHierarchyTable" class="table table-striped table-bordered table-hover">
-         <thead class="thead-dark">
-           <tr class="tableHeading">
-             <th>Employee Id</th>
-             <th>Name</th>
-             <th>Department</th>
-             <th>Mentor</th>
-             <th>Position</th>
-             <th>Action</th>
-           </tr>
-         </thead>
-         <tbody>
-           <%
-           if(sampleData.length > 0) {
-             sampleData.forEach((data) => {
-           %>
-           <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
-             <td name="id" ><%= data.Employee_Id %></td>
-             <td><%= data.Employee_Name %></td>
-             <td><%= data.Employee_Department %></td>
-             <td><input type="text" name="mentor_val" id="mentorID" value="<%=data.mentor%>" disabled></td>
-             <td><input type="text" name="position_val" id="positionID" value="<%=data.position%>" disabled></td>
-             <td><input type="submit"  class="btn btn-success btn-sm btn-block" onclick="enableAndSubmit(<%= data.Employee_Id %>)"  ></input></td>
-           </tr>
-           <%
-             });
-           } else {
-           %>
-           <tr>
-             <td colspan="8" class="text-center">No Data Found</td>
-           </tr>
-           <%
-           }
-           %>
-         </tbody>
-       </table> -->
-
-
-
-
-
-
-          <!-- 
-          <div >
-            <label for="formGroupExampleInput" class="form-label"> Enter </label>
-
-            <input type="text" class="form-control" name="Add_Mentor1" id="formEmpId1" placeholder="Enter Mentor Name"  >
-          </div>
-          <br>
-          <div class="col-12 d-flex justify-content-end">
-
-            <button type="submit" class="btn btn-success" onclick="handleEmployeeSubmit1()" >Submit</button>
-          </div> -->
-
-      <!-- </form> -->
   </div>
  
-
-
-
-
-
-
-
-
-
-  <!-- <div id="updateMentor" style="border: 2px solid black; width: 50%; margin-left: 20%;" >
-   <p> &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Update Mentor</p>
-
-   <%
-   if(sampleData) {
-     sampleData.forEach((data) => {
-   %>
-    <form method="POST" action="/admin/updatementor" enctype="multipart/form-data" class="newEmployeeForm1 " id="newEmployeeForm1">
-      <label for="formGroupExampleInput" class="form-label">Employee Id</label>
-      <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" value="<%= data.Employee_Id %>" >
-      <label for="formGroupExampleInput" class="form-label">Mentor</label>
-      <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="" value="<%=data.mentor%>"  >
-      <label for="formGroupExampleInput" class="form-label">Position</label>
-      <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="" value="<%=data.position%>" >
-   
-    </form>
-    
-    <%
-  });
-}else {
-  %>
-  <tr>
-    <td colspan="8" class="text-center">No Data Found</td>
-  </tr>
-  <%
-  }
-  %>
-  </div> -->
-
- 
-
-
-
-
-
-
-
-
 
 
   
@@ -627,7 +504,7 @@
        
        <a href="/admin/resign" class="btn btn-outline-secondary" style="text-decoration: none;  color: white;margin-left: 5px;border-radius: 5px;background-color: rgb(84, 96, 228);">Prev Employees</a>
       
-        <button type="button" class="btn btn-outline-secondary"  style="background-color: rgb(84, 96, 228); color: white;margin-left: 5px;" onclick="onClickOpenEdithierarchypopUp()">Edit Hierarchy</button>
+        <button type="button" class="btn btn-outline-secondary"  style="background-color: rgb(84, 96, 228); color: white;margin-left: 5px;" onclick="onClickOpenEdithierarchypopUp()">Hierarchy</button>
        
  
  </div>
@@ -671,34 +548,13 @@
     </table>
   </div>
  
-    <!-- <div id="adminNotification">
-      <% if(message.length > 0){  %>
- 
-        <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
-        <!-- <div class="alert alert-success" id="alert" style="margin-top: 10px;width:250px; margin: 50px auto;text-align: center;" role="alert">
-          <%= message %>
-        </div> -->
-       
-      <% } %>
-    </div> -->
+  
+    </div>
   </div>
   </span>
 
   <div class="newEmployeePopup" id="addNewEmployee">
-    <!-- <div class="col-md-10 text-center" style=" font-weight: bold; font-size: large; color: cadetblue;">
-      Search for Employee
-  </div>
-     <form action="/admin/searchEmp" id="myForm">
-
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search By Employee ID" name="searchId" id="searchEMPID" aria-label="Recipient's username" aria-describedby="basic-addon2">
-        <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="submit" >Search</button>
-        </div>
-      </div>
-     </form> -->
-
-     <!-- Search  -->
+   
    
     <form method="POST" action="/admin/addEmployee" enctype="multipart/form-data" class="newEmployeeForm " id="newEmployeeForm" >
       <div class="row mb-3">
@@ -723,16 +579,11 @@
            
         <label for="formGroupExampleInput" class="form-label">Employee Id</label>
 
-        <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="Enter Employee id"  >
+        <input type="text" class="form-control" name="Add_Employee_Id" id="formEmpId" placeholder="Employee_Id like 'S00XXXX' "  >
         <%
           }
         %>
       </div>
-      <!-- <div class="mb-3">
-        <label for="formGroupExampleInput2" class="form-label">Employee Name <span class="mandatory">*</span> </label>
-        <input type="text" class="form-control" id="formEmpName" name="Add_Employee_Name" placeholder="Enter Employee Name" >
-        <p id="formEmpIMGName" class="err">Err</p>
-      </div> -->
 
       <div class="mb-3">
         <label for="formGroupExampleInput2" class="form-label">Employee Image <span class="mandatory">*</span> </label>
@@ -756,19 +607,10 @@
          
          
         </select>
-        <!-- <input type="text" placeholder="Enter new Designation" class="form-control" width="50%"> -->
-        <!-- <div class="row">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Enter new Designation" aria-label="First name">
-          </div>
-        </div> -->
+        
         <p id="empDesignationErr" class="err">Err</p>
       </div>
-      <!-- <div class="mb-3">
-        <label for="formGroupExampleInput4" class="form-label">Email <span class="mandatory">*</span> </label>
-        <input type="email" class="form-control" id="formEmpEmail" name="Add_Employee_Email" placeholder="Enter Mail id">
-        <p id="formEmpEmailErr" class="err">Err</p>
-      </div> -->
+
       <div class="mb-3">
         <label for="formGroupExampleInput5" class="form-label">Department <span class="mandatory">*</span> </label>
         <select class="form-select" id="formEmpDept" aria-label="Default select example" name="Add_Employee_Department">
@@ -810,21 +652,195 @@
     
   </div>
   
+  <!-- Hierarchy view -->
+
+      <div id="Hierarchyview" style="display: none;width: 100%;">
+        <div class="row" >      
+      <div class="tree">
+    
+        <div style="display: flex;justify-content: space-between;">
+          <h2 style="letter-spacing: 2px;font-style: italic;text-decoration: underline;" class="UI5-TEAM-HIERARCHY">
+            <span>UI5</span>
+            <span>TEAM</span>
+            <span>HIERARCHY</span>
+              </h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="oCloseUI5HierarchyView()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </div>
+        
+        <% 
+        debugger
+        var lead;
+        var ui5DeptEmps = []
+         sampleData.forEach((ele)=>{
+          if(ele.Employee_Department == "UI5"){
+            ui5DeptEmps.push(ele)
+
+            if(ele.position == "Lead"){
+              lead = ele.Employee_Name
+            }
+          }
+          
+        })
+        %>
+       
+          
+              <ul>
+                <li>
+                  <a href="#"><%= lead %></a>
+                  <ul>
+                    <% 
+                      sampleData.forEach((ele)=>{
+                        if(ele.position == "L1"){
+                    %>
+                          <li id="Emp<%= ele.Employee_Id %>">
+                            <a href="#" ><%= ele.Employee_Name %></a>
+                            
+                          </li>
+                    <%
+                        }
+                      })
+                    %>
+                  </ul>
+                </li>
+              </ul>
+          
+      <!-- <ul><li><a href="">lead</a>
+        
+      <ul>
+        <li><a href="#">L1</a></li>
+        <li><a href="#">L1</a></li>
+        <li><a href="#">L1</a></li>
+      </ul>
+  
+      </li>
+      </ul> -->
+      
+      </div>
+      </div>
+      </div>
   <script>
 
-// document.addEventListener('DOMContentLoaded', (event) => {
-//     // Get the form element
-//     const form = document.getElementById('myForm');
+    //UI5HierarchyView enable/disable
+    localStorage.setItem("UI5HryCheck", false);
+    function oCloseUI5HierarchyView(){
+      debugger
+      localStorage.setItem("UI5HryCheck", true);
+      document.getElementById("editHierarchyMainContainer").style.filter = "blur(0px)"
 
-//     // Add an event listener for the form's submit event
-//     form.addEventListener('submit', function(event) {
-//         // Prevent the default form submission behavior
-//         event.preventDefault();
+      document.getElementById("Hierarchyview").style.display = "none";
+    }
 
-//         // Call your custom method
-//         onSubmit ();
-//     });
-// });
+    function oViewUI5TeamHirerarchy(){
+      debugger
+
+      
+
+      document.getElementById("editHierarchyMainContainer").style.filter = "blur(8px)"
+      document.getElementById("Hierarchyview").style.display = "block";
+      var RawData = document.getElementById("allData").innerHTML;
+      var splitData = RawData.split("/");
+
+      var EmpData = []
+      splitData.forEach((ele,ind)=>{
+        EmpData.push({
+          "EmpName":splitData[ind].split("\n")[0].split("*")[0],
+          "EmpId":splitData[ind].split("\n")[0].split("*")[1],
+          "MentorId":splitData[ind].split("\n")[0].split("*")[2]
+        })
+      })
+      //EmpData.splice(0,2);
+      var allUI5Data = []
+      var pendingEmps = []
+      
+
+     let checkData = localStorage.getItem("UI5HryCheck")
+     if(localStorage.getItem("UI5HryCheck") == "true"){
+      document.getElementById("Hierarchyview").style.display = "block";
+      
+     }
+     else{
+      EmpData.forEach((ele)=>{
+        allUI5Data.push(ele)
+        if( ele.EmpId && ele.MentorId){
+          let ul = document.createElement("ul")
+          let li = document.createElement("li")
+          let a = document.createElement("a")
+        
+
+          li.setAttribute("id","Emp"+ele.EmpId)
+          
+          ul.appendChild(li)
+          li.appendChild(a)
+          a.innerHTML = ele.EmpName
+
+          let rootElement = document.getElementById("Emp"+ele.MentorId)
+          if(!rootElement){
+            pendingEmps.push(ele)
+          }
+          else if(rootElement.children.length-1 > 0){
+            rootElement.lastChild.appendChild(li)
+          }
+          else{
+            rootElement.appendChild(ul)
+          }
+          
+          
+
+        }
+      })
+
+      pendingEmps.forEach((ele)=>{
+        allUI5Data.push(ele);
+        localStorage.setItem("allUI5HryData", JSON.stringify(allUI5Data))
+        if(ele.EmpId && ele.MentorId){
+          let ul = document.createElement("ul")
+          let li = document.createElement("li")
+          let a = document.createElement("a")
+        
+
+          li.setAttribute("id","Emp"+ele.EmpId)
+          
+          ul.appendChild(li)
+          li.appendChild(a)
+          a.innerHTML = ele.EmpName
+
+          let rootElement = document.getElementById("Emp"+ele.MentorId)
+          if(!rootElement){
+            
+          }
+          else if(rootElement.children.length-1 > 0){
+            rootElement.lastChild.appendChild(li)
+          }
+          else{
+            rootElement.appendChild(ul)
+          }
+          
+          
+
+        }
+      })
+     }
+          
+}
+
+    
+
+function onValidateFields(id){
+debugger
+  var SelectedPosition = id+"positionID";
+  SelectedPosition = document.getElementById(SelectedPosition).value
+  var UpdateMentorId = id+"mentorID"
+  if(SelectedPosition == "Lead"){
+    document.getElementById(UpdateMentorId).value = ""
+    document.getElementById(UpdateMentorId).disabled = true
+  }else{
+    document.getElementById(UpdateMentorId).value = ""
+    document.getElementById(UpdateMentorId).disabled = false
+  }
+
+}
 
     async function onSubmit(){
       debugger
@@ -914,152 +930,10 @@ function AdminNotificationHide(){
     document.getElementById('newEmployeeForm').addEventListener('submit',(e)=>{
         e.preventDefault()
     })
+    document.getElementById('loadBusyIndicator').style.visibility = "visible";
     document.getElementById('newEmployeeForm').submit() 
 
-                      //      var empName= document.getElementById('formEmpName')
-                      //      var empDesignation= document.getElementById('formEmpDesignation')
-                      //      var empEmail= document.getElementById('formEmpEmail')
-                      //      var empDept= document.getElementById('formEmpDept')
-                      //      var empGender= document.getElementById('formEmpGender')
-
-
-                      //      var empNameErr= document.getElementById('formEmpNameErr')
-                      //      var empDesignationErr= document.getElementById('empDesignationErr')
-                      //      var empEmailErr= document.getElementById('formEmpEmailErr')
-                      //      var empDeptErr= document.getElementById('formEmpDeptErr')
-                      //      var empGenderErr= document.getElementById('formEmpGenderErr')
-                      //      var EmailVal =/^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
-                      // debugger
-
-                      //       if(empName.value == '' && empDesignation.value =='---Select---' && empEmail.value == '' && empDept.value == '---Select---' && empGender.value =='---Select---'){
-                      //         empName.style.border='1px solid red'
-                      //         empNameErr.style.visibility='visible'
-                      //         empNameErr.innerHTML = 'Please Enter Employee Name'
-
-                      //         empDesignation.style.border='1px solid red'
-                      //         empDesignationErr.style.visibility='visible'
-                      //         empDesignationErr.innerHTML = 'Please Select the Employee Designation'
-
-                      //         empEmail.style.border='1px solid red'
-                      //         empEmailErr.style.visibility='visible'
-                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
-
-                      //         empDept.style.border='1px solid red'
-                      //         empDeptErr.style.visibility='visible'
-                      //         empDeptErr.innerHTML='Please Select Department of Employee'
-
-                      //         empGender.style.border='1px solid red'
-                      //         empGenderErr.style.visibility='visible'
-                      //         empGenderErr.innerHTML='Please select Gender'
-
-                      //       }
-                      //       else if(empName.value==''){
-                      //         empName.style.border='1px solid red'
-                      //         empNameErr.style.visibility='visible'
-                      //         empNameErr.innerHTML = 'Please Enter Employee Name'
-
-                      //         empDesignation.style.border='1px solid red'
-                      //         empDesignationErr.style.visibility='visible'
-                      //         empDesignationErr.innerHTML = 'Please Select the Employee Designation'
-
-                      //         empEmail.style.border='1px solid red'
-                      //         empEmailErr.style.visibility='visible'
-                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
-
-                      //         empDept.style.border='1px solid red'
-                      //         empDeptErr.style.visibility='visible'
-                      //         empDeptErr.innerHTML='Please Select Department of Employee'
-
-                      //         empGender.style.border='1px solid red'
-                      //         empGenderErr.style.visibility='visible'
-                      //         empGenderErr.innerHTML='Please select Gender'
-                      //       }
-                      //       else if(empDesignation.value=='---Select---'){
-                      //         empName.style.border='1px solid black'
-                      //         empNameErr.style.visibility='hidden'
-
-                      //         empDesignation.style.border='1px solid red'
-                      //         empDesignationErr.style.visibility='visible'
-                      //         empDesignationErr.innerHTML = 'Please Select the Employee Designation'
-
-                      //         empEmail.style.border='1px solid red'
-                      //         empEmailErr.style.visibility='visible'
-                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
-
-                      //         empDept.style.border='1px solid red'
-                      //         empDeptErr.style.visibility='visible'
-                      //         empDeptErr.innerHTML='Please Select Department of Employee'
-
-                      //         empGender.style.border='1px solid red'
-                      //         empGenderErr.style.visibility='visible'
-                      //         empGenderErr.innerHTML='Please select Gender'
-                      //       }
-                      //       else if(empEmail.value == ''){
-                      //         empName.style.border='1px solid black'
-                      //         empNameErr.style.visibility='hidden'
-
-                      //         empDesignation.style.border='1px solid black'
-                      //         empDesignationErr.style.visibility='hidden'
-
-                      //         empEmail.style.border='1px solid red'
-                      //         empEmailErr.style.visibility='visible'
-                      //         empEmailErr.innerHTML = 'Please Enter Employee Email'
-
-                      //         empDept.style.border='1px solid red'
-                      //         empDeptErr.style.visibility='visible'
-                      //         empDeptErr.innerHTML='Please Select Department of Employee'
-
-                      //         empGender.style.border='1px solid red'
-                      //         empGenderErr.style.visibility='visible'
-                      //         empGenderErr.innerHTML='Please select Gender'
-                      //       }
-                      //       else if(empDept.value=='---Select---'){
-                      //         empName.style.border='1px solid black'
-                      //         empNameErr.style.visibility='hidden'
-
-                      //         empDesignation.style.border='1px solid black'
-                      //         empDesignationErr.style.visibility='hidden'
-
-                      //         empEmail.style.border='1px solid black'
-                      //         empEmailErr.style.visibility='hidden'
-
-                      //         empDept.style.border='1px solid red'
-                      //         empDeptErr.style.visibility='visible'
-                      //         empDeptErr.innerHTML='Please Select Department of Employee'
-
-                      //         empGender.style.border='1px solid red'
-                      //         empGenderErr.style.visibility='visible'
-                      //         empGenderErr.innerHTML='Please select Gender'
-                      //       }
-                      //       else if(empGender.value=='---Select---'){
-                      //         empName.style.border='1px solid black'
-                      //         empNameErr.style.visibility='hidden'
-
-                      //         empDesignation.style.border='1px solid black'
-                      //         empDesignationErr.style.visibility='hidden'
-
-                      //         empEmail.style.border='1px solid black'
-                      //         empEmailErr.style.visibility='hidden'
-
-                      //         empDept.style.border='1px solid black'
-                      //         empDeptErr.style.visibility='hidden'
-
-                      //         empGender.style.border='1px solid red'
-                      //         empGenderErr.style.visibility='visible'
-                      //         empGenderErr.innerHTML='Please select Gender'
-                      //       }
-                      //       else if(EmailVal.test(!empEmail.value)){
-                      //         empEmail.style.border='1px solid red'
-                      //         empEmailErr.style.visibility='visible'
-                      //         empEmailErr.innerHTML = 'Please Enter Valid Email';
-                      //       } else if(!empEmail.value.includes('signiwis.com')){
-                      //         empEmail.style.border='1px solid red'
-                      //         empEmailErr.style.visibility='visible'
-                      //         empEmailErr.innerHTML = 'Please Enter email related to your organization';
-                      //       }
-                            // else{
-                            
-                            // }
+                      
   }
   
 

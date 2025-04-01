@@ -53,7 +53,7 @@ router.get(['/Employee_review', '/:id'], function (req, res, next) {
   var message = req.flash('success')
 
   var query = `SELECT * FROM employee_table`
-  var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = ${req.params.id}`
+  var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = '${req.params.id}'`
   var query3 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.params.id}'`
   var query4 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.session.EmpId}'`
 
@@ -376,7 +376,7 @@ Signiwis Technologies `,
 
   })
 
-  var sql4 = `UPDATE employee_table SET Employee_Mock_Given = "${parseInt(employee_Mock_Given) + 1}" WHERE Employee_Id = "${Employee_Id}"`
+  var sql4 = `UPDATE employee_table SET Employee_Mock_Given = "${parseInt(employee_Mock_Given) + 1}" WHERE Employee_Id = '${Employee_Id}'`
   
   connection.query(sql4, (error, data) => {
     
@@ -418,7 +418,7 @@ Signiwis Technologies `,
         else{
           // Admin Notification Status updating
           var mock_type = localStorage.getItem("Mocktype")
-          var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = ${Employee_Id} && selectedId = '${req.session.EmpId}' && Mock_Type = '${mock_type}' && Status = "Accepted"`;
+          var updateStatus = `UPDATE admin_notification SET Status = "Done" WHERE User_Id = '${Employee_Id}' && selectedId = '${req.session.EmpId}' && Mock_Type = '${mock_type}' && Status = "Accepted"`;
 
           connection.query(updateStatus, (error, data) => {
           if(error)
