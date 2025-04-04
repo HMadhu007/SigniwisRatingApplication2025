@@ -10,6 +10,8 @@ var ID = Math.ceil(radnm)
 var UniqueId =ID
 let employee_Mock_Given = 0
 let employee_Mock_Taken = 0
+const nodemailer = require("nodemailer");
+
 
  
 const app = express()
@@ -50,17 +52,17 @@ var connection  = mysql.createConnection({
 
 this.oUser_ID
 var vid = null
-router.get ( ['/','/:id' ], function(req, res, next) {
+router.get ( '/:id', function(req, res, next) {
 debugger
  
 localStorage.setItem("Mocktype", "KPI")
-  this.oUser_ID = req.params.id
+  this.oUser_ID = req.params.id.split("-")[0]
   var message = req.flash('success')
   // req.session.reviewedId = req.params.id;
   this.reviewerUserId = req.session.EmpId
  
-  var query = `SELECT * FROM employee_table where Employee_Id = '${req.params.id}'`
-  var querr1 = `SELECT Request_Id From admin_notification where User_Id = '${req.params.id}'`
+  var query = `SELECT * FROM employee_table where Employee_Id = '${this.oUser_ID}'`
+  var querr1 = `SELECT Request_Id From admin_notification where User_Id = '${this.oUser_ID}'`
   var kpiPointQuterly = `SELECT * From kpi1 where Emp_Id = '${this.oUser_ID}' and ReviewerId = '${this.reviewerUserId}'`
  
   connection.query(query, function(error, data, rows){
@@ -76,16 +78,13 @@ localStorage.setItem("Mocktype", "KPI")
       if(error){
         req.flash('success', "some Error");
       }
-          debugger
-          console.log(kpiData);
 
           connection.query(kpiPointQuterly,function(error, kpiPointData) {
             if(error){
-              debugger;
+             
               req.flash('success', "some Error");
             }
-            debugger
-            console.log(kpiPointData)
+            
             res.render('KPI', {message ,singleUserData:data, KPIData1:kpiData, kpi1TableData:kpiPointData });
 
           })
@@ -110,25 +109,30 @@ router.post('/UpdateKPI',function(req,res){
 
 //---------------------------------------------------------------------------------------------------
 
-debugger;
-  router.post('/ratings/:id',function(req, res ){
+
+  router.post('/ratings/:id/:mocktrype',function(req, res ){
     debugger;
     
-    connection.query(`SELECT Request_Id From admin_notification where User_Id = '${req.params.id}'`, function(err, data1){
+    connection.query(`SELECT Request_Id From admin_notification where User_Id = '${req.params.id}' && selectedId= '${req.session.EmpId}' && Mock_Type = '${req.params.mocktrype}' && Status = 'Accepted'`, function(err, data1){
       if(err){
-        debugger
+        console.error(err)
+        req.flash('sucess', 'Something went wrong');
+        res.redirect(`/user`)
       }else{
-        debugger
+        
         connection.query(`SELECT * FROM employee_review where Request_Id = '${data1[0].Request_Id}'`, function(err, data2){
+          debugger
           if(err){
-            debugger
+            console.error(err)
+            req.flash('sucess', 'Something went wrong');
+            res.redirect(`/user`)
           } else {
-            debugger
+            
             var value = []
             const prefix = "KPI";
     
           data2.forEach((element, index) => {
-            debugger
+            
                for(const property in req.body){
                 if(element.employee_review_val == property){
                     element.review_value = req.body[property];
@@ -139,7 +143,7 @@ debugger;
               var kpiDocLink=req.body.KPI_Doc_Link
               const UnqKPI =   `${prefix}${timestamp}${randomNum}`
                value.push([req.session.EmpId,UnqKPI, element.employee_review_val, element.review_points, element.Request_Id, element.Requested_Date,element.review_value,element.employee_id,kpiDocLink])
-               console.log(value);
+               
 
             });
             
@@ -147,16 +151,20 @@ debugger;
             connection.query(sql, [value], function(err, data){
               
               if(err){
+                console.error(err)
                 req.flash('sucess', 'Something went wrong');
                 res.redirect(`/user`)
               } else{
                 debugger
-                connection.query(`UPDATE admin_notification SET Status ="Done" where User_Id = '${req.params.id}' && selectedId = '${req.session.EmpId}' && Mock_Type = 'KPI' && Status = 'Accepted'`, (err, data)=>{
+                connection.query(`UPDATE admin_notification SET Status ="Done" where User_Id = '${req.params.id}' && selectedId = '${req.session.EmpId}' && Mock_Type = '${req.params.mocktrype}' && Status = 'Accepted'`, (err, data)=>{
                   if(err){
+                    console.error(err)
                     req.flash('success', 'Something went wrong');
                     res.redirect(`/user`)
                   }
                   else{
+
+                    
                     req.flash('success', 'Data submitted successfully');
                     res.redirect(`/user`)
                   }

@@ -1,4 +1,3 @@
-debugger
 var express = require('express');
 var router = express.Router();
 var router2 = express.Router();

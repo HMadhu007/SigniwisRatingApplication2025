@@ -85,22 +85,23 @@
                 }
                                 
                   %>
-                  <% var mockType;
+                  <% 
+                  debugger
+                  var mockType;
                     if(data.Mock_Type == "Monthly Mock")
                     {
                       mockType = "monthlyMock"
                     }
-                    if(data.Mock_Type == "Hierarchy Mock")
+                    else if(data.Mock_Type == "Hierarchy Mock")
                     {
                       mockType = "hierarchyMock"
                     }
-                    if(data.Mock_Type == "Technology completion Mock")
+                    else if(data.Mock_Type == "Technology completion Mock")
                     {
                         mockType = "Technology completion Mock"
                     }
-                    if(data.Mock_Type == "KPI")
-                    {
-                        mockType = "KPI"
+                    else{
+                      mockType = data.Mock_Type.split("_")[1]
                     }
                   
                   %>
@@ -109,9 +110,9 @@
                   <td><%= data.Requested_Date %></td>
                   <td><%= data.Status %></td>
                   <td><%= data.Mock_Type %> <input style="display: none;" name="Mock_Type" value="<%= data.Mock_Type %>"></td>
-                  <td ><button class="btn btn-sm btn-success" style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;"  <%= oBtnStatus %>><a href="/user/mail/<%= data.Request_Id %>/<%= data.User_Id %>/<%= mockType %>" style="color: white;text-decoration: none;" >Accept</a></button>
+                  <td ><button class="btn btn-sm btn-success" style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;"  <%= oBtnStatus %>><a href="/user/mail/<%= data.Request_Id %>/<%= data.User_Id %>/<%= data.Mock_Type %>" style="color: white;text-decoration: none;" >Accept</a></button>
                     <button style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-danger" <%= oBtnStatus  %>><a href="/user/delete/<%= data.User_Id %>/<%= data.Mock_Type %>" style="color: white;text-decoration: none;">Reject</a></button>
-                    <button style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-secondary" <%= oReviewBtnStatus %>><a href="/<%= mockType %>/<%= data.User_Id %>" style="color: white;text-decoration: none;" >Review</a></button>
+                    <button style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-secondary" <%= oReviewBtnStatus %>><a href="/<%= mockType %>/<%= data.User_Id %>-<%= data.Mock_Type %>" style="color: white;text-decoration: none;" >Review</a></button>
                   </td>
                   </tr>
                   <%
@@ -306,7 +307,7 @@
               <img width="220px" height="250px" src="data:image/png;base64,<%= element.IMG_file %>" style="border:2px solid black;border-radius: 6px;margin: 0% 0% 0% 49px;box-shadow: 0px 0px 10px 5px gray;"/>
             
             <div class="col-md-7" style="padding: 5px 0px 0px 20px;width: inherit; border-left: 2px solid black;">
-              <h2 style="font-weight: bold;letter-spacing: 2px;"><%= session.Name  %></h2>
+              <h2 style="font-weight: bold;letter-spacing: 2px;text-decoration: underline rgba(255, 0, 0, 0.496) dotted;"><%= session.Name  %></h2>
               <p ><b>Employee_Id :</b> <%= session.EmpId  %> </p>
               <p><b>Department :</b> <%= session.Dept  %> Consultant</p>
               <p><b>Email :</b> <a href= "#" target="_blank"><%= session.Email  %></a> </p>

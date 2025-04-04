@@ -5,7 +5,8 @@ const nodemailer = require("nodemailer");
 const puppeteer = require('puppeteer');
 const path = require('path');
 const {generateReport} = require('../controller/userController');
-
+var multer = require('multer')
+const upload = multer({storage:multer.memoryStorage()})
 const { LocalStorage } = require('node-localstorage');
 const localStorage = new LocalStorage('../localStorage');
 var mysql = require('mysql');
@@ -262,11 +263,14 @@ router.post('/rating/:Department',(req,res,next)=>{
         }
     })
  })
- router.get('/updatekpipoits/:Department', function(req, res){
-    
+
+ // KPI Request
+ router.get('/updatekpipoits/:Department', (req, res)=>{
+    debugger
     // :Department
     var Departmenet = req.params.Department;
     var kpiPoint = req.query;
+    var KPI_Type = req.query.KPI_Type
 
 let value = []
 const reqId = Math.floor(Math.random() * 1000000);
@@ -282,53 +286,147 @@ const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 const randomNumber = Math.floor(Math.random() * 10000);
 const meetingId = `${prefix}${randomNumber.toString().padStart(4, '0')}`;
 var selectedId = req.query.Reviewer_Id;
+var MentorEmail;
+var MentorName;
+var MenteeName;
+var KPI_Doc_Link = req.query.KPIDocumentLink
 
-    
-    let sql = `INSERT into employee_review (employee_id, unique_id,employee_review_val, review_points,Request_Id,Requested_Date) values ?`;
-    let sql1 = `INSERT INTO admin_notification (User_Id, Requested_Date, Status,Reviewer_name, Mock_Type,Request_Id, selectedId) VALUES (?,?,?,?,?,?,?)`;
-    connection.query(sql1,[req.session.UID, vFormattedDate, 'Pending',meetingId, 'KPI',requestId, selectedId], function(error, data){
-      if(error){
-        req.flash('success',`Previous Ratings Not yet Reviewed`);
+    connection.query(`select * from admin_notification`,(err, data)=>{
+      if(data.some((ele, ind)=>{ 
+          
+        return ele.User_Id == req.session.UID && ele.Mock_Type == KPI_Type && ele.Status == 'Pending' && ele.selectedId == selectedId
+      }))
+      {
+        req.flash('success', `Request already sent and the status is Pending`);
         res.redirect(`/adminMDPopup/${req.session.UID}`)
-      } else{
-
-        connection.query(`SELECT * FROM employee_table`, function (error, emp_data) {
-          if (error) {
-              
-              console.error('Error fetching employee data:', error);
-          } else {
-              
-              var arr = []
-              console.log('Employee Data:', emp_data);
-              emp_data.forEach((ele)=>{
-                  if( Departmenet == ele.Employee_Department){     
-                    const prefix1 = 'M001';
-                      const randomNumber = Math.floor(Math.random() * 100000000);
-                      const meetingId = `${prefix1}${randomNumber.toString().padStart(4, '0')}`;
-                      arr.push([requestId,ele.Employee_Id,ele.Employee_Name,vFormattedDate,"KPI", meetingId]);
-                  }
-              })
-              var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES ? `
-              connection.query(reference, [arr], function( error, refData){
-                    if(error){
-                      throw error
-                    }
-                    else{
-                      // console.log("success");
-                      connection.query(sql,[value],function(error, data){
+      }
+      else if(data.some((ele, ind)=>{ 
+          
+        return ele.User_Id == req.session.UID && ele.Mock_Type == KPI_Type && ele.Status == 'Accepted' && ele.selectedId == selectedId
+      }))
+      {
+        req.flash('success', `Request already sent and the status is Accepted`);
+        res.redirect(`/adminMDPopup/${req.session.UID}`)
+      }
+      else{
+        let sql = `INSERT into employee_review (employee_id, unique_id,employee_review_val, review_points,Request_Id,Requested_Date) values ?`;
+        let sql1 = `INSERT INTO admin_notification (User_Id, Requested_Date, Status,Reviewer_name, Mock_Type,Request_Id, selectedId) VALUES (?,?,?,?,?,?,?)`;
+        connection.query(sql1,[req.session.UID, vFormattedDate, 'Pending',meetingId, KPI_Type,requestId, selectedId], function(error, data){
+          if(error){
+            req.flash('success',`Previous Ratings Not yet Reviewed`);
+            res.redirect(`/adminMDPopup/${req.session.UID}`)
+          } else{
+    
+            connection.query(`SELECT * FROM employee_table`, function (error, emp_data) {
+              if (error) {
+                req.flash('success',`Something went wrong`);
+                res.redirect(`/adminMDPopup/${req.session.UID}`)  
+              } else {
+                  
+                  var arr = []
+                  console.log('Employee Data:', emp_data);
+                  emp_data.forEach((ele)=>{
+                      if( Departmenet == ele.Employee_Department){     
+                        const prefix1 = 'M001';
+                          const randomNumber = Math.floor(Math.random() * 100000000);
+                          const meetingId = `${prefix1}${randomNumber.toString().padStart(4, '0')}`;
+                          arr.push([requestId,ele.Employee_Id,ele.Employee_Name,vFormattedDate,"KPI", meetingId]);
+                      }
+                      if(selectedId == ele.Employee_Id){
+                        MentorName = ele.Employee_Name;
+                        MentorEmail = ele.Employee_Email;
+    
+                      }
+                      if(req.session.UID == ele.Employee_Id){
+                        MenteeName = ele.Employee_Name;
+                      }
+                  })
+                  debugger
+                  var reference = ` INSERT into accept_reject (Request_Id, emp_id, name, request_date, type_of_mock, table_UId) VALUES ? `
+                  connection.query(reference, [arr], function( error, refData){
                         if(error){
-                          throw error
-                        } else{
-                        req.flash('success',`KPI Request sent`);
-                          res.redirect(`/adminMDPopup/${req.session.UID}`)
+                          req.flash('success',`Something went wrong`);
+                          res.redirect(`/adminMDPopup/${req.session.UID}`)  
                         }
-                      })
-                    }
-                 })
-               }    
-            });  
-          }
-       })
+                        else{
+                          // console.log("success");
+                          connection.query(sql,[value],function(error, data){
+                            if(error){
+                              req.flash('success',`Something went wrong`);
+                              res.redirect(`/adminMDPopup/${req.session.UID}`)
+                            } 
+                            else{
+    
+    
+                              const transporter = nodemailer.createTransport({
+                                service: "gmail",
+                                secureConnection: false,
+                                auth: {
+                                  user: 'ganeshjkoppad@gmail.com',
+                                  pass: 'wpwyawesxyolwdpc'
+                                }              
+                              });
+                  
+                              transporter.verify(function (error, success) {
+                                if (error) {
+                                  console.log(error);
+                                } else {
+                                  console.log('Server is ready to take our messages');
+                                }
+                              });
+                  
+                              const options = {
+                                from: "Derr",
+                                to: `${MentorEmail}`,
+                                subject: "KPI-Discussion-RatingApp",                        
+                                html: `
+                                
+                                
+                                <p> Dear <strong>${MentorName}, </strong> <br>
+                                <br>
+                                  <i>I hope this email finds you well!</i> <br><br><br>
+    
+                                  Please find the attached <b><a href='${KPI_Doc_Link}'>document link</a></b> for the ${KPI_Type} discussion with <strong>${MenteeName}</strong>.<br><br>
+    
+                                  Kindly ensure that your discussion covers the points outlined in the attachment. Once the discussion is complete, we would appreciate it if you could provide us with your feedback.
+                                  <br><br><br>
+                                  Thank you in advance for your time and attention to this matter.
+                                <br>
+                                <br>
+                                <br>
+                                Best regards, </br>
+                                <strong>Signiwis Technologies.
+                                </strong> </br>
+                                <a href="https://www.signiwis.com/">www.signiwis.com</a>
+                                </p>
+                                `
+                                
+                              }
+                  
+                              transporter.sendMail(options, (error, info) => {
+                                if (error) {
+                                  req.flash('success',`Something went wrong`);
+                                  res.redirect(`/adminMDPopup/${req.session.UID}`)
+                                }
+                                else {   
+                                      req.flash('success',`KPI Request sent`);
+                                      res.redirect(`/adminMDPopup/${req.session.UID}`)  
+                                }
+                              })                          
+    
+                               
+                            }
+                          })
+                        }
+                     })
+                   }    
+                });  
+              }
+        })
+      }
+    })
+    
+    
        
  })
   
