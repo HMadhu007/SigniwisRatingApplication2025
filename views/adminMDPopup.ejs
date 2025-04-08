@@ -550,7 +550,7 @@
 
   
 
-   <div class="container" id="kpiContainerId" style="border: 2px solid;display: none;position: absolute;top: 10%;left: 12%;background-color: white;border-radius: 8px;padding: 30px;margin-bottom: 100px;">
+  <div class="container" id="kpiContainerId" style="border: 2px solid;display: none;position: absolute;top: 10%;left: 12%;background-color: white;border-radius: 8px;padding: 30px;margin-bottom: 100px;">
 <form action="/adminMDPopup/updatekpipoits/<%= vSingleEmpData[0].Employee_Department %> " method="get">
   <input type="text" id="Reviewer_name_inp" style="display: none;" name="Reviewer_Id">
    
@@ -685,104 +685,92 @@
 }
   var DocLink = "";
   var KPIType_Title;
+  var KPIPointsForEmp = []
+  var oFormattedData = []
   KPIdata.forEach((ele)=>{
     if(ele.employee_review_val == "KPI_Type"){
       KPIType_Title = ele.review_points;
+      KPIType_Title = KPIType_Title.split("_")[0]+" "+KPIType_Title.split("_")[1]
+    }
+    if(ele.employee_id == session.UID){
+      KPIPointsForEmp.push(ele)
     }
   })
-  KPIType_Title = KPIType_Title.split("_")[0]+" "+KPIType_Title.split("_")[1]
-   if(KPIdata.length > 0){
-  %>
-    <div class="container" id="KPI_Form" style="display: none;margin-bottom: 50px;">
-      <div class="frequently-parent">
-        <div class="frequently-header"><br> <br> <br>
-          <h2>KPI Details </h2>
-          <hr>
-          <!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
-      </div>
-      <div class="frequently-child" style="padding-bottom: 50px;">
-<%
-    var outputArray = [];
-    var count = 0;
-    var start = false;
-    KPIdata.forEach((ele1)=> {
-      outputArray.forEach((val1) =>{
-          if (ele1.reviewer_id == val1.reviewer_id) {
-              start = true;
-          }
-      })
-      count++;
-      if (count == 1 && start == false) {
-          outputArray.push(ele1);
-      }
-      start = false;
-      count = 0;
-    })
-
-    outputArray.forEach((ele, ind)=>{
-    %>
+  debugger
+  KPIPointsForEmp.forEach((ele)=>{
+    oFormattedData.push({
+      "ReqId":ele.Request_Id,
+      "label" : ele.review_points,
+      "value" : ele.review_value,
+      "reviewer_id":ele.reviewer_id,
+      "DocLink": ele.document_link,
+      "date" : ele.Requested_Date
     
-      <div class="frequently-details">
-        <details>
-            <summary> Requested Date: <%= ele.Requested_Date %> Reviewed by : <%= ele.reviewer_id %></summary>
-                <h5 style="text-decoration: underline red;"><%= KPIType_Title %></h5>
-              <%
-                KPIdata.forEach((val, index)=>{
-                  debugger
-                  if(val.reviewer_id == ele.reviewer_id){
-                    if(val.review_points.length < 120 && val.review_points.length>15)
-                      {
-                        DocLink = val.document_link
-              %>
-                
-          <form class="borderDiv" id="" action="" method="" >
-               <div>
-                   <!-- KPI Doc. link -->
-                    <div style="display: flex;">
-                      <label for="inputPassword" class="col-sm-5 col-form-label" style="margin-bottom: 5px;"> <%= val.review_points %></label>
-                      
-                      <input type="text" class="form-control" style="margin-bottom: 5px;"  value="<%= val.review_value %>" name="" readonly>
-                      
-                      
-                    </div>
-                    
-                  </div>
-                  
-                  
-                  
-                <% 
-              }}
-              %>
-             
-              
-              <%
-              
-            })
-            
-          %>
-          <label for="">Document Link</label>
-          <a href="<%= DocLink %>" target="_blank">Click Here</a>
-          </form>
-            
-            
-          </details>
-            <hr>
-        </div>
-        
-        <%
-  
-})
-}
-%>
+    })
+  })
 
-   </div>
-      
-       
-  </div>
-   </div>
-   
+  debugger
+  var UniqReqIDs = [...new Set(oFormattedData.map(item => item.ReqId))]; // KPI itration setting
+
+
+  %>
 
  
+    <div class="container" id="KPI_Form" style="display: none;margin-bottom: 50px;">
+      <div class="frequently-parent" style="box-shadow: 0px 0px 10px 1px rgb(140, 139, 139);padding-left: 50px;border-radius: 10px;border: 2px solid rgba(8, 238, 246, 0.371);">
+          <h2 style="text-align: center;text-decoration: underline rgba(5, 199, 238, 0.327);padding: 30px 100px;">KPI Details </h2>
+          <%
+          UniqReqIDs.forEach((ele1)=>{
+            var DocLink;
+            var Date;
+          %>
+          <div class="frequently-details" >
+            <details> 
+              
+          <%
+            oFormattedData.forEach((ele2)=>{
+              if(ele1 == ele2.ReqId && ele2.label.length <120){
+                debugger
+                DocLink = ele2.DocLink;
+                Date = ele2.date;
+          
+                if(ele2.label.split("_")[1] == "KPI"){
+          %>
+
+                  <summary><b style="font-style: italic;text-decoration: underline red;letter-spacing: 2px;"><%= ele2.label.replace("_", " ") %> - Reviewed by <%= ele2.reviewer_id %> on <%= Date %></b></summary>
+                  
+          <%
+                }
+          %>
+          
+          <%
+                if(!!ele2.value){
+          %>
+                
+                  <div style="display: flex;gap: 5px;">
+                    <p style="font-weight: 600;"><%= ele2.label %></p>:<p><b><%= ele2.value %></b></p>
+                  </div>
+                  
+                
+          <%
+                }
+          %>
+                
+          <%
+              }
+            })
+
+          %> 
+          <a href="<%= DocLink %>" target="_blank">Document Link</a>
+        </div>
+        </details>
+          <hr>
+          <%
+          })
+          %>
+       
+      </div>
+    </div>
    <script>
 
 
@@ -856,7 +844,7 @@ function checkKPInRatings(){
                 document.getElementById('EmployeeReviewDetails').style.display='none'
                
             } else {
-                 document.getElementById('EmployeeReviewDetails').style.display='block'
+                 document.getElementById('EmployeeReviewDetails').style.display='flex'
                  document.getElementById('KPI_Form').style.display='none';
                
             }

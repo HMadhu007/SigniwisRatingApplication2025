@@ -13,6 +13,8 @@
     <script src="https://kit.fontawesome.com/e799d6a9ed.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
 
 
@@ -114,6 +116,35 @@
     border-bottom: 2px solid #dee2e6; /* Optional: Adds a border at the bottom */
 }
 
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 5px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #ddd;}
+
+.dropdown:hover .dropdown-content {display: block;}
+
+.StatusFilter:hover .StatusFilterContent {
+  display: block;
+}
 @keyframes mad{
   0%, 50% {
     
@@ -196,19 +227,20 @@
     <!-- ******************************************************************************** -->
   
     <div style="width: 90%;height: 80%;background-color:white;position: absolute;top:10%;left: 5%;display: none;z-index: 2;border-radius: 10px;z-index: 20;" id="AdminNotificationPopUp" >
-      <div class="row mt-2 mb-2">
-        <div class="col-md-3"></div>
-        <div class="col-md-7">
-          <h3   style="font-style: oblique;color: cadetblue;position: sticky; top: 0px; background-color: #fff;"> Admin Notification</h1>
-
+      <div class="row mt-2 mb-2" style="display: flex;justify-content: center;">
+        <div class="col-md-3" ><h3   style="font-style: oblique;color: cadetblue;margin: 0px 0px 0px 40px;"> Admin Notification</h1></div>
+        <div class="col-md-7" style="display: flex;justify-content: end;">
+          <input type="text" style="width: 350px;text-align: center;font-style: italic;" id="filterStsMcktype" onkeyup="AdminNotifyFilterStatus()" placeholder="Search your content.." title="search">
         </div>
-        <div class="col-md-1"></div>
-        <div class="col-md-1">
-          <div style="display: flex;justify-content: space-around;cursor: pointer;">
-            <svg xmlns="http://www.w3.org/2000/svg" id="AdminNotifyCloseBtn" width="20" height="20" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="AdminNotifyCloseBtn()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: center;">
+        <div class="col-md-1" style="margin-left: 80px;">
+          <div style="display: flex;justify-content: end;cursor: pointer;">
+                        
+            <svg xmlns="http://www.w3.org/2000/svg" id="AdminNotifyCloseBtn" width="22" height="22" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="AdminNotifyCloseBtn()" style="background-color:#EAE7DC;border-radius:45%;">
               <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
             </svg>
           </div>
+
+          
         </div>
       </div>
       
@@ -219,7 +251,7 @@
           <thead class=".thead-dark">
           <tr style="background-color: #fff;"  ><th style="color:black;">Mock Type</th><th style="color:black;">Requested Date</th><th  style="color:black;">Employee Id</th><th  style="color:black;">Reviewer Id</th><th  style="color:black;">Status</th></tr>
         </thead>
-        <tbody>
+        <tbody id="AdminNotifyTbody">
           <%
           debugger
           var oDateFormatter = [];
@@ -396,10 +428,11 @@
     <div id="newDesigDiv1">
 
 
-      <div style="display: flex;" id="navBarOfEditHierarchy">
+      <div style="display: flex;align-items: center;gap: 10%;" id="navBarOfEditHierarchy">
             <img src="../images/logo.jpg" alt="" height="90px" width="90px" style="margin-left: 10px;" >
             <p id="editHierarchyTitle">EDIT HIERARCHY</p>
             
+          <input type="text" style="margin-top: 10px;width: 250px;text-align: center;font-style: italic;height: 37px;" id="HierarchySearchField" onkeyup="HierarchyTableSearch()" placeholder="Search your content.." title="search">
               
               <!-- <button type="button" class="btn btn-success" style="height: 2.3rem;margin-left: 1rem;margin-top: 2rem;display: none;" id="editHierarchySaveButton" onclick="onClickEditHierarchySave()">Save</button> -->
                 <svg xmlns="http://www.w3.org/2000/svg" id="ocloseEditHierarchyPopUp" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="onCloseEditHierarchyPopUp()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
@@ -430,27 +463,14 @@
              <th>Action</th>
            </tr>
          </thead>
-         <tbody>
+         <tbody id='HierarchySearchTbody'>
 
-          <!-- UI5 Team Hierarchy data -->
-          <p style="display: none;" id="allData">
-          
-           <% 
-            sampleData.forEach((ele)=>{
-          %>
-              debugger
-             if(ele.Employee_Department == "UI5"){
-              /<%= ele.Employee_Name %>*<%= ele.Employee_Id %>*<%= ele.mentorId %>
-             }
-          <%
-            })
-          %> 
-        </p>
+         
           <% if(sampleData.length > 0) { %>
             <% sampleData.forEach((data) => { %>
              
               <form action="/admin/updatementor" method="post" id="newEmployeeForm1">
-                <tr class='searchbyName searchbyID' id="<%= data.Employee_Id %>">
+                <tr  id="<%= data.Employee_Id %>">
                  
                   <input type="hidden" name="id" value="<%= data.Employee_Id %>" id="MentorID">
                   <td><%= data.Employee_Id %></td>
@@ -468,6 +488,12 @@
                       <option value="L3">L3</option>
                       <option value="L4">L4</option>
                       <option value="L5">L5</option>
+                      <option value="L5">L6</option>
+                      <option value="L5">L7</option>
+                      <option value="L5">L8</option>
+                      <option value="L5">L9</option>
+                      <option value="L5">L10</option>
+                      <option value="L5">L11</option>
                     </select>
 
                   </td>
@@ -654,6 +680,21 @@
   
   <!-- Hierarchy view -->
 
+     <!-- UI5 Team Hierarchy data -->
+     <p style="display: none;" id="allData">
+          
+      <% 
+      debugger
+      allUI5Data.forEach((ele)=>{
+     %>
+        
+        if(ele.Employee_Department == "UI5"){
+         /<%= ele.Employee_Name %>*<%= ele.Employee_Id %>*<%= ele.mentorId %>
+        }
+     <%
+       })
+     %> 
+   </p>
       <div id="Hierarchyview" style="display: none;width: 100%;">
         <div class="row" >      
       <div class="tree">
@@ -692,7 +733,7 @@
                   <ul>
                     <% 
                       sampleData.forEach((ele)=>{
-                        if(ele.position == "L1"){
+                        if(ele.position == "L1" && ele.Employee_Department == "UI5"){
                     %>
                           <li id="Emp<%= ele.Employee_Id %>">
                             <a href="#" ><%= ele.Employee_Name %></a>
@@ -709,10 +750,111 @@
       </div>
       </div>
       </div>
+
+      <!-- ABAP-Hierarchy  -->
+
+      <p style="display: none;" id="allABAPData">
+          
+        <% 
+        allABAPData.forEach((ele)=>{
+       %>
+           debugger
+          if(ele.Employee_Department == "ABAP"){
+           /<%= ele.Employee_Name %>*<%= ele.Employee_Id %>*<%= ele.mentorId %>
+          }
+       <%
+         })
+       %> 
+     </p>
+      <div id="HierarchyviewABAP" style="display: none;width: 100%;">
+        <div class="row" >      
+      <div class="tree">
+    
+        <div style="display: flex;justify-content: space-between;">
+          <h2 style="letter-spacing: 2px;font-style: italic;text-decoration: underline;" class="UI5-TEAM-HIERARCHY">
+            <span>ABAP</span>
+            <span>TEAM</span>
+            <span>HIERARCHY</span>
+              </h2>
+          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16" onclick="oCloseABAPHierarchyView()" style="background-color:#EAE7DC;border-radius:45%;display: flex;align-items: center;justify-content: end;">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+          </svg>
+        </div>
+        
+        <% 
+        debugger
+        var lead;
+        var ABAPDeptEmps = []
+         sampleData.forEach((ele)=>{
+          if(ele.Employee_Department == "ABAP"){
+            ABAPDeptEmps.push(ele)
+
+            if(ele.position == "Lead"){
+              lead = ele.Employee_Name
+            }
+          }
+          
+        })
+        %>
+       
+          
+              <ul>
+                <li>
+                  <a href="#"><%= lead %></a>
+                  <ul>
+                    <% 
+                      sampleData.forEach((ele)=>{
+                        if(ele.Employee_Department == "ABAP" && ele.position == "L1"){
+                    %>
+                          <li id="Emp<%= ele.Employee_Id %>">
+                            <a href="#" ><%= ele.Employee_Name %></a>
+                            
+                          </li>
+                    <%
+                        }
+                      })
+                    %>
+                  </ul>
+                </li>
+              </ul>
+      
+      </div>
+      </div>
+      </div>
+
   <script>
+
+    //Hierarchy table field search
+    function HierarchyTableSearch(){
+      $(document).ready(function(){
+        $("#HierarchySearchField").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#HierarchySearchTbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+    }
+    //filtrer for Admin Notification
+    function AdminNotifyFilterStatus() {
+      debugger
+      //
+
+      $(document).ready(function(){
+        $("#filterStsMcktype").on("keyup", function() {
+          var value = $(this).val().toLowerCase();
+          $("#AdminNotifyTbody tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+          });
+        });
+      });
+
+     
+    }
 
     //UI5HierarchyView enable/disable
     localStorage.setItem("UI5HryCheck", false);
+    localStorage.setItem("ABAPHryCheck", false);
     function oCloseUI5HierarchyView(){
       debugger
       localStorage.setItem("UI5HryCheck", true);
@@ -722,9 +864,6 @@
     }
 
     function oViewUI5TeamHirerarchy(){
-      debugger
-
-      
 
       document.getElementById("editHierarchyMainContainer").style.filter = "blur(8px)"
       document.getElementById("Hierarchyview").style.display = "block";
@@ -745,13 +884,13 @@
       
 
      let checkData = localStorage.getItem("UI5HryCheck")
-     if(localStorage.getItem("UI5HryCheck") == "true"){
+     if(checkData == "true"){
       document.getElementById("Hierarchyview").style.display = "block";
       
      }
      else{
       EmpData.forEach((ele)=>{
-        allUI5Data.push(ele)
+       // allUI5Data.push(ele)
         if( ele.EmpId && ele.MentorId){
           let ul = document.createElement("ul")
           let li = document.createElement("li")
@@ -781,8 +920,8 @@
       })
 
       pendingEmps.forEach((ele)=>{
-        allUI5Data.push(ele);
-        localStorage.setItem("allUI5HryData", JSON.stringify(allUI5Data))
+        //allUI5Data.push(ele);
+        //localStorage.setItem("allUI5HryData", JSON.stringify(allUI5Data))
         if(ele.EmpId && ele.MentorId){
           let ul = document.createElement("ul")
           let li = document.createElement("li")
@@ -814,9 +953,107 @@
           
 }
 
-    
 
-function onValidateFields(id){
+    function oCloseABAPHierarchyView(){
+      localStorage.setItem("ABAPHryCheck", true);
+      document.getElementById("editHierarchyMainContainer").style.filter = "blur(0px)"
+
+      document.getElementById("HierarchyviewABAP").style.display = "none";
+    }
+
+    function oViewABAPTeamHirerarchy(){
+
+      debugger
+      document.getElementById("editHierarchyMainContainer").style.filter = "blur(8px)"
+      document.getElementById("HierarchyviewABAP").style.display = "block";
+      var RawData = document.getElementById("allABAPData").innerHTML;
+      var splitData = RawData.split("/");
+
+      var EmpData = []
+      splitData.forEach((ele,ind)=>{
+        EmpData.push({
+          "EmpName":splitData[ind].split("\n")[0].split("*")[0],
+          "EmpId":splitData[ind].split("\n")[0].split("*")[1],
+          "MentorId":splitData[ind].split("\n")[0].split("*")[2]
+        })
+      })
+      debugger
+      //EmpData.splice(0,2);
+      var allUI5Data = []
+      var pendingEmps = []
+      
+
+     let checkData = localStorage.getItem("ABAPHryCheck")
+     if(checkData == "true"){
+      document.getElementById("HierarchyviewABAP").style.display = "block";
+      
+     }
+     else{
+      EmpData.forEach((ele)=>{
+       // allUI5Data.push(ele)
+        if( ele.EmpId && ele.MentorId){
+          let ul = document.createElement("ul")
+          let li = document.createElement("li")
+          let a = document.createElement("a")
+        
+
+          li.setAttribute("id","Emp"+ele.EmpId)
+          
+          ul.appendChild(li)
+          li.appendChild(a)
+          a.innerHTML = ele.EmpName
+
+          let rootElement = document.getElementById("Emp"+ele.MentorId)
+          if(!rootElement){
+            pendingEmps.push(ele)
+          }
+          else if(rootElement.children.length-1 > 0){
+            rootElement.lastChild.appendChild(li)
+          }
+          else{
+            rootElement.appendChild(ul)
+          }
+          
+          
+
+        }
+      })
+
+      pendingEmps.forEach((ele)=>{
+        //allUI5Data.push(ele);
+        //localStorage.setItem("allABAPHryData", JSON.stringify(allUI5Data))
+        if(ele.EmpId && ele.MentorId){
+          let ul = document.createElement("ul")
+          let li = document.createElement("li")
+          let a = document.createElement("a")
+        
+
+          li.setAttribute("id","Emp"+ele.EmpId)
+          
+          ul.appendChild(li)
+          li.appendChild(a)
+          a.innerHTML = ele.EmpName
+
+          let rootElement = document.getElementById("Emp"+ele.MentorId)
+          if(!rootElement){
+            
+          }
+          else if(rootElement.children.length-1 > 0){
+            rootElement.lastChild.appendChild(li)
+          }
+          else{
+            rootElement.appendChild(ul)
+          }
+          
+          
+
+        }
+      })
+     }      
+    }
+
+
+    function onValidateFields(id){
 debugger
   var SelectedPosition = id+"positionID";
   SelectedPosition = document.getElementById(SelectedPosition).value

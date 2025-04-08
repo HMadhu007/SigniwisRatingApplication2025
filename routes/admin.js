@@ -51,6 +51,17 @@ router.get('/',
             let s = JSON.stringify(data)
             
             localStorage.setItem("data", s)
+            var allABAPData = []
+            var allUI5Data = []
+
+            data.forEach((ele)=>{
+                if(ele.Employee_Department == "UI5"){
+                    allUI5Data.push(ele)
+                }
+                if(ele.Employee_Department == "ABAP"){
+                    allABAPData.push(ele)
+                }
+            })
             connection.query('SELECT * FROM review_status', function (error, data2) {
                 connection.query(largestNumber, function (error3, data3) {
                    
@@ -60,7 +71,7 @@ router.get('/',
 
                     connection.query('SELECT * FROM designation', function (error, data4) {
 
-                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4, AdminNotifyData:AdminNotifyData, BusyIndicator:BusyIndicator })
+                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4, AdminNotifyData:AdminNotifyData, BusyIndicator:BusyIndicator, allUI5Data:allUI5Data, allABAPData:allABAPData})
 
                     })
 
