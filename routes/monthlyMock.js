@@ -54,20 +54,22 @@ var vid = null
 router.get ( ['/monthlyMock','/:id'], function(req, res, next) {
 debugger
   localStorage.setItem("Mocktype", "Monthly Mock")
-  this.oUser_ID = req.params.id
+  localStorage.setItem("oUser_ID", req.params.id.split("-")[0])
+  this.oUser_ID = req.params.id.split("-")[0]
   var message = req.flash('success')
 
   var query = `SELECT * FROM employee_table`
-  var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = ${req.params.id}`
-  var query3 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.params.id}'`
+  var query2 = `SELECT Requested_Date FROM admin_notification WHERE User_Id = '${this.oUser_ID}'`
+  var query3 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${this.oUser_ID}'`
   var query4 = `select Employee_Mock_Taken,Employee_Mock_Given from employee_table where Employee_Id = '${req.session.EmpId}'`
   
   connection.query(query, function(error, data, rows){
 connection.query(query2,function(error2,data2,rows2){
     debugger
+    this.oUser_ID = localStorage.getItem("oUser_ID")
     for(let i=0 ; i<=data.length ; i++)
     {
-      if(data[i].Employee_Id == req.params.id)
+      if(data[i].Employee_Id == this.oUser_ID)
       {
         debugger
       res.render('monthlyMock', {title:oUser_ID, message ,singleUserData:data,BusyIndicator:BusyIndicator })

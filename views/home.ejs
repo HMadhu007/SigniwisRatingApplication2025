@@ -7,6 +7,13 @@
     <title>SIGNIWIS-HOME</title>
     <link rel="stylesheet" href="popupS.css">
     <style>
+
+    #empId::placeholder{
+      letter-spacing: 2px;
+    }
+    #empPassword::placeholder{
+      letter-spacing: 2px;
+    }
     input[type=number]::-webkit-inner-spin-button, 
     input[type=number]::-webkit-outer-spin-button { 
     -webkit-appearance: none;
@@ -146,7 +153,7 @@ height: 100%;
             <!-- Email input -->
             <div class="form-outline mb-4">
               <input type="text" id="empId" name="User_Id" class="form-control form-control-lg text-center"
-                placeholder="Enter Employee Id" width="100%"/>
+                placeholder="S00XXXX" width="100%"/>
                 <span id="loginEmployeeIdNotify" style="visibility: hidden;">Employee number cannot be blank</span><br>
            
             </div>
@@ -154,7 +161,7 @@ height: 100%;
             <!-- Password input -->
             <div class="form-outline mb-3">
               <input  type="password" id="empPassword" name="User_Password" class="form-control form-control-lg text-center"
-                placeholder="Enter password" />
+                placeholder="PASSWORD" />
                 <span id="loginEmployeePasswordNotify" style="visibility: hidden;">Password cannot be blank</span><br>
             
             </div>
@@ -485,7 +492,7 @@ else if((EmpForgotId.value==null || EmpForgotId.value=='') && (empForgotPassword
         loginEmployeePasswordNotify.style.visibility = "hidden"
         loginEmployeePasswordNotify.style.margin="0px 0px 0px 20px"
         if(loginEmployeeId.value=='Admin' && loginEmployeePassword.value==123){
-          alert('hello Admin')
+         
           location.href='file:///D:/Application/RatingApplication/admin/admin.html'
         }
         else if(loginEmployeeId.value=='User' && loginEmployeePassword.value==123){

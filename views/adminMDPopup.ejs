@@ -39,6 +39,15 @@
     </style>
 </head>
 <body >
+
+  <!-- BusyIndicator -->
+  <div id="loadBusyIndicator" style="visibility:<%= BusyIndicator.BusyIndicator %> ;height: 100vh;width: 100vw; background-color: rgba(101, 146, 214, 0.418);z-index: 2;position: fixed;display: flex;align-items: center;justify-content: center;margin-top: -3px;">
+    <div class="spinner-grow" role="status" style="height: 50px;width: 50px;">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+<!-- .................... -->
+
   <div   id="alert1" style=" display: none; width:350px;text-align: center;position: absolute;left: 36%;z-index: 100;background-color: rgb(12, 241, 164);border-radius: 5px;padding: 2px;" role="alert"> </div>
 
   <div id="adminNotification">
@@ -209,69 +218,9 @@
               %>
           </div>
         </div> 
-          <!-- <div class="empBandge mt-5 mb-5 ">
-            <%
-              for(let i = 0; i < sampleData.length;i++){
-                if(sampleData[i].Employee_Id == session.UID){
-                  if(sampleData[i].Employee_Status == 'Working')
-
-                  {
-                  %>
-                  <span class="badge rounded-pill text-bg-success" style="width: 125px;padding: 12px 22px;font-weight: bold;">
-                    <%= sampleData[i].Employee_Status %>
-                    <% break %>
-                  </span>
-                  <%
-                  }
-                  else if(sampleData[i].Employee_Status == 'Released'){
-                    %>
-                    <span class="badge rounded-pill text-bg-primary" style="width: 125px;padding: 12px 22px; font-weight: bold;">
-                      <%= sampleData[i].Employee_Status %>
-                      <% break %>
-                    </span>
-                    <%
-                    
-                  }else{
-                    %>
-                    <span class="badge rounded-pill text-bg-danger" style="width: 125px;padding: 12px 22px;font-weight: bold;">
-                      <%= sampleData[i].Employee_Status %>
-                      <% break %>
-                    </span>
-                    <%
-                    
-                  }
-                }
-            }
-            
-            %>
-
-          </div>
-          <!-- <div class="col-md-3 mt-2">
-            <div class="d-flex ">
-                <div onclick="handleEditPopUp()">
-                  <i class="fas fa-edit" style="font-size: 25px;color: black;cursor: pointer;"></i>
-                </div>
-                <div class="ms-3">
-                  <a href="/adminMDPopup/empDelete/:id" title="Delete"><i class="fa-solid fa-trash" style="font-size: 25px;color: black;"></i></a>
-                </div>
-
-            </div>
-            <form  method="POST" action="/adminMDPopup/rating" style="height: max-content;margin-top: 125px;">
-
-              <input style="padding: 2px 20px 2px 20px;border-radius: 5px;background-color: rgb(35, 239, 107);" type="submit" value="Request Rating">
-                
-            </form>  
-          </div> -->
+          
           <div class="col-md-3 mt-2">
-            <!-- <div class="d-flex ">
-                <div onclick="handleEditPopUp()">
-                  <i class="fas fa-edit" style="font-size: 25px;color: black;cursor: pointer;"></i>
-                </div>
-                <div class="ms-3">
-                  <a href="/adminMDPopup/empDelete/:id" title="Delete"><i class="fa-solid fa-trash" style="font-size: 25px;color: black;"></i></a>
-                </div>
-
-            </div> -->
+            
             <% if(vSingleEmpData[0].Employee_Total_Rating < 5 ) {%>
               <h6 >Latest Ratings : <strong style="color: red"> <%= vSingleEmpData[0].Employee_Total_Rating %> </strong></h6>
 
@@ -291,48 +240,13 @@
             <label>Feedback : </label><br>
             <textarea name="feedback" id="textarea" cols="42" rows="5"> <%= vSingleEmpData[0].Employee_Overall_Feedback %></textarea>
 
-<!--             
-            <form  method="POST" action="/adminMDPopup/rating/<%= vSingleEmpData[0].Employee_Department %>" id="requestRatingID" style="height: max-content;margin-top: 65px;">
-              <select class="form-select" id="selectRatingsId" name="Mock_Type" aria-label="Default select example" onchange="onSelctReviewtype()">
-                <option selected >--- Select Review ---</option>
-                <option value="monthlyMock">Monthly Mock</option>
-                <option value="hierarchyMock">Hierarchy Mock</option>
-                <option value="Technology">Technology completion Mock</option>
-                <option  value="KPI">KPI</option>
-              </select>
-              <div id="departmentId" style=" left: 78%; top: 80%;">
-                <select onclick="" class="form-select" id="formEmpDesignation1" aria-label="Default select example" name="Reviewer_name" >
-                  <option selected>--- Select Employee ---</option>
-                  <%
-                    if(sampleData.length > 0){
-                      sampleData.forEach((data)=>{
-                        if(data.Employee_Department == currDepartment && data.Employee_Id !=title  ){
-                  %>
-                          <option value="<%= data.Employee_Name %><%= ',' %><%= data.Employee_Id %>"> <%= data.Employee_Name %> </option>
-                       
-                        <%
-                        }
-                     })                  
-                      }
-                  %>
-  
-                </select>
-               </div>
-              <br>
-              <input style="padding: 2px 20px 2px 20px;border-radius: 5px;background-color: #212529;color: white;padding-bottom:6px ;font-weight: bold;" type="submit" id="requestRating" onclick="handleSubmit()" value="Request Rating">
-                
-
-
-
-            </form>   -->
-
 
             <form method="POST" action="/adminMDPopup/rating/<%= vSingleEmpData[0].Employee_Department %>" id="requestRatingID" style="height: max-content; margin-top: 65px;">
               <div id="departmentId"></div>
               <!-- Container for aligning selects side by side -->
               <div style="display: flex; gap: 5px;width: 390px;">
                 <select class="form-select" id="selectRatingsId" name="Mock_Type" aria-label="Default select example" onchange="onSelctReviewtype()">
-                  <option selected>-Select Review-</option>
+                  <option selected>-Mock Type-</option>
                   <option value="Monthly Mock">Monthly Mock</option>
                   <option value="Hierarchy Mock">Hierarchy Mock</option>
                   <option value="Technology completion Mock">Technology completion Mock</option>
@@ -342,8 +256,8 @@
                 <select class="form-select" id="formEmpDesignation1" aria-label="Default select example" name="Reviewer_name" onchange="onSelectReviewer_name()">
                   <option selected>-Select Employee-</option>
                   <%
-                    if (sampleData.length > 0) {
-                      sampleData.forEach((data) => {
+                    if (sameDept.length > 0) {
+                      sameDept.forEach((data) => {
                         if (data.Employee_Department == currDepartment && data.Employee_Id != title) {
                   %>
                           <option value="<%= data.Employee_Name %><%= ',' %><%= data.Employee_Id %>">
@@ -363,7 +277,7 @@
                 type="submit"
                 id="requestRating"
                 onclick="handleSubmit()"
-                value="Request Rating"
+                value="Request Ratings"
               >
             </form>
             
@@ -401,9 +315,9 @@
         </label>
         <label id="kpiLabel" >KPI</label>
       </div>
-      <div id="EmployeeReviewDetails"  class="table-responsive">
+      <div id="EmployeeReviewDetails"  class="table-responsive" style="display: flex;align-items: center;justify-content: center;">
         
-        <table class="table table-hover" border="1"> 
+        <table class="table table-hover" style="margin-left: 0%;" border="1"> 
             <tr>
             <th>Reviewer_Id</th>
             <th>Reviewer Name</th>
@@ -636,28 +550,48 @@
 
   
 
-   <div class="container" id="kpiContainerId" style=" border: 2px solid;display: none;position: absolute;top: 100px;left: 100px;background-color: white;">
+  <div class="container" id="kpiContainerId" style="border: 2px solid;display: none;position: absolute;top: 10%;left: 12%;background-color: white;border-radius: 8px;padding: 30px;margin-bottom: 100px;">
 <form action="/adminMDPopup/updatekpipoits/<%= vSingleEmpData[0].Employee_Department %> " method="get">
   <input type="text" id="Reviewer_name_inp" style="display: none;" name="Reviewer_Id">
    
-  <h3 style="display: inline-block;"> Select KPI points to be Reviewed</h3><i onclick="onCloseKPIPoints()" style="display: inline-block; float: right;height: 25px;padding: 2px;"  class="fa-solid fa-xmark"></i>
+  <i onclick="onCloseKPIPoints()" style="display: inline-block; float: right;height: 25px;padding: 2px;"  class="fa-solid fa-xmark"></i>
+  <div style="display: flex;justify-content: center;margin-bottom: 20px;">
+    <h3 style="display: inline-block;text-align: center;"> Select KPI Points</h3>
+  </div>
+
+  <div>
+    <select class="form-select" id="selectKPIType" name="KPI_Type" aria-label="Default select example" style="width: max-content;" >
+      <option selected>-Select KPI Type-</option>
+      <option value="Monthly_KPI">Monthly KPI</option>
+      <option value="Yearly_KPI">Yearly KPI</option>
+      <option value="Quarterly_KPI">Quarterly KPI</option>
+    </select>
+  </div>
+
+  <div class="form-check" style="display: flex;align-items: center;" onclick="test()">
+    <input class="form-check-input" type="checkbox"  id="flexCheckDefault" >
+    <label class="form-check-label" for="flexCheckDefault" style="font-weight: bold;">
+     Document Link :
+    </label>
+    <input type="text" id="desigInpId12" style="margin: 10px 20px ;width: 70%;" class="form-control" placeholder="Provide document link" name="KPIDocumentLink" aria-label="First name">
+  </div>
 
     <div class="form-check sectionClass" >
-      <input class="form-check-input" type="checkbox" value="Should complete training on SAP UI5, SAP OData, SAP ABAP." name="TL_Complete_Training" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Should complete training on SAP UI5, SAP OData, SAP ABAP" name="TL_Complete_Training" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Should complete training on SAP UI5, SAP OData, SAP ABAP.
+        Should complete training on SAP UI5, SAP OData, SAP ABAP
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value="Learn advance concept in sap fiori." name="TL_Adv_Concept_Fiori" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Learn advance concept in sap fiori" name="TL_Adv_Concept_Fiori" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Learn advance concept in sap fiori.
+        Learn advance concept in sap fiori
       </label>
     </div>
     <div class="form-check sectionClass">
       <input class="form-check-input" type="checkbox" value=" Performance in Mock" name="TL_Performance_Mock" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Performance in Mock.
+        Performance in Mock
       </label>
     </div>
     <div class="form-check sectionClass">
@@ -667,87 +601,80 @@
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value="Need to learn at least two new topic in year." name="TL_Two_Topics_Year" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Need to learn at least two new topic in year" name="TL_Two_Topics_Year" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Need to learn at least two new topic in year.
+        Need to learn at least two new topic in year
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value="Regularity, Availability and Attendance in Signiwis." name="TL_Reg_Avail_Attendance" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Regularity, Availability and Attendance in Signiwis" name="TL_Reg_Avail_Attendance" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Regularity, Availability and Attendance in Signiwis.
+        Regularity, Availability and Attendance in Signiwis
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value=" Share document for the topic they have learn." name="TL_Documents_New_Topics" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value=" Share document for the topic they have learn" name="TL_Documents_New_Topics" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Share document for the topic they have learn.
+        Share document for the topic they have learn
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value="Should train minimum of two candidate." name="TMS_Train_Two_Candidates" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Should train minimum of two candidate" name="TMS_Train_Two_Candidates" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Should train minimum of two candidate.
+        Should train minimum of two candidate
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value="Number of session they have took quarterly with proof(recording)." name="TMS_Taken_Session_Year" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Number of session they have took quarterly with proof(recording)" name="TMS_Taken_Session_Year" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Number of session they have took quarterly with proof(recording).
+        Number of session they have took quarterly with proof(recording)
       </label>
     </div>
     <div class="form-check sectionClass">
-      <input class="form-check-input" type="checkbox" value="Employee should initiate to take sesion on Saturday regarding topic which trainees have learned in that week." name="TMS_Session_On_Sat" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Employee should initiate to take sesion on Saturday regarding topic which trainees have learned in that week" name="TMS_Session_On_Sat" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Employee should initiate to take sesion on Saturday regarding topic which trainees have learned in that week.
+        Employee should initiate to take sesion on Saturday regarding topic which trainees have learned in that week
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="Regularity, Availability and Attendance in Signiwis." name="HRF_Reg_Avail_Attendance" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Regularity, Availability and Attendance in Signiwis" name="HRF_Reg_Avail_Attendance" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Regularity, Availability and Attendance in Signiwis.
+        Regularity, Availability and Attendance in Signiwis
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="Employees need to inimate HR that they want to take session on that particular topic." name="HRF_Emp_Need_Inform_HR" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Employees need to inimate HR that they want to take session on that particular topic" name="HRF_Emp_Need_Inform_HR" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Employees need to inimate HR that they want to take session on that particular topic.
+        Employees need to inimate HR that they want to take session on that particular topic
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="Mail need to be shared regarding appreciation, shared by client to employee." name="CF_Appreciate_Mail_Client" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Mail need to be shared regarding appreciation, shared by client to employee" name="CF_Appreciate_Mail_Client" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Mail need to be shared regarding appreciation, shared by client to employee.
+        Mail need to be shared regarding appreciation, shared by client to employee
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="Client Feedback while releasing from project." name="CF_Project_Release_Feedb" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Client Feedback while releasing from project" name="CF_Project_Release_Feedb" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Client Feedback while releasing from project.
+        Client Feedback while releasing from project
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="contribution for Company growth." name="CTC_Company_Growth" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="contribution for Company growth" name="CTC_Company_Growth" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        contribution for Company growth.
+        contribution for Company growth
       </label>
     </div>
     <div class="form-check">
-      <input class="form-check-input" type="checkbox" value="Number of Leaves taken." name="CTC_Num_Leave_Taken" id="flexCheckDefault">
+      <input class="form-check-input" type="checkbox" value="Number of Leaves taken" name="CTC_Num_Leave_Taken" id="flexCheckDefault">
       <label class="form-check-label" for="flexCheckDefault">
-        Number of Leaves taken.
+        Number of Leaves taken
       </label>
     </div>
-    <div class="form-check" onclick="test()">
-      <input class="form-check-input" type="checkbox"  id="flexCheckDefault" >
-      <label class="form-check-label" for="flexCheckDefault">
-       other
-      </label>
-      <input type="text" id="desigInpId12" class="form-control" placeholder="Enter New KPI Document Link" name="otherKpiPointName" aria-label="First name">
-    </div>
-
-    <div class="form-check">
-      <button type="submit" class="btn btn-primary" id="submitKpiPiont">Submit</button>
+    
+    <div class="form-check" style="display: flex;justify-content: right;">
+      <button type="submit" class="btn btn-primary" id="submitKpiPiont" onclick="oSubmitKpiPiont()">Submit</button>
     </div>
   </form>
     </div>
@@ -757,100 +684,116 @@
   <%
 }
   var DocLink = "";
-   if(KPIdata.length > 0){
-  %>
-    <div class="container" id="KPI_Form" style="display: none;margin-bottom: 50px;">
-      <div class="frequently-parent">
-        <div class="frequently-header"><br> <br> <br>
-          <h2>KPI Points </h2>
-          <hr>
-          <!-- <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p> -->
-      </div>
-      <div class="frequently-child" style="padding-bottom: 50px;">
-<%
-    var outputArray = [];
-    var count = 0;
-    var start = false;
-    KPIdata.forEach((ele1)=> {
-      outputArray.forEach((val1) =>{
-          if (ele1.reviewer_id == val1.reviewer_id) {
-              start = true;
-          }
-      })
-      count++;
-      if (count == 1 && start == false) {
-          outputArray.push(ele1);
-      }
-      start = false;
-      count = 0;
-    })
-
-    outputArray.forEach((ele, ind)=>{
-    %>
+  var KPIType_Title;
+  var KPIPointsForEmp = []
+  var oFormattedData = []
+  KPIdata.forEach((ele)=>{
+    if(ele.employee_review_val == "KPI_Type"){
+      KPIType_Title = ele.review_points;
+      KPIType_Title = KPIType_Title.split("_")[0]+" "+KPIType_Title.split("_")[1]
+    }
+    if(ele.employee_id == session.UID){
+      KPIPointsForEmp.push(ele)
+    }
+  })
+  debugger
+  KPIPointsForEmp.forEach((ele)=>{
+    oFormattedData.push({
+      "ReqId":ele.Request_Id,
+      "label" : ele.review_points,
+      "value" : ele.review_value,
+      "reviewer_id":ele.reviewer_id,
+      "DocLink": ele.document_link,
+      "date" : ele.Requested_Date
     
-      <div class="frequently-details">
-        <details>
-            <summary> Requested Date: <%= ele.Requested_Date %> Reviewed by : <%= ele.reviewer_id %></summary>
-            
-              <%
-                KPIdata.forEach((val, index)=>{
-                  if(val.reviewer_id == ele.reviewer_id){
-                    if(val.review_points.length>5 )
-                      {
-                        DocLink = val.document_link
-              %>
-                
-          <form class="borderDiv" id="" action="" method="" >
-               <div>
-                   <!-- KPI Doc. link -->
-                    <div style="display: flex;">
-                      <label for="inputPassword" class="col-sm-5 col-form-label" style="margin-bottom: 5px;"> <%= val.review_points %></label>
-                      
-                      <input type="text" class="form-control" style="margin-bottom: 5px;"  value="<%= val.review_value %>" name="" readonly>
-                      
-                      
-                    </div>
-                    
-                  </div>
-                  
-                  
-                  
-                <% 
-              }}
-              %>
-             
-              
-              <%
-              
-            })
-            
-          %>
-          <label for="">Document Link</label>
-          <a href="<%= DocLink %>">Click Here</a>
-          </form>
-            
-            
-          </details>
-            <hr>
-        </div>
-        
-        <%
-  
-})
-}
-%>
+    })
+  })
 
-   </div>
-      
-       
-  </div>
-   </div>
-   
+  debugger
+  var UniqReqIDs = [...new Set(oFormattedData.map(item => item.ReqId))]; // KPI itration setting
+
+
+  %>
 
  
+    <div class="container" id="KPI_Form" style="display: none;margin-bottom: 50px;">
+      <div class="frequently-parent" style="box-shadow: 0px 0px 10px 1px rgb(140, 139, 139);padding-left: 50px;border-radius: 10px;border: 2px solid rgba(8, 238, 246, 0.371);">
+          <h2 style="text-align: center;text-decoration: underline rgba(5, 199, 238, 0.327);padding: 30px 100px;">KPI Details </h2>
+          <%
+          UniqReqIDs.forEach((ele1)=>{
+            var DocLink;
+            var Date;
+          %>
+          <div class="frequently-details" >
+            <details> 
+              
+          <%
+            oFormattedData.forEach((ele2)=>{
+              if(ele1 == ele2.ReqId && ele2.label.length <120){
+                debugger
+                DocLink = ele2.DocLink;
+                Date = ele2.date;
+          
+                if(ele2.label.split("_")[1] == "KPI"){
+          %>
+
+                  <summary><b style="font-style: italic;text-decoration: underline red;letter-spacing: 2px;"><%= ele2.label.replace("_", " ") %> - Reviewed by <%= ele2.reviewer_id %> on <%= Date %></b></summary>
+                  
+          <%
+                }
+          %>
+          
+          <%
+                if(!!ele2.value){
+          %>
+                
+                  <div style="display: flex;gap: 5px;">
+                    <p style="font-weight: 600;"><%= ele2.label %></p>:<p><b><%= ele2.value %></b></p>
+                  </div>
+                  
+                
+          <%
+                }
+          %>
+                
+          <%
+              }
+            })
+
+          %> 
+          <a href="<%= DocLink %>" target="_blank">Document Link</a>
+        </div>
+        </details>
+          <hr>
+          <%
+          })
+          %>
+       
+      </div>
+    </div>
    <script>
 
+
+    function oSubmitKpiPiont(){
+      document.getElementById("submitKpiPiont").addEventListener('submit',(e)=>{
+        e.preventDefault();
+      });
+
+      document.getElementById("loadBusyIndicator").style.visibility = "visible"
+
+    }
+
   function onSelectReviewer_name(){
+    debugger
+    var oSelectRatings = document.getElementById('selectRatingsId');
+    var MentorSelected = document.getElementById('formEmpDesignation1');
+    let oContainer = document.getElementById('kpiContainerId');
+
+    if(oSelectRatings.value == "KPI" && !(MentorSelected.value[0] == "-Select Employee-")){
+       oContainer.style.display = 'block'; 
+      document.getElementById('body').style.filter='blur(3px)'
+    }
+
     document.getElementById("Reviewer_name_inp").value = document.getElementById("formEmpDesignation1").value.split(",")[1]
   }
 
@@ -901,7 +844,7 @@ function checkKPInRatings(){
                 document.getElementById('EmployeeReviewDetails').style.display='none'
                
             } else {
-                 document.getElementById('EmployeeReviewDetails').style.display='block'
+                 document.getElementById('EmployeeReviewDetails').style.display='flex'
                  document.getElementById('KPI_Form').style.display='none';
                
             }
@@ -914,8 +857,21 @@ function checkKPInRatings(){
   function onSelctReviewtype(){
     debugger
     let oSelectedItem = document.getElementById('selectRatingsId');
-      let oContainer = document.getElementById('kpiContainerId');
-    if(oSelectedItem.value == 'KPI'){
+    let oContainer = document.getElementById('kpiContainerId');
+    var MentorSelected = document.getElementById('formEmpDesignation1');
+    if(MentorSelected.value == "-Select Employee-"){
+      document.getElementById('alert1').style.display = 'block';
+      document.getElementById('alert1').innerHTML = `<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i> Please select Employee`;
+      setTimeout(()=>{
+      document.getElementById('alert1').style.display = 'none';
+
+      },3000)
+    }
+    else if(oSelectedItem.value == 'KPI'){
+      oContainer.style.display = 'block'; 
+      document.getElementById('body').style.filter='blur(3px)'
+    }
+    else if(oSelectedItem.value == 'KPI' && !MentorSelected.value == "-Select Employee-"){
       oContainer.style.display = 'block'; 
       document.getElementById('body').style.filter='blur(3px)'
     }
@@ -931,25 +887,35 @@ function checkKPInRatings(){
 
 
     function handleSubmit(){
-      debugger
+      
       document.getElementById('requestRatingID').addEventListener('submit',(e)=>{
         e.preventDefault()
       });
 
       var oSelectRatings = document.getElementById('selectRatingsId');
-      if(oSelectRatings.value == "Select Review"){
+      var MentorSelected = document.getElementById('formEmpDesignation1');
+      debugger
+      if(oSelectRatings.value == "-Mock Type-"){
           document.getElementById('alert1').style.display = 'block';
           document.getElementById('alert1').innerHTML = `<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i> Please select Mock Type`;
           setTimeout(()=>{
           document.getElementById('alert1').style.display = 'none';
 
-          },5000)
+          },3000)
 
       }
-      // else if(){
+      else if(MentorSelected.value == "-Select Employee-"){
 
-      // }
+        document.getElementById('alert1').style.display = 'block';
+          document.getElementById('alert1').innerHTML = `<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i> Please select Employee`;
+          setTimeout(()=>{
+          document.getElementById('alert1').style.display = 'none';
+
+          },3000)
+      }
       else {
+    
+        document.getElementById('loadBusyIndicator').style.visibility = "visible";
         document.getElementById('requestRatingID').submit();
       }
     }

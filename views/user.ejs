@@ -50,14 +50,22 @@
 
 
           <%
+          debugger
           var oReviewBtnStatus;
           var oBtnStatus;
           var oReviewBtnStatus;
-          var aEmployeesData = []        
-          if(oReviewEmpData.length > 0)
+          var aEmployeesData = []      
+          if(oReviewEmpData == "undefined"){
+          %>
+          <tr>
+            <td style="position: relative; left: 35%;">No Data Found</td>
+        </tr>
+          <%
+          }  
+          else if(oReviewEmpData)
           {
             oReviewEmpData.forEach((data)=>{
-              if(data.selectedId === loggedUser1  )
+              if(data.selectedId === loggedUser1)
               {
                 if(data.Status == "Pending" ){
                   oReviewBtnStatus = "disabled"
@@ -77,14 +85,34 @@
                 }
                                 
                   %>
+                  <% 
+                  debugger
+                  var mockType;
+                    if(data.Mock_Type == "Monthly Mock")
+                    {
+                      mockType = "monthlyMock"
+                    }
+                    else if(data.Mock_Type == "Hierarchy Mock")
+                    {
+                      mockType = "hierarchyMock"
+                    }
+                    else if(data.Mock_Type == "Technology completion Mock")
+                    {
+                        mockType = "Technology completion Mock"
+                    }
+                    else{
+                      mockType = data.Mock_Type.split("_")[1]
+                    }
+                  
+                  %>
                   <!-- <td><%= loggedUser1 %></td> -->
                   <td><%= data.User_Id %></td>
                   <td><%= data.Requested_Date %></td>
                   <td><%= data.Status %></td>
                   <td><%= data.Mock_Type %> <input style="display: none;" name="Mock_Type" value="<%= data.Mock_Type %>"></td>
-                  <td ><button class="btn btn-sm btn-success" style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;"  <%= oBtnStatus %>><a href="/user/mail/<%= data.Request_Id %>/<%= data.User_Id %>/<%= data.Mock_Type == 'Monthly Mock' ? 'monthlyMock' : 'hierarchyMock' || data.Mock_Type == 'Hierarchy Mock' ? 'hierarchyMock' : 'Technology completion Mock' %>" style="color: white;text-decoration: none;" >Accept</a></button>
+                  <td ><button class="btn btn-sm btn-success" style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;"  <%= oBtnStatus %>><a href="/user/mail/<%= data.Request_Id %>/<%= data.User_Id %>/<%= data.Mock_Type %>" style="color: white;text-decoration: none;" >Accept</a></button>
                     <button style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-danger" <%= oBtnStatus  %>><a href="/user/delete/<%= data.User_Id %>/<%= data.Mock_Type %>" style="color: white;text-decoration: none;">Reject</a></button>
-                    <button style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-secondary" <%= oReviewBtnStatus %>><a href="/<%= data.Mock_Type == 'Monthly Mock' ? 'monthlyMock' : 'hierarchyMock' || data.Mock_Type == 'Hierarchy Mock' ? 'hierarchyMock' : 'Technology completion Mock' %>/<%= data.User_Id %>" style="color: white;text-decoration: none;" >Review</a></button>
+                    <button style="border: 1px solid rgb(13, 13, 13);border-radius: 6px;padding:4px 15px;text-decoration: none;" class=" ms-2 btn btn-sm btn-secondary" <%= oReviewBtnStatus %>><a href="/<%= mockType %>/<%= data.User_Id %>-<%= data.Mock_Type %>" style="color: white;text-decoration: none;" >Review</a></button>
                   </td>
                   </tr>
                   <%
@@ -279,7 +307,7 @@
               <img width="220px" height="250px" src="data:image/png;base64,<%= element.IMG_file %>" style="border:2px solid black;border-radius: 6px;margin: 0% 0% 0% 49px;box-shadow: 0px 0px 10px 5px gray;"/>
             
             <div class="col-md-7" style="padding: 5px 0px 0px 20px;width: inherit; border-left: 2px solid black;">
-              <h2 style="font-weight: bold;letter-spacing: 2px;"><%= session.Name  %></h2>
+              <h2 style="font-weight: bold;letter-spacing: 2px;text-decoration: underline rgba(255, 0, 0, 0.496) dotted;"><%= session.Name  %></h2>
               <p ><b>Employee_Id :</b> <%= session.EmpId  %> </p>
               <p><b>Department :</b> <%= session.Dept  %> Consultant</p>
               <p><b>Email :</b> <a href= "#" target="_blank"><%= session.Email  %></a> </p>
@@ -400,7 +428,7 @@
 
   function handleSubmit(){
     debugger
-    document.getElementById("loadBusyIndicator").style.visibility = "visible";
+    
     
     document.getElementById('requestRatingID').addEventListener('submit',(e)=>{
       e.preventDefault()
@@ -436,8 +464,8 @@
 
         },3000)
     }
-    else if(MenteeName.value == MentorName.value){
-
+    else if(MenteeName.value.split(",")[0] == MentorName.value.split(",")[0]){
+      debugger
       document.getElementById('alert1').style.display = 'block';
       document.getElementById('alert1').innerHTML = `Please change values, Mentor & Mentee `;
         setTimeout(()=>{
@@ -446,6 +474,7 @@
         },3000)
     }
     else {
+      document.getElementById("loadBusyIndicator").style.visibility = "visible";
       document.getElementById('requestRatingID').submit();
     }
   }

@@ -122,7 +122,7 @@ debugger
     debugger
     var id = req.params.id;
     var id2 = req.params.id2;
-    connection.query(`DELETE FROM employee_rating WHERE UniqueId = ${id}`, function(error,data){
+    connection.query(`DELETE FROM employee_rating WHERE UniqueId = '${id}'`, function(error,data){
         debugger
         if(error)
         {
@@ -139,8 +139,8 @@ debugger
  router.get('/empDelete/:id',function(req,res,next){
   debugger
     var id = req.session.UID;
-    var sql=`Select Employee_Name from employee_table WHERE Employee_Id = ${id}`
-    var sqlData=`Select * from employee_table WHERE Employee_Id = ${id}`
+    var sql=`Select Employee_Name from employee_table WHERE Employee_Id = '${id}'`
+    var sqlData=`Select * from employee_table WHERE Employee_Id = '${id}'`
     var empName;
 
     var employeeName;
@@ -209,7 +209,7 @@ debugger
       }
     })
     
-    connection.query(`DELETE FROM employee_table WHERE Employee_Id = ${id}`,function(error,data){
+    connection.query(`DELETE FROM employee_table WHERE Employee_Id = '${id}'`,function(error,data){
       debugger
       if(error)
       {

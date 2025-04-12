@@ -22,7 +22,16 @@
 
 <body>
 
-<div id="alert1" style="display:none;width:350px;text-align: center;position: absolute;left: 40%;top:1% ;z-index: 100;background-color: rgba(210, 214, 213, 0.826);border-radius: 5px;padding: 2px;border: 1px solid black;" role="alert">Welcome</div>
+<div id="alert1" style="display:block;width:350px;text-align: center;position: absolute;left: 40%;top:1% ;z-index: 100;" role="alert">
+
+  <% if(message.length> 0){ %>
+    <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
+    <div class="alert alert-success" id="alert" style="text-align: center;margin: 5px auto;" role="alert">
+      <%= message %>
+    </div>
+    <% } %>
+
+</div>
 
   <div class="loader"></div>
 
@@ -286,12 +295,7 @@
             </div>
             <div class="col-md-4">
 
-              <% if(message.length> 0){ %>
-                <!-- <span id="loginEmployeePasswordNotify" >hello  </span><br> -->
-                <div class="alert alert-success" id="alert" style="text-align: center;margin: 5px auto;" role="alert">
-                  <%= message %>
-                </div>
-                <% } %>
+              
 
             </div>
             <div class="col-md-3">
@@ -318,29 +322,7 @@
       
     </div>
   </div>
-  <!-- <div style="display: flex;justify-content: space-around;margin-top: 10px;width: 100%;align-items: center;gap: 50%;margin-top: 2%;">
-      <div id="Reviewer-comments-area">
-        <div>
-          <span class="Mandatory">* </span>  
-          <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
-          <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
-        </div>
-      </div> -->
-
-  <!-- <div >
-        <div style="margin-bottom: 25px;">
-          <span class="Mandatory">* </span>
-          <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;">
-          <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div>
-        <div>
-            <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
-        </form></div>
-      </div>
-     </div> -->
-
-  <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
-
-  <!-- </div> -->
+  
   </div>
   <div id="adminNotification">
 

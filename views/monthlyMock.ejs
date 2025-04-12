@@ -13,6 +13,56 @@
         color: red;
         font-weight: bolder;
       }
+
+      .wave-text span {
+        display: inline-block;
+        font-size: 2rem;
+        animation: wave 3s ease-in-out infinite;
+    }
+    
+    .wave-text span:nth-child(1) {
+        animation-delay: 0s;
+    }
+    .wave-text span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    .wave-text span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    .wave-text span:nth-child(4) {
+        animation-delay: 0.6s;
+    }
+    .wave-text span:nth-child(5) {
+      animation-delay: 0.8s;
+    }
+    .wave-text span:nth-child(6) {
+      animation-delay: 1s;
+    }
+    .wave-text span:nth-child(7) {
+      animation-delay: 1.2s;
+    }
+    .wave-text span:nth-child(8) {
+      animation-delay: 1.3s;
+    }
+    .wave-text span:nth-child(9) {
+      animation-delay: 1.4s;
+    }
+    .wave-text span:nth-child(10) {
+      animation-delay: 1.5s;
+    }
+    .wave-text span:nth-child(11) {
+      animation-delay: 1.6s;
+    } 
+    @keyframes wave {
+        0%, 100% {
+            transform: translateY(5px);
+            color: rgba(52, 10, 238, 0.514);
+        }
+        80% {
+            transform: translateY(-10px);
+            color: black;
+        }
+    }
      
     </style>
  
@@ -101,22 +151,20 @@
       <h1 style="text-align: center; display: inline;">Review hhh</h1>
       <span><i class="fa-solid fa-info"></i></span> -->
       <div class="heder-info" style="width: 50%; display: flex;justify-content: space-between;margin-left: 40%;position: relative;">
-        <h1 style="text-align: center;">Review</h1>
-        <!-- <div>
-        <span onclick="" class="hover-affect"><i style="background-color: rgba(0, 255, 255, 0.347);padding: 10px;border-radius: 50%;font-size: 90;color:rgb(34, 155, 199)"  class="fa-solid fa-info"></i></span>
-        <div  >
-          <span>Points are counted out of 10</span>
-          <ul class="info-content ratingpoints" style="position: absolute;background-color: rgb(178, 255, 255); color: rgb(34, 155, 199); left: 73%;padding: 10px; border-bottom-left-radius:25px ; border-top-left-radius: 25px; border-bottom-right-radius: 25px;">
-            <li> Poor is '<'5 </li>
-            <li> Fair is 6</li>
-            <li> Satisfactory is 7</li>
-            <li> Good is 8</li>
-            <li> Excellent is 9</li>
- 
-          </ul>
- 
-        </div>
-      </div> -->
+        <h6 style="text-align: center;" class="wave-text">
+          <span>M</span>
+          <span>O</span>
+          <span>N</span>
+          <span>T</span>
+          <span>H</span>
+          <span>L</span>
+          <span>Y&nbsp;</span>
+          <span>M</span>
+          <span>O</span>
+          <span>C</span>
+          <span>K</span>
+        </h6>
+        
  
       <button type="button" class="collapsible" ><i style="background-color: #0060ff ;padding: 10px;border-radius: 50%;font-size: 90;color:white"  class="fa-solid fa-info"></i></button>
 <div class="content">
@@ -310,29 +358,7 @@
           </div>
         </div>
       </div>  
-     <!-- <div style="display: flex;justify-content: space-around;margin-top: 10px;width: 100%;align-items: center;gap: 50%;margin-top: 2%;">
-      <div id="Reviewer-comments-area">
-        <div>
-          <span class="Mandatory">* </span>  
-          <textarea name="Overall_Feedback" id="idOverall_Feedback" cols="40" rows="5" placeholder="Overall Feedback"></textarea>
-          <p id="Overall_Feedback_Error" style="visibility: hidden;">err</p>
-        </div>
-      </div> -->
- 
-      <!-- <div >
-        <div style="margin-bottom: 25px;">
-          <span class="Mandatory">* </span>
-          <input type="text" name="Overall_Ratings" id="idOverall_Ratings" placeholder="Overall Ratings" style="text-align: center;">
-          <p id="Overall_Ratings_Error" style="visibility: hidden;">err</p></div>
-        <div>
-            <input style="padding: 5px 35px;border-radius: 7px" type="submit" value="Submit" onclick="handleSubmit()"/>
-        </form></div>
-      </div>
-     </div> -->
-     
-     <!-- <div><button onclick="oCloseUpdateReviewPopup()" style="background-color: rgba(255, 0, 0, 0.765);padding: 4px 15px;border-radius: 6px;position: relative;left: 90%;top: 5%;border: 1px rgb(28, 28, 28) solid;">Close</button></div> -->
-   
-    <!-- </div> -->
+    
   </div>
   <div id="adminNotification">
    

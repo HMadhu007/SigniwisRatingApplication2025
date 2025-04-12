@@ -1,4 +1,3 @@
-debugger
 var express = require('express');
 var router = express.Router();
 var router2 = express.Router();
@@ -6,16 +5,15 @@ var multer = require('multer')
 const axios = require('axios');
 var request1 = require("request");
 const upload = multer({storage:multer.memoryStorage()})
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('../localStorage');
 
 // var popup = require('popups');
 
 // var database = require('../database')
 
-
-debugger
 const { request } = require('../app');
 const session = require('express-session');
-debugger
 var mysql = require('mysql');
 const app = require('../app');
 var connection = mysql.createConnection({
@@ -27,7 +25,11 @@ var connection = mysql.createConnection({
     port: 3306
 
 });
-debugger
+
+var BusyIndicator = {
+    "BusyIndicator":"hidden"
+  }
+
 /* GET users listing. */
 router.get('/',
    
@@ -43,19 +45,33 @@ router.get('/',
     ) AS Largest_value;`
 
         connection.query('SELECT * FROM employee_table', function (error, data) {
+
+            debugger
+
+            let s = JSON.stringify(data)
+            
+            localStorage.setItem("data", s)
+            var allABAPData = []
+            var allUI5Data = []
+
+            data.forEach((ele)=>{
+                if(ele.Employee_Department == "UI5"){
+                    allUI5Data.push(ele)
+                }
+                if(ele.Employee_Department == "ABAP"){
+                    allABAPData.push(ele)
+                }
+            })
             connection.query('SELECT * FROM review_status', function (error, data2) {
                 connection.query(largestNumber, function (error3, data3) {
-                    // debugger
-                    // console.log(data3[0]);
-                    // res.render('admin', {title:"Welcome to Signiwis", message ,session:req.session,sampleData:data, sampleData2:data2, newId:data3})
-
+                   
                    // Admin Notification
 
                    connection.query('SELECT * FROM admin_notification', function (error, AdminNotifyData) {
 
                     connection.query('SELECT * FROM designation', function (error, data4) {
 
-                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4, AdminNotifyData:AdminNotifyData })
+                        res.render('admin', { title: "Welcome to Signiwis", message, session: req.session, sampleData: data, sampleData2: data2, newId: data3, designation: data4, AdminNotifyData:AdminNotifyData, BusyIndicator:BusyIndicator, allUI5Data:allUI5Data, allABAPData:allABAPData})
 
                     })
 
@@ -85,7 +101,7 @@ router.get('/admin/:id', function (req, res) {
     debugger
     var id = request.params.id
 
-    var query = `SELECT * FROM employee_table WHERE Employee_Id = ${id}`
+    var query = `SELECT * FROM employee_table WHERE Employee_Id = '${id}'`
 
     connection.query(query, function (error, data, rows) {
         debugger
@@ -117,7 +133,7 @@ router.get('/fetchuser', (req, res) => {
 
     var UId = req.body.EmpIdForFeatchData
 
-    var query = `SELECT * FROM employee_table WHERE Employee_Id = ${UId}`
+    var query = `SELECT * FROM employee_table WHERE Employee_Id = '${UId}'`
 
 
 
@@ -133,34 +149,34 @@ router.get('/fetchuser', (req, res) => {
 
 // Admin Notification Delete
 
-router.get('/delete/:id/:sId/:mocktype', function (req, res, next) {
+router.get('/delete/:id/:sId/:mocktype/:status/:reqId', function (req, res, next) {
     debugger
-    var id = req.params.id.split(":")[1];
-    connection.query(`DELETE FROM admin_notification WHERE User_Id = '${id}' && selectedId = '${req.params.sId.split(":")[1]}' && Mock_Type = '${req.params.mocktype.split(":")[1]}' && Status = 'Done'`, function (error, data) {
+    var id = req.params.id;
+    if(req.params.status == 'Accepted'){
+
+        req.flash('success', `Can't delete, untill the mock get's complete`);
+        res.redirect("/admin"); 
+
+    }
+    else{
+        connection.query(`DELETE FROM admin_notification WHERE User_Id = '${id}' && selectedId = '${req.params.sId}' && Mock_Type = '${req.params.mocktype}' && Status = '${req.params.status}' && Request_Id = '${req.params.reqId}'`, function (error, data) {
         
-        if (error) {
-            req.flash('success', `Something went wrong`);
-            res.redirect("/admin");
-
-        }
-        else {
-            if(data.affectedRows == 0){
-                req.flash('success', `Can't delete, untill the mock get's complete`);
-                res.redirect("/admin");        
+            if (error) {
+                req.flash('success', `Something went wrong`);
+                res.redirect("/admin");
+    
             }
-            else{
-                req.flash('success', `Data deleted`);
-
-                res.redirect("/admin")
+            else {                
+                    req.flash('success', `Data deleted`);
+                    res.redirect("/admin");          
             }
-            
-        }
-    })
+        })
+    }
 })
 
 
 router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res, next) => {
-    debugger
+    
     try {
         var empId = req.body.Add_Employee_Id
         var mentor = req.body.Add_Mentor
@@ -177,10 +193,11 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
             }
         })
         const data = await response.json();
-        console.log(data);
-        var newID="S000"+empId
         var empDetails
-        data.data.forEach((x)=>{if(x.employeeNo==newID){empDetails=x}})
+        data.data.forEach((x)=>{
+            if(x.employeeNo==empId){
+                empDetails=x
+            }})
         req.session.employeeId = empDetails.employeeId;
         req.session.dateOfBirth = empDetails.dateOfBirth;
         req.session.email = empDetails.email;
@@ -188,9 +205,7 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
         req.session.gender = empDetails.gender;
         req.session.mobile = empDetails.mobile;
         req.session.name = empDetails.name;
-
-        debugger
-        ;
+    
         var empName = empDetails.name;
         var empDesignation = req.body.Add_Employee_Designation;
         var empEmail = empDetails.email;
@@ -205,30 +220,25 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
         var mobile = empDetails.mobile;
         var employeeNo = empDetails.employeeNo;
 
-
-        console.log(img);
-
         var file = req.file.uploaded_image;
-        console.log(file);
-
-
-
-
+       
         var sql = `INSERT INTO employee_table (Employee_Id, Employee_Name, Employee_Designation, Employee_Email,
     Employee_Department, Employee_Password,
     Employee_Icon,Employee_Status,Employee_Mock_Taken,Employee_Mock_Given,IMG_file,dateOfBirth,mobil,employeeNo,mentor,position) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?,?,?)`;
 
 
-        connection.query(sql, [empId, empName, empDesignation, empEmail, empDept, empPassword, empGender, empStatus, empMockTaken, empMockGiven, img, dateOfBirth, mobile, employeeNo, mentor, position], function (error, data, rows) {
+        connection.query(sql, [employeeNo, empName, empDesignation, empEmail, empDept, empPassword, empGender, empStatus, empMockTaken, empMockGiven, img, dateOfBirth, mobile, employeeNo, mentor, position], function (error, data, rows) {
             if (error) {
-                debugger
-
+                
                 console.log(error);
+                req.flash('success', "Something went wrong");
+                res.redirect("/admin")
+                
 
             }
             else {
-                debugger
+                
                 console.log('data created successfully');
                 req.flash('success', "Employee Added Successfully");
                 res.redirect("/admin")
@@ -237,18 +247,11 @@ router.post('/addEmployee', upload.single('Add_Employee_Image'), async (req, res
         }
         )
     } catch (error) {
-        debugger
+        
         req.flash('success', error)
         res.redirect('/admin')
 
     }
-
-
-
-
-
-
-
 
 })
 async function generateAccessToken() {
@@ -265,21 +268,8 @@ async function generateAccessToken() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 router.post('/updatementor', function (req, res) {
-    debugger;
+    ;
     try {
 
         const mentor = req.body.updateMentor;
@@ -291,7 +281,9 @@ router.post('/updatementor', function (req, res) {
         var updateMentor = `UPDATE employee_table SET position = '${position}', mentor = 'Lead', mentorId ='${id}' WHERE Employee_Id = "${id}"`
         connection.query(updateMentor, function (err, data) {
             if (err) {
-                throw err
+                req.flash('success', `Something went wrong`);
+                console.log(err)
+                res.redirect('/admin')
             }
             else {
                 req.flash('success', `Updated succesfully`);
@@ -369,11 +361,6 @@ router.post('/updateMy', function(req, res){
     const mentor = req.body.updateMentor;
     console.log(mentor)
 })
-
-
-
-
-
 
 
 module.exports = router;
