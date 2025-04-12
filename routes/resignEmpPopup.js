@@ -5,11 +5,8 @@ var router2 = express.Router();
 
 // var popup = require('popups');
 
-// var database = require('../database')
+// var database = require('../database')Q
 
-
-debugger
-const { request } = require('../app');
 const session = require('express-session');
 debugger
 var mysql = require('mysql');
