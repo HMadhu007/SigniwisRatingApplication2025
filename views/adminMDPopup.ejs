@@ -568,8 +568,8 @@
     </select>
   </div>
 
-  <div class="form-check" style="display: flex;align-items: center;" onclick="test()">
-    <input class="form-check-input" type="checkbox"  id="flexCheckDefault" >
+  <div class="form-check" style="display: flex;align-items: center;" >
+    <input class="form-check-input" type="checkbox"  id="flexCheckDefault" onclick="test()" />
     <label class="form-check-label" for="flexCheckDefault" style="font-weight: bold;">
      Document Link :
     </label>
@@ -674,7 +674,7 @@
     </div>
     
     <div class="form-check" style="display: flex;justify-content: right;">
-      <button type="submit" class="btn btn-primary" id="submitKpiPiont" onclick="oSubmitKpiPiont()">Submit</button>
+      <button type="submit" class="btn btn-primary"  style="display:none;" id="submitKpiPiont" onclick="oSubmitKpiPiont()">Submit</button>
     </div>
   </form>
     </div>
@@ -696,7 +696,7 @@
       KPIPointsForEmp.push(ele)
     }
   })
-  debugger
+  
   KPIPointsForEmp.forEach((ele)=>{
     oFormattedData.push({
       "ReqId":ele.Request_Id,
@@ -709,7 +709,7 @@
     })
   })
 
-  debugger
+  
   var UniqReqIDs = [...new Set(oFormattedData.map(item => item.ReqId))]; // KPI itration setting
 
 
@@ -730,7 +730,7 @@
           <%
             oFormattedData.forEach((ele2)=>{
               if(ele1 == ele2.ReqId && ele2.label.length <120){
-                debugger
+                
                 DocLink = ele2.DocLink;
                 Date = ele2.date;
           
@@ -776,6 +776,7 @@
 
     function oSubmitKpiPiont(){
       document.getElementById("submitKpiPiont").addEventListener('submit',(e)=>{
+
         e.preventDefault();
       });
 
@@ -783,30 +784,34 @@
 
     }
 
-  function onSelectReviewer_name(){
-    debugger
-    var oSelectRatings = document.getElementById('selectRatingsId');
-    var MentorSelected = document.getElementById('formEmpDesignation1');
-    let oContainer = document.getElementById('kpiContainerId');
+    function onSelectReviewer_name(){
+      
+      var oSelectRatings = document.getElementById('selectRatingsId');
+      var MentorSelected = document.getElementById('formEmpDesignation1');
+      let oContainer = document.getElementById('kpiContainerId');
 
-    if(oSelectRatings.value == "KPI" && !(MentorSelected.value[0] == "-Select Employee-")){
-       oContainer.style.display = 'block'; 
-      document.getElementById('body').style.filter='blur(3px)'
+      if(oSelectRatings.value == "KPI" && !(MentorSelected.value[0] == "-Select Employee-")){
+        oContainer.style.display = 'block'; 
+        document.getElementById('body').style.filter='blur(3px)'
+      }
+
+      document.getElementById("Reviewer_name_inp").value = document.getElementById("formEmpDesignation1").value.split(",")[1]
     }
 
-    document.getElementById("Reviewer_name_inp").value = document.getElementById("formEmpDesignation1").value.split(",")[1]
-  }
-
-var desigInp12 = document.getElementById("desigInpId12")
+    var desigInp12 = document.getElementById("desigInpId12")
     desigInp12.style.display='none'
 
     function test(params) {
-      debugger
-       desigInp12.style.display='block'
+        var DecumentLikn= desigInp12.style.display
+        if(DecumentLikn==='block'){
+          desigInp12.style.display="none"
+        }else
+        {
+          desigInp12.style.display='block'
+        }
     }
 
-function AdminNotificationHide(){
-        debugger
+    function AdminNotificationHide(){
         var oContainer = document.getElementById('adminNotification');
         setTimeout(()=>{
             oContainer.style.display='none'
@@ -814,11 +819,11 @@ function AdminNotificationHide(){
     }
     AdminNotificationHide();
 
-var kipDivId = document.getElementById('KPI_Form')
+    var kipDivId = document.getElementById('KPI_Form')
  
-function checkKPInRatings(){
+    function checkKPInRatings(){
   const isChecked = document.getElementById('toggleCheckbox').checked;
-  debugger;
+  ;
   if(kipDivId == null && isChecked == true){
     document.getElementById("alert1").style.display= 'block';
     document.getElementById("alert1").innerHTML= '<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i>There is no KPI points to display';
@@ -854,8 +859,8 @@ function checkKPInRatings(){
 
   // On selecting KPI from dropdown
 
-  function onSelctReviewtype(){
-    debugger
+    function onSelctReviewtype(){
+    
     let oSelectedItem = document.getElementById('selectRatingsId');
     let oContainer = document.getElementById('kpiContainerId');
     var MentorSelected = document.getElementById('formEmpDesignation1');
@@ -880,7 +885,7 @@ function checkKPInRatings(){
 
   // close kpi points
 
-  function onCloseKPIPoints(){
+    function onCloseKPIPoints(){
     document.getElementById('kpiContainerId').style.display = 'none';
     document.getElementById('body').style.filter='blur(0px)'
   }
@@ -894,7 +899,7 @@ function checkKPInRatings(){
 
       var oSelectRatings = document.getElementById('selectRatingsId');
       var MentorSelected = document.getElementById('formEmpDesignation1');
-      debugger
+      
       if(oSelectRatings.value == "-Mock Type-"){
           document.getElementById('alert1').style.display = 'block';
           document.getElementById('alert1').innerHTML = `<i style="background-color: white;border-radius: 100%;padding: 4px;" class="fa-solid fa-info"></i> Please select Mock Type`;
@@ -922,19 +927,19 @@ function checkKPInRatings(){
     // function stopDisplayingMSG(){
     //   document.getElementById('alert1').style.display = 
     // }
-      function oCloseuserEditPopup(){
-        document.getElementById('editEmpPopup').style.display = 'none';
-        document.getElementById('body').style.filter='blur(0px)'
+    function oCloseuserEditPopup(){
+    document.getElementById('editEmpPopup').style.display = 'none';
+    document.getElementById('body').style.filter='blur(0px)'
 
-      }
+  }
 
-      function handleEditPopUp(){
+    function handleEditPopUp(){
         document.getElementById('editEmpPopup').style.display = 'block';
         document.getElementById('body').style.filter='blur(3px)'
 
       }
 
-      function handleEmpEdit(){
+    function handleEmpEdit(){
 
         document.getElementById('editEmpPopup').addEventListener('submit',(e)=>{
           e.preventDefault();
@@ -1163,22 +1168,33 @@ function checkKPInRatings(){
           empStatusErr.innerHTML='Please Select Employee Status'
         }
         else{
-          debugger
+          
           document.getElementById('editEmployee').submit()
         }
 
       }
 
 
-      window.addEventListener("load", () => {
-  const loader = document.querySelector(".loader");
+    window.addEventListener("load", () => {
+          const loader = document.querySelector(".loader");
+          loader.classList.add("loader--hidden");
+          loader.addEventListener("transitionend", () => {
+          document.body.removeChild(loader);
+        });
+      });
 
-  loader.classList.add("loader--hidden");
 
-  loader.addEventListener("transitionend", () => {
-    document.body.removeChild(loader);
-  });
-});
+    //--------------------code Dynamically showing the submit button for KPI ---- 
+    const  selectKPITypeDropdown=document.getElementById('selectKPIType')
+    selectKPITypeDropdown.addEventListener('change',function(){
+      ;
+        if(selectKPITypeDropdown.value !=='-Select KPI Type-'){
+            document.getElementById('submitKpiPiont').style.display="block"
+        }
+        else{
+            document.getElementById('submitKpiPiont').style.display="none"
+        }    
+    })
    </script>
 </body>
 </html>
